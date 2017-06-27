@@ -1,6 +1,11 @@
 Strukt Commons
 ==============
 
+[![Latest Stable Version](https://poser.pugx.org/strukt/commons/v/stable)](https://packagist.org/packages/strukt/commons)
+[![Total Downloads](https://poser.pugx.org/strukt/commons/downloads)](https://packagist.org/packages/strukt/commons)
+[![Latest Unstable Version](https://poser.pugx.org/strukt/commons/v/unstable)](https://packagist.org/packages/strukt/commons)
+[![License](https://poser.pugx.org/strukt/commons/license)](https://packagist.org/packages/strukt/commons)
+
 #Usage
 
 ##Collection
