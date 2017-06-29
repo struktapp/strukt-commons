@@ -7,9 +7,9 @@ Strukt Commons
 [![Latest Unstable Version](https://poser.pugx.org/strukt/commons/v/unstable)](https://packagist.org/packages/strukt/commons)
 [![License](https://poser.pugx.org/strukt/commons/license)](https://packagist.org/packages/strukt/commons)
 
-#Usage
+# Usage
 
-##Collection
+## Collection
 
 ```php
 $contactsCol = new \Strukt\Core\Collection("Contacts");
@@ -22,7 +22,7 @@ $userCol->set("contacts", $contactsCol);
 $userCol->get("contacts.mobile"); //outputs +2540770123456
 ```
 
-##Collection Builder
+## Collection Builder
 
 ```php
 $s = array(
@@ -53,7 +53,7 @@ $b = new Strukt\Builder\CollectionBuilder();
 $x = $b->fromAssoc($s); //returns \Strukt\Core\Collection
 ```
 
-##Map
+## Map
 
 ```php
 $map = new \Strukt\Core\Map(new \Strukt\Core\Collection());
@@ -66,7 +66,7 @@ $map->set("db.config.password", "_root");
 
 Both `Map` and `Collection` have functions `set` , `get` , `exist` , `remove` The difference between both utilities is that `Map` can `set` and `remove` deep values while `Collection` cannot.
 
-##String Builder
+## String Builder
 
 ```php
 $filter = array("name"=>"user_");
@@ -85,7 +85,7 @@ echo $sql;
 //SELECT p FROM Permission p WHERE p.name = :name ORDER BY p.id DESC
 ```
 
-##Events
+## Events
 
 ```php
 $credentials = array("username"=>"admin", "password"=>"p@55w0rd");
