@@ -31,6 +31,13 @@ class Executor{
 	private $reflEvent = null;
 
 	/**
+	* List of reflected parameters
+	*
+	* @var Array
+	*/
+	private $reflParams = null;
+
+	/**
 	* Constructor
 	*
 	* @param $event \Closure
@@ -38,6 +45,10 @@ class Executor{
 	public function __construct(\Closure $event){
 
 		$this->event = $event;
+
+		$this->reflEvent = new \ReflectionFunction($this->event);
+
+		$this->reflParams = $this->reflEvent->getParameters();
 	}
 
 	/**
@@ -74,9 +85,18 @@ class Executor{
 	public function applyArgs(Array $args){
 
 		$this->args = $args;
-		$this->reflEvent = new \ReflectionFunction($this->event);
 
 		return $this;
+	}
+
+	/**
+	* Get list of reflected parameters
+	*
+	* @return Array
+	*/
+	public function getParams(){
+
+		return $this->reflParams;
 	}
 
 	/**
@@ -95,7 +115,7 @@ class Executor{
 
 			$args=null;
 			if(!$isNotAssoc)
-				foreach($this->reflEvent->getParameters() as $reflParam)
+				foreach($this->reflParams as $reflParam)
 					$args[] = $this->args[$reflParam->getName()];
 
 			if(!is_null($args))

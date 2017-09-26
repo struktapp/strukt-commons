@@ -14,6 +14,23 @@ class ExecutorTest extends PHPUnit_Framework_TestCase{
 		$this->assertEquals($sHelloWorld, $helloWorld->exec());
 	}
 
+	// public function testParamType(){
+
+	// 	$forEach = new Strukt\Event\Executor(function(Array $list){
+
+	// 		//
+	// 	});
+
+	// 	$params = $forEach->getParams();
+
+	// 	foreach($params as $param)
+	// 		print_r($param);
+
+	// 	// print_r($params
+	// 	// print_r($params[0]->getClass()->getName());
+	// 	// print_r($params[0]->getType());
+	// }
+
 	public function testApplyInput(){
 
 		$credentials = array("admin", "p@55w0rd");

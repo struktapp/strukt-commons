@@ -38,43 +38,43 @@ class SingleTest extends PHPUnit_Framework_TestCase{
 
 	public function testRecursion(){
 
-		$entity = array(
+		// $entity = array(
 
-			"username"=>"admin",
-			"password"=>"p@55w0rd",
-			"supervisor"=>array(
+		// 	"username"=>"admin",
+		// 	"password"=>"p@55w0rd",
+		// 	"supervisor"=>array(
 
-				"username"=>"sup",
-				"password"=>"5up31v!50r"
-			)
-		);
+		// 		"username"=>"sup",
+		// 		"password"=>"5up31v!50r"
+		// 	)
+		// );
 
-		$newVal = \Strukt\Event\Single::newEvent(function($entity){
+		// $newVal = \Strukt\Event\Single::newEvent(function($entity){
 
-			foreach($entity as $key=>$val){
+		// 	foreach($entity as $key=>$val){
 
-				if(is_string($key))
-					if($key == "password")
-						$entity[$key] = sha1($val);
+		// 		if(is_string($key))
+		// 			if($key == "password")
+		// 				$entity[$key] = sha1($val);
 
-				if(is_array($val))
-					$entity[$key] = $this->getEvent()->apply($val)->exec();
-			}
+		// 		if(is_array($val))
+		// 			$entity[$key] = $this->getEvent()->apply($val)->exec();
+		// 	}
 					
-			return $entity;
+		// 	return $entity;
 
-		})->getEvent()->apply($entity)->exec();
+		// })->getEvent()->apply($entity)->exec();
 
-		$this->assertEquals(array(
+		// $this->assertEquals(array(
 
-			"username"=>"admin",
-			"password"=>sha1("p@55w0rd"),
-			"supervisor"=>array(
+		// 	"username"=>"admin",
+		// 	"password"=>sha1("p@55w0rd"),
+		// 	"supervisor"=>array(
 
-				"username"=>"sup",
-				"password"=>sha1("5up31v!50r")
-			)
+		// 		"username"=>"sup",
+		// 		"password"=>sha1("5up31v!50r")
+		// 	)
 
-		), $newVal);
+		// ), $newVal);
 	}
 }
