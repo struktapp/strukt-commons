@@ -99,34 +99,3 @@ $isLoggedIn = $login->exec("admin", "p@55w0rd");
 // $isLoggedIn = $login->getEvent()->apply("admin","p@55w0rd")->exec();
 // $isLoggedIn = $login->getEvent()->applyArgs($credentials)->exec();
 ```
-
-### Recursion
-
-```php
-$entity = array(
-
-    "username"=>"admin",
-    "password"=>"p@55w0rd",
-    "supervisor"=>array(
-
-        "username"=>"sup",
-        "password"=>"5up31v!50r"
-    )
-);
-
-$newVal = \Strukt\Event\Single::newEvent(function($entity){
-
-    foreach($entity as $key=>$val){
-
-        if(is_string($key))
-            if($key == "password")
-                $entity[$key] = sha1($val);
-
-        if(is_array($val))
-            $entity[$key] = $this->getEvent()->apply($val)->exec(); //Recursion
-    }
-            
-    return $entity;
-
-})->getEvent()->apply($entity)->exec();
-```
