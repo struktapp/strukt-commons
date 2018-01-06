@@ -68,4 +68,16 @@ class ExecutorTest extends PHPUnit_Framework_TestCase{
 
 		$this->assertTrue($isLoginSuccess->applyArgs($credentials)->exec());
 	}
+
+	public function testReflectedMethodClosure(){
+
+		$r = new ReflectionClass(Fixture\Person::class);
+		$m = $r->getMethod("getId");
+		$c = $m->getClosure($r->newInstance());
+
+		// var_dump($m);
+		// var_dump($c);
+
+		$this->assertTrue(is_object(new Strukt\Event\Executor($c)));
+	}
 }

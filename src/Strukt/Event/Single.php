@@ -30,7 +30,9 @@ class Single{
 	*/
 	public function __construct(\Closure $event){
 
-		$this->event = \Closure::bind($event, $this);
+		// $this->event = \Closure::bind($event, $this);
+
+		$this->event = $event;
 	}
 
 	/**
@@ -51,6 +53,8 @@ class Single{
 	* @return Strukt\Event\Executor
 	*/
 	public function getEvent(){
+
+		// print_r(get_class($this->event));exit;
 
 		return new Executor($this->event);
 	}
