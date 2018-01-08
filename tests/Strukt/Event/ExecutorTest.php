@@ -14,22 +14,31 @@ class ExecutorTest extends PHPUnit_Framework_TestCase{
 		$this->assertEquals($sHelloWorld, $helloWorld->exec());
 	}
 
-	// public function testParamType(){
+	public function testParamType(){
 
-	// 	$forEach = new Strukt\Event\Executor(function(Array $list){
+		$forEach = new Strukt\Event\Executor(function(Array $list){
 
-	// 		//
-	// 	});
+			//
+		});
 
-	// 	$params = $forEach->getParams();
+		$person = new Strukt\Event\Executor(function(int $id, string $name){
 
-	// 	foreach($params as $param)
-	// 		print_r($param);
 
-	// 	// print_r($params
-	// 	// print_r($params[0]->getClass()->getName());
-	// 	// print_r($params[0]->getType());
-	// }
+		});
+
+		$this->assertTrue($forEach->expects("array"));
+		$this->assertTrue($person->expects("int"));
+		$this->assertTrue($person->expects("string"));
+
+		// $params = $forEach->getParams();
+
+		// foreach($person->getParams() as $param)
+			// print_r("\n".$param->getType()."\n");
+
+		// print_r($params
+		// print_r($params[0]->getClass()->getName());
+		// print_r($params[0]->getType());
+	}
 
 	public function testApplyInput(){
 

@@ -96,8 +96,27 @@ class Executor{
 	*/
 	public function getParams(){
 
-		return $this->reflParams;
+		$params = [];
+		foreach($this->reflParams as $reflParam)
+			$params[(string)$reflParam->getName()] = $reflParam->getType()->getName();
+
+		return $params;
 	}
+
+	public function expects($type){
+
+		foreach($this->reflParams as $reflParam)
+			if($reflParam->hasType())
+				if($type == $reflParam->getType())
+					return true;
+
+		return false;
+	}
+
+	// public function getReflection(){
+
+	// 	return $this->reflEvent;
+	// }
 
 	/**
 	* Execute event
