@@ -96,9 +96,19 @@ class Executor{
 	*/
 	public function getParams(){
 
+		// print_r($this->reflParams);exit;
+
 		$params = [];
-		foreach($this->reflParams as $reflParam)
-			$params[(string)$reflParam->getName()] = $reflParam->getType()->getName();
+		foreach($this->reflParams as $reflParam){
+
+			// echo("\n".$reflParam->getName()."---".$reflParam->getType()."\n");
+
+
+
+			$params[(string)$reflParam->getName()] = (string)$reflParam->getType();//->getName();
+		}
+
+		// print_r($params);exit;
 
 		return $params;
 	}
