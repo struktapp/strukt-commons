@@ -55,7 +55,7 @@ class CollectionBuilder{
 		foreach($array as $key=>$val){
 
 			if(is_array($val))
-				if(\Strukt\Common\Util\Arr::isAssoc($val))
+				if(!empty(array_filter(array_keys($val), "is_string")))
 					$val = CollectionBuilder::getInstance(new Collection($key))->fromAssoc($val);
 
 			$this->collection->set($key, $val);

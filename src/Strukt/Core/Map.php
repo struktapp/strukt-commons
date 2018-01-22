@@ -69,7 +69,7 @@ class Map{
 	*/
 	public function set($key, $val){
 
-		\Strukt\Common\Util\Collection::doMarshal($key, $val, $this->collection);
+		Collection::marshal($key, $val, $this->collection);
 	}
 
 	/**

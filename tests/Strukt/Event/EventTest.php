@@ -1,12 +1,12 @@
 <?php
 
-class ExecutorTest extends PHPUnit_Framework_TestCase{
+class EventTest extends PHPUnit_Framework_TestCase{
 
 	public function testExec(){
 
 		$sHelloWorld = "Hello World";
 
-		$helloWorld = new Strukt\Event\Executor(function() use($sHelloWorld){
+		$helloWorld = new Strukt\Event\Event(function() use($sHelloWorld){
 
 			return $sHelloWorld;
 		});
@@ -16,14 +16,14 @@ class ExecutorTest extends PHPUnit_Framework_TestCase{
 
 	public function testParamType(){
 
-		$forEach = new Strukt\Event\Executor(function(Array $list){
+		$forEach = new Strukt\Event\Event(function(Array $list){
 
 			//
 		});
 
-		$person = new Strukt\Event\Executor(function(int $id, string $name){
+		$person = new Strukt\Event\Event(function(int $id, string $name){
 
-
+			//
 		});
 
 		$this->assertTrue($forEach->expects("array"));
@@ -44,7 +44,7 @@ class ExecutorTest extends PHPUnit_Framework_TestCase{
 
 		$credentials = array("admin", "p@55w0rd");
 
-		$isLoginSuccess = new Strukt\Event\Executor(function($username, $password) use ($credentials){
+		$isLoginSuccess = new Strukt\Event\Event(function($username, $password) use ($credentials){
 
 			return $username == reset($credentials) && $password == end($credentials);
 		});
@@ -58,7 +58,7 @@ class ExecutorTest extends PHPUnit_Framework_TestCase{
 
 		$credentials = array("admin", "p@55w0rd");
 
-		$isLoginSuccess = new Strukt\Event\Executor(function($username, $password) use ($credentials){
+		$isLoginSuccess = new Strukt\Event\Event(function($username, $password) use ($credentials){
 
 			return $username == reset($credentials) && $password == end($credentials);
 		});
@@ -70,7 +70,7 @@ class ExecutorTest extends PHPUnit_Framework_TestCase{
 
 		$credentials = array("password"=>"p@55w0rd", "username"=>"admin");
 
-		$isLoginSuccess = new Strukt\Event\Executor(function($username, $password) use ($credentials){
+		$isLoginSuccess = new Strukt\Event\Event(function($username, $password) use ($credentials){
 
 			return $username == $credentials["username"] && $password == $credentials["password"];
 		});
@@ -87,6 +87,6 @@ class ExecutorTest extends PHPUnit_Framework_TestCase{
 		// var_dump($m);
 		// var_dump($c);
 
-		$this->assertTrue(is_object(new Strukt\Event\Executor($c)));
+		$this->assertTrue(is_object(new Strukt\Event\Event($c)));
 	}
 }

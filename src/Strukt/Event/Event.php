@@ -7,7 +7,7 @@ namespace Strukt\Event;
 *
 * @author Moderator <pitsolu@gmail.com>
 */
-class Executor{
+class Event{
 
 	/**
 	* Event arguments

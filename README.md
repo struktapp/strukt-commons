@@ -90,7 +90,7 @@ echo $sql;
 ```php
 $credentials = array("username"=>"admin", "password"=>"p@55w0rd");
 
-$login = Strukt\Event\Single::newEvent(function($username, $password) use($credentials){
+$login = Strukt\Event\Event::newEvent(function($username, $password) use($credentials){
 
     return $username == $credentials["username"] && $password == $credentials["password"];
 });
