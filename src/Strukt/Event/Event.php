@@ -96,19 +96,11 @@ class Event{
 	*/
 	public function getParams(){
 
-		// print_r($this->reflParams);exit;
-
 		$params = [];
 		foreach($this->reflParams as $reflParam){
 
-			// echo("\n".$reflParam->getName()."---".$reflParam->getType()."\n");
-
-
-
-			$params[(string)$reflParam->getName()] = (string)$reflParam->getType();//->getName();
+			$params[(string)$reflParam->getName()] = (string)$reflParam->getType();
 		}
-
-		// print_r($params);exit;
 
 		return $params;
 	}
@@ -122,11 +114,6 @@ class Event{
 
 		return false;
 	}
-
-	// public function getReflection(){
-
-	// 	return $this->reflEvent;
-	// }
 
 	/**
 	* Execute event

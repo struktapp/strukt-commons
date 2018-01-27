@@ -29,15 +29,6 @@ class EventTest extends PHPUnit_Framework_TestCase{
 		$this->assertTrue($forEach->expects("array"));
 		$this->assertTrue($person->expects("int"));
 		$this->assertTrue($person->expects("string"));
-
-		// $params = $forEach->getParams();
-
-		// foreach($person->getParams() as $param)
-			// print_r("\n".$param->getType()."\n");
-
-		// print_r($params
-		// print_r($params[0]->getClass()->getName());
-		// print_r($params[0]->getType());
 	}
 
 	public function testApplyInput(){
@@ -83,9 +74,6 @@ class EventTest extends PHPUnit_Framework_TestCase{
 		$r = new ReflectionClass(Fixture\Person::class);
 		$m = $r->getMethod("getId");
 		$c = $m->getClosure($r->newInstance());
-
-		// var_dump($m);
-		// var_dump($c);
 
 		$this->assertTrue(is_object(new Strukt\Event\Event($c)));
 	}
