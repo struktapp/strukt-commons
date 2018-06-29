@@ -95,7 +95,6 @@ $login = Strukt\Event\Event::newEvent(function($username, $password) use($creden
     return $username == $credentials["username"] && $password == $credentials["password"];
 });
 
-$isLoggedIn = $login->exec("admin", "p@55w0rd");
-// $isLoggedIn = $login->getEvent()->apply("admin","p@55w0rd")->exec();
+$isLoggedIn = $login->getEvent()->apply("admin","p@55w0rd")->exec();
 // $isLoggedIn = $login->getEvent()->applyArgs($credentials)->exec();
 ```
