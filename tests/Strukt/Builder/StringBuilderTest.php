@@ -2,7 +2,7 @@
 
 use Strukt\Builder\StringBuilder;
 
-class StringBuilderTest extends PHPUnit_Framework_TestCase{
+class StringBuilderTest extends PHPUnit\Framework\TestCase{
 
 	public function testBuilder(){
 

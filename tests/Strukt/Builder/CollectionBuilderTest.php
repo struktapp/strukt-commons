@@ -1,6 +1,6 @@
 <?php
 
-class CollectionBuilderTest extends PHPUnit_Framework_TestCase{
+class CollectionBuilderTest extends PHPUnit\Framework\TestCase{
 
 	public function testBuilder(){
 

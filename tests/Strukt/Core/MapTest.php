@@ -3,7 +3,7 @@
 use Strukt\Core\Map;
 use Strukt\Core\Collection;
 
-class MapTest extends PHPUnit_Framework_TestCase{
+class MapTest extends PHPUnit\Framework\TestCase{
 
 	function setUp(){
 

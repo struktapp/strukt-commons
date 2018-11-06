@@ -3,3 +3,5 @@ test.php
 index.php
 php_errors.log
 src/Strukt/Common/Container.php
+..travis.yml.swp
+composer.lock
