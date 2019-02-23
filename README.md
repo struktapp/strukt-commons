@@ -66,25 +66,6 @@ $map->set("db.config.password", "_root");
 
 Both `Map` and `Collection` have functions `set` , `get` , `exist` , `remove` The difference between both utilities is that `Map` can `set` and `remove` deep values while `Collection` cannot.
 
-## String Builder
-
-```php
-$filter = array("name"=>"user_");
-
-// StringBuilder::getInstance([delimiter])
-$sql = \Strukt\Builder\StringBuilder::getInstance()
-        ->add("SELECT p FROM Permission p")
-        ->add(function() use($filter){
-
-            if(in_array("name", array_keys($filter)))
-                return "WHERE p.name = :name";
-        })
-        ->add("ORDER BY p.id DESC");
-
-echo $sql; 
-//SELECT p FROM Permission p WHERE p.name = :name ORDER BY p.id DESC
-```
-
 ## Events
 
 ```php
