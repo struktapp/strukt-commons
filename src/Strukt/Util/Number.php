@@ -51,7 +51,7 @@ class Number{
 		return $this->add($number);
 	}
 
-	public function multiply($number){
+	public function times($number){
 
 		$number = Number::deject($number);
 
@@ -91,7 +91,7 @@ class Number{
 
 			$ratio = new Number($ratio);
 
-			$parts[] =  $ratio->multiply($divisor)->yield();
+			$parts[] =  $ratio->times($divisor)->yield();
 		}
 
 		return $parts; 
@@ -151,7 +151,7 @@ class Number{
 	public static function random($qty, $min=null, $max=null){
 
 		$i=0;
-		while($i<=$qty){
+		while($i<=$qty-1){
 
 			if(!is_null($min) && !is_null($max))
 				$numbers[] = rand($min, $max);
