@@ -137,7 +137,7 @@ $str = new Str("Strukt Framework");
 $str->startWith("Str");//true
 $str->endsWith("work");//true
 $str->first(3);//Str
-$str->last(4);//Str
+$str->last(4);//work
 $str->contains("Frame");//true
 $str->slice(7,5)->equals("Frame");//true
 $str->replace("work", "play")->equals("Strukt Frameplay");
@@ -149,7 +149,9 @@ $str->toLower();//strukt framework
 $camel = new Str("thisIsCamelCase");
 $camel->toSnake();//this_is_camel_case
 $camel->toSnake()->toCamel();//ThisIsCamelCase
-$sdo = $str->prepend("Doctrine +");//Doctrine + Strukt Framework
+$sdo = $str->prepend("Doctrine + ");//Doctrine + Strukt Framework
 $sdo->concat(" = Strukt Do");//Doctrine + Strukt Framework = Strukt Do
+$str->split(" ");//['Strukt', "Framework"]
+(new Str("blah blah blah"))->count("blah");//3
 
 ```
