@@ -134,7 +134,7 @@ echo $start; //return date as string
 use Strukt\Util\Str;
 
 $str = new Str("Strukt Framework");
-$str->startWith("Str");//true
+$str->startsWith("Str");//true
 $str->endsWith("work");//true
 $str->first(3);//Str
 $str->last(4);//work
@@ -153,5 +153,4 @@ $sdo = $str->prepend("Doctrine + ");//Doctrine + Strukt Framework
 $sdo->concat(" = Strukt Do");//Doctrine + Strukt Framework = Strukt Do
 $str->split(" ");//['Strukt', "Framework"]
 (new Str("blah blah blah"))->count("blah");//3
-
 ```
