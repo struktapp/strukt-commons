@@ -79,3 +79,77 @@ $login = Strukt\Event\Event::newEvent(function($username, $password) use($creden
 $isLoggedIn = $login->getEvent()->apply("admin","p@55w0rd")->exec();
 // $isLoggedIn = $login->getEvent()->applyArgs($credentials)->exec();
 ```
+
+# Value Objects
+
+## Number
+
+```php
+use Strukt\Util\Number;
+
+$num = new Number(1000);
+$num = $num->add(200);//1200
+$num = $num->subtract(100);//1100
+$num = $num->times(2);//2200 multiplication
+$num = $num->parts(4);//550 division
+$rem = $num->mod(9);//1 modulus
+$num = $num->raise(2);//302500 power
+list($num1, $num2) = $num->ratio(1,1);//151250, 151250
+list($num1, $num2) = $num->ratio(1,3);//75625,226875
+list($num1, $num2, $num3) = $num->ratio(1,1,3);//60500,60500,181500
+$num->gt(302499);//true; greaterthan
+$num->gte(302500);//true greaterthanorequals
+$num->lt(302499);//false lessthan
+$num->lte(302501);//true lessthanorequals
+$num->negate()->equals(-302500)  
+$num->yield() //return native number
+Number::random(4, 10, 20); //return 4 random numbers between 10 and 20
+(new Number(10.1))->type();//double
+echo $num;//return native number
+```
+
+## DateTime
+
+```php
+use Strukt\Util\DateTime;//inherits native \DateTime object
+
+$start = new DateTime();
+$end = new DateTime("+30 days");
+$start->toMakeRand($end);//make start date random date between start and end
+$end->gt($start);//true
+$end->gte($start);//true
+$start->lt($end);
+$end->lte($end);//true
+$start->equals($end);//false
+$newStart = $start->clone();
+$newStartPlusOneDay = $start->clone("+1 day");
+$start->beginDay();//reset time to 00:00:00 000000
+$start->endDay();//reset time to 23:59:59 1000000
+echo $start; //return date as string
+```
+
+## String
+
+```php
+use Strukt\Util\Str;
+
+$str = new Str("Strukt Framework");
+$str->startWith("Str");//true
+$str->endsWith("work");//true
+$str->first(3);//Str
+$str->last(4);//Str
+$str->contains("Frame");//true
+$str->slice(7,5)->equals("Frame");//true
+$str->replace("work", "play")->equals("Strukt Frameplay");
+$str->replaceFirst("k","c")->equals("Struct Framework");
+$str->replaceLast("k","d")->equals("Struct Frameword");
+$str->replaceAt("ing", 3, 3)->equals("String Framwork")
+$str->toUpper();//STRUKT FRAMEWORK
+$str->toLower();//strukt framework
+$camel = new Str("thisIsCamelCase");
+$camel->toSnake();//this_is_camel_case
+$camel->toSnake()->toCamel();//ThisIsCamelCase
+$sdo = $str->prepend("Doctrine +");//Doctrine + Strukt Framework
+$sdo->concat(" = Strukt Do");//Doctrine + Strukt Framework = Strukt Do
+
+```
