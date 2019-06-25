@@ -34,8 +34,7 @@ class MapTest extends PHPUnit\Framework\TestCase{
 	}
 
 	/**
-	* @expectedException Exception
-	* @expectedExceptionMessage ValueOnValueException
+	* @expectedException Strukt\Exception\KeyOverlapException
 	*/
 	function testExpectValueOnValueException(){
 

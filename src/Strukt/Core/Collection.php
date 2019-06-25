@@ -2,6 +2,10 @@
 
 namespace Strukt\Core;
 
+use Strukt\Exception\KeyOverlapException;
+use Strukt\Exception\KeyNotFoundException;
+use Strukt\Exception\InvalidKeyException;
+
 /**
 * Collection class
 *
@@ -62,11 +66,11 @@ class Collection{
 	public function set($key, $val){
 
 		if (strpos($key, '.') !== false)
-			throw new \Exception(sprintf("Invalid key [%s]!", $key));
+			throw new InvalidKeyException($key);
 
 		if($this->exists($key))
 			if(!empty($this->get($key)))
-				throw new \Exception("ValueOnValueException");
+				throw new KeyOverlapException($key);
 
 		$this->collection[$key] = $val;
 	}
@@ -127,7 +131,7 @@ class Collection{
 		if(key_exists($key, $this->collection))
 			return $this->collection[$key];
 
-		throw new \Exception(sprintf("NonExistentKeyException [%s]!", $key));	
+		throw new KeyNotFoundException($key);	
 	}
 
 	/**
@@ -164,7 +168,7 @@ class Collection{
 
 		if($collection->exists($hashKey))
 			if(!empty($collection->get($hashKey)))
-				throw new \Exception("ValueOnValueException!");
+				throw new KeyOverlapException($hashKey);
 
 		$keyList = explode(".", $hashKey);
 

@@ -36,8 +36,7 @@ class CollectionTest extends PHPUnit\Framework\TestCase{
 	}
 
 	/**
-	* @expectedException Exception
-	* @expectedExceptionMessage ValueOnValueException
+	* @expectedException Strukt\Exception\KeyOverlapException
 	*/
 	function testExpectValueOnValueException(){
 
@@ -45,8 +44,7 @@ class CollectionTest extends PHPUnit\Framework\TestCase{
 	}
 
 	/**
-	* @expectedException Exception
-	* @expectedExceptionMessage NonExistentKeyException [middlename]!
+	* @expectedException Strukt\Exception\KeyNotFoundException
 	*/
 	function testExpectNonExistentKeyException(){
 
