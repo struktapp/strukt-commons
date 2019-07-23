@@ -196,6 +196,11 @@ class Str{
 		return empty($this->str);
 	}
 
+	public function isRegEx($string) {
+
+		return @preg_match($string, '') !== FALSE;
+	}
+
 	public function __toString(){
 
 		return $this->str;
