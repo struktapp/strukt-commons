@@ -140,7 +140,10 @@ class Number{
 
 	public function yield(){
 
-		return (int)$this->number;
+		if(!is_numeric($this->number))
+			new \Strukt\Raise("NaN");
+
+		return $this->number;
 	}
 
 	public function __toString(){
