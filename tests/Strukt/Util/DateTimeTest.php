@@ -16,7 +16,7 @@ class DateTimeTest extends PHPUnit\Framework\TestCase{
 
 		$this->assertEquals($randDate->format("Y-m-d H:i:s"), $strStart);
 
-		$randDate->toMakeRand($this->end);
+		$randDate->rand($this->end);
 
 		$this->assertTrue($randDate->gte($this->start) && $randDate->lte($this->end));
 	}
@@ -43,13 +43,13 @@ class DateTimeTest extends PHPUnit\Framework\TestCase{
 
 		$startDate = $this->start->clone();
 
-		$this->start->beginDay();
+		$this->start->reset();
 
 		$this->assertTrue($this->start->lt($startDate));
 
 		$endDate = $this->end->clone();
 
-		$this->end->endDay();
+		$this->end->last();
 
 		$this->assertTrue($this->end->gt($endDate));
 	}
