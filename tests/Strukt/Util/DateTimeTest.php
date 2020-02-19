@@ -10,47 +10,42 @@ class DateTimeTest extends PHPUnit\Framework\TestCase{
 
 	public function testRandDateIsInBtwn(){
 
-		$strStart = $this->start->format("Y-m-d H:i:s");
+		$rand = $this->start->rand($this->end);
 
-		$randDate = new \Strukt\Util\DateTime($strStart);
-
-		$this->assertEquals($randDate->format("Y-m-d H:i:s"), $strStart);
-
-		$randDate->rand($this->end);
-
-		$this->assertTrue($randDate->gte($this->start) && $randDate->lte($this->end));
+		$this->assertTrue($rand->gte($this->start) && $rand->lte($this->end));
 	}
 
 	public function testClone(){
 
-		$newStartA = $this->start->clone();
+		$clone = $this->start->clone();
 
-		$this->assertTrue($this->start->equals($newStartA));
+		$this->assertTrue($this->start->equals($clone));
 
-		$newStartB = $this->start->clone("+1 day");
+		$clonePlusOneDay = $this->start->clone("+1 day");
 
-		$this->assertEquals($newStartB, $this->start->modify("+1 day"));
+		$this->assertEquals($clonePlusOneDay, $this->start->modify("+1 day"));
 	}
 
 	public function testInequalities(){
 
-		$newStart = $this->start->clone("+10 days");
+		$clonePlusTenDays = $this->start->clone("+10 days");
 
-		$this->assertTrue($this->start->lt($newStart) && $this->end->gt($newStart));
+		$this->assertTrue($this->start->lt($clonePlusTenDays) 
+							&& $this->end->gt($clonePlusTenDays));
 	}
 
 	public function testResetTime(){
 
-		$startDate = $this->start->clone();
+		$startClone = $this->start->clone();
 
 		$this->start->reset();
 
-		$this->assertTrue($this->start->lt($startDate));
+		$this->assertTrue($this->start->lt($startClone));
 
-		$endDate = $this->end->clone();
+		$endClone = $this->end->clone();
 
 		$this->end->last();
 
-		$this->assertTrue($this->end->gt($endDate));
+		$this->assertTrue($this->end->gt($endClone));
 	}
 }

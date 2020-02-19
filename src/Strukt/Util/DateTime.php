@@ -6,19 +6,32 @@ class DateTime extends \DateTime{
 
 	private $format;
 
-	public function __construct($datetime="", $format="Y-m-d H:i:s.u"){
+	public function __construct($datetime="", $format=""){
+
+		if(!empty($format))
+			$datetime = \DateTime::createFromFormat($format, $datetime);
+
+		if(is_object($datetime))
+			$datetime = $datetime->format("Y-m-d H:i:s.u");
 
 		$this->format = $format;
-
-		if($datetime instanceof \DateTime)
-			$datetime = $datetime->format($format);
 
 		parent::__construct($datetime);
 	}
 
+	public static function create(string $datetime, string $format="Y-m-d"){
+
+		return new self(\DateTime::createFromFormat($format, $datetime));
+	}
+
+	public static function fromTimestamp($timestamp){
+
+		return (new self)->setTimestamp($timestamp);
+	}
+
 	public function rand(\DateTime $end){
 
-		$this->setTimestamp(rand($this->getTimestamp(), $end->getTimestamp()));
+		return $this->fromTimestamp(rand($this->getTimestamp(), $end->getTimestamp()));
 	}
 
 	/**
