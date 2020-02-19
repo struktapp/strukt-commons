@@ -12,14 +12,15 @@ Strukt Commons
 ## Collection
 
 ```php
-$contactsCol = new \Strukt\Core\Collection("Contacts");
-$contactsCol->set("mobile", "+2540770123456");
-$contactsCol->set("work-phone", "+2540202345678");
+//use Strukt\Core\Collection
+$contact = new Collection("Contacts");
+$contact->set("mobile", "+2540770123456");
+$contact->set("work-phone", "+2540202345678");
 
-$userCol = new Collection("User");
-$userCol->set("contacts", $contactsCol);
+$user = new Collection("User");
+$user->set("contacts", $contact);
 
-$userCol->get("contacts.mobile"); //outputs +2540770123456
+$user->get("contacts.mobile"); //outputs +2540770123456
 ```
 
 ## Collection Builder
@@ -46,17 +47,20 @@ $s = array(
         )
     )
 );
-
-// $x = Strukt\Builder\CollectionBuilder::getInstance(new \Strukt\Core\Collection())->fromAssoc($s);
-// $b = Strukt\Builder\CollectionBuilder(new \Strukt\Core\Collection());
-$b = new Strukt\Builder\CollectionBuilder();
-$x = $b->fromAssoc($s); //returns \Strukt\Core\Collection
+//use Strukt\Builder\CollectionBuilder
+//use Strukt\Core\Collection
+// $x = CollectionBuilder::getInstance(new Collection())->fromAssoc($s);
+// $b = CollectionBuilder(new Collection());
+$b = new CollectionBuilder();
+$x = $b->fromAssoc($s); //returns \Collection
 ```
 
 ## Map
 
 ```php
-$map = new \Strukt\Core\Map(new \Strukt\Core\Collection());
+//use Strukt\Core\Map
+//use Strukt\Core\Collection
+$map = new Map(new Collection());
 $map->set("session.user.username", "genewilder");
 $map->set("session.user.firstname", "Gene");
 $map->set("session.user.surname", "Wilder");
@@ -69,9 +73,10 @@ Both `Map` and `Collection` have functions `set` , `get` , `exist` , `remove` Th
 ## Events
 
 ```php
+//use Strukt\Event\Event
 $credentials = array("username"=>"admin", "password"=>"p@55w0rd");
 
-$login = Strukt\Event\Event::newEvent(function($username, $password) use($credentials){
+$login = Event::newEvent(function($username, $password) use($credentials){
 
     return $username == $credentials["username"] && $password == $credentials["password"];
 });
@@ -113,9 +118,11 @@ echo $num;//return native number
 ```php
 use Strukt\Util\DateTime;//inherits native \DateTime object
 
+//DateTime::create("10-31-2010", "m-d-Y")
+//DateTime::fromTimestamp(1198998987)
 $start = new DateTime();
 $end = new DateTime("+30 days");
-$start->toMakeRand($end);//make start date random date between start and end
+$rand = $start->rand($end);//make start date random date between start and end
 $end->gt($start);//true
 $end->gte($start);//true
 $start->lt($end);
@@ -123,8 +130,8 @@ $end->lte($end);//true
 $start->equals($end);//false
 $newStart = $start->clone();
 $newStartPlusOneDay = $start->clone("+1 day");
-$start->beginDay();//reset time to 00:00:00 000000
-$start->endDay();//reset time to 23:59:59 1000000
+$start->reset();//reset time to 00:00:00 000000
+$start->last();//reset time to 23:59:59 1000000
 echo $start; //return date as string
 ```
 
