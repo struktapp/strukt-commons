@@ -4,7 +4,7 @@ use Strukt\Core\Collection;
 
 class CollectionTest extends PHPUnit\Framework\TestCase{
 
-	function setUp(){
+	public function setUp():void{
 
 		$this->collection = new Collection("user");
 		$this->collection->set("firstname", "Gene");
@@ -35,18 +35,16 @@ class CollectionTest extends PHPUnit\Framework\TestCase{
 		$this->assertFalse($this->collection->exists("surname"));
 	}
 
-	/**
-	* @expectedException Strukt\Exception\KeyOverlapException
-	*/
 	function testExpectValueOnValueException(){
+
+		$this->expectException(Strukt\Exception\KeyOverlapException::class);
 
 		$this->collection->set("firstname", "_Gene_");
 	}
 
-	/**
-	* @expectedException Strukt\Exception\KeyNotFoundException
-	*/
 	function testExpectNonExistentKeyException(){
+
+		$this->expectException(Strukt\Exception\KeyNotFoundException::class);
 
 		$this->collection->get("middlename");
 	}

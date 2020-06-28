@@ -2,7 +2,7 @@
 
 class ArrTest extends PHPUnit\Framework\TestCase{
 
-	public function setUp(){
+	public function setUp():void{
 
 		$this->rawarr = array(
 
@@ -37,6 +37,43 @@ class ArrTest extends PHPUnit\Framework\TestCase{
 		$last = end($this->rawarr);
 
 		$this->assertEquals($this->arr->last(), $last);
+	}
+
+	public function testFlat(){
+
+		$nested = array(
+
+			array(
+
+				"name" => "pitsolu"
+			),
+			array(
+
+				array(
+
+					"phone" => "0800-PITSOLU"
+				)
+			),
+			array(
+
+				array(
+
+					array(
+
+						"email" => "pitsolu@gmail.com"
+					)
+				)
+			)
+		);
+
+		$flattened = array(
+
+			"name" => "pitsolu",
+			"phone" => "0800-PITSOLU",
+			"email" => "pitsolu@gmail.com"
+		);
+
+		$this->assertEquals($flattened, \Strukt\Util\Arr::flat($nested));
 	}
 
 	public function testMap(){

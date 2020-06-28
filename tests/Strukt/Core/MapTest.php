@@ -5,7 +5,7 @@ use Strukt\Core\Collection;
 
 class MapTest extends PHPUnit\Framework\TestCase{
 
-	function setUp(){
+	function setUp():void{
 
 		$this->map = new Map(new Collection());
 		$this->map->set("session.user.username", "genewilder");
@@ -33,10 +33,9 @@ class MapTest extends PHPUnit\Framework\TestCase{
 		$this->assertFalse($this->map->exists("session.user.username"));
 	}
 
-	/**
-	* @expectedException Strukt\Exception\KeyOverlapException
-	*/
 	function testExpectValueOnValueException(){
+
+		$this->expectException(Strukt\Exception\KeyOverlapException::class);
 
 		$this->map->set("db", "_Gene_");
 	}

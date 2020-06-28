@@ -4,7 +4,7 @@ use Strukt\Util\Number;
 
 class NumberTest extends PHPUnit\Framework\TestCase{
 
-	public function setUp(){
+	public function setUp():void{
 
 		$this->num = new Number(1000);
 	}

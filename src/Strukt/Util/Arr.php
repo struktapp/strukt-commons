@@ -47,6 +47,16 @@ class Arr{
 		return $arr;
 	}
 
+	public static function flat($arr){
+
+		$it = new \RecursiveIteratorIterator(new \RecursiveArrayIterator($arr));
+
+		foreach ($it as $key => $value) 
+			$result[$key] = $value;
+
+		return $result;
+	}
+
 	public function yield(){
 
 		return $this->arr; 

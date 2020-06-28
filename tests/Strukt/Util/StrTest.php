@@ -4,7 +4,7 @@ use Strukt\Util\Str;
 
 class StrTest extends PHPUnit\Framework\TestCase{
 
-	public function setUp(){
+	public function setUp():void{
 
 		$this->str = new Str("Strukt Framework");
 		$this->blah = new Str("Blah blah blah!");
