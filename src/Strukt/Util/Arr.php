@@ -51,8 +51,13 @@ class Arr{
 
 		$it = new \RecursiveIteratorIterator(new \RecursiveArrayIterator($arr));
 
-		foreach ($it as $key => $value) 
+		foreach ($it as $key => $value){
+
+			if(empty($key)) 
+				$key = rand();
+				
 			$result[$key] = $value;
+		}
 
 		return $result;
 	}
