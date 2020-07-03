@@ -22,6 +22,18 @@ class ArrTest extends PHPUnit\Framework\TestCase{
 		$this->arr = new \Strukt\Util\Arr($this->rawarr);
 	}
 
+	public function testItr(){
+
+		$this->assertTrue($this->arr->current()->equals($this->rawarr["othernames"]));
+		$this->arr->next();
+		$this->assertTrue($this->arr->current()->equals($this->rawarr["surname"]));
+		$this->arr->last();
+		$this->assertTrue($this->arr->current()->equals($this->rawarr["contact"]));
+		$this->arr->reset();
+		$this->assertTrue($this->arr->current()->equals($this->rawarr["othernames"]));
+		$this->assertEquals($this->arr->key(), "othernames");
+	}
+
 	public function testEmpty(){
 
 		$this->assertFalse($this->arr->empty());
@@ -29,14 +41,14 @@ class ArrTest extends PHPUnit\Framework\TestCase{
 
 	public function testCount(){
 
-		$this->assertTrue($this->arr->only(count($this->rawarr)));
+		$this->assertTrue($this->arr->only($this->arr->length()));
 	}
 
 	public function testLast(){
 
 		$last = end($this->rawarr);
 
-		$this->assertEquals($this->arr->last(), $last);
+		$this->assertTrue($this->arr->last()->equals($last));
 	}
 
 	public function testFlat(){

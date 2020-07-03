@@ -11,7 +11,7 @@ class Arr{
 		$this->arr = $arr;
 	}
 
-	public function getNew(array $arr){
+	public static function create(array $arr){
 
 		return new self($arr);
 	}
@@ -21,16 +21,47 @@ class Arr{
 		return $this->only(0);
 	}
 
+	public function length(){
+
+		return count($this->arr);
+	}
+
 	public function only(int $num){
 
-		return count($this->arr) == $num;
+		return $this->length() == $num;
+	}
+
+	public function reset():void{
+
+		reset($this->arr);
+	}
+
+	public function key(){
+
+		return key($this->arr);
+	}
+
+	public function current(){
+
+		$curr_elem = current($this->arr);
+
+		return new ValueObject($curr_elem);
+	}
+
+	public function next(){
+
+		$curr_elem = $this->current();
+
+		$next_elem = next($this->arr);
+
+		return $curr_elem != $next_elem;
 	}
 
 	public function last(){
 
 		$last_elem = end($this->arr);
 
-		return $last_elem;
+		return new ValueObject($last_elem);
 	}
 
 	public function map(array $maps){
@@ -48,6 +79,8 @@ class Arr{
 	}
 
 	public static function flat($arr){
+
+		$result = array();
 
 		$it = new \RecursiveIteratorIterator(new \RecursiveArrayIterator($arr));
 
