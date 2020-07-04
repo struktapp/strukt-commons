@@ -2,16 +2,21 @@
 
 namespace Strukt\Util;
 
-class Number{
+class Number extends \Strukt\Contract\ValueObject{
 
-	private $number;
+	private $val;
 
 	public function __construct($number = 0){
 
 		if(!is_numeric($number))
 			throw new \Exception(sprintf("Must use numeral, %s given!", gettype($number)));
 			
-		$this->number = $number;
+		$this->val = $number;
+	}
+
+	public static function create($number = 0){
+
+		return new self($number);
 	}
 
 	private static function objectify($number){
@@ -39,7 +44,7 @@ class Number{
 
 		$number = Number::deject($number);
 	
-		return new Number($this->number + $number);
+		return new Number($this->val + $number);
 	}
 
 	public function subtract($number){
@@ -55,28 +60,28 @@ class Number{
 
 		$number = Number::deject($number);
 
-		return new Number($number*$this->number);
+		return new Number($number*$this->val);
 	}
 
 	public function parts($number){
 
 		$number = Number::deject($number);
 
-		return new Number($this->number/$number);
+		return new Number($this->val/$number);
 	}
 
 	public function mod($number){
 
 		$number = Number::deject($number);
 
-		return new Number($this->number%$number);
+		return new Number($this->val%$number);
 	}
 
 	public function raise($number){
 
 		$number = Number::deject($number);
 
-		return new Number(pow($this->number, $number));
+		return new Number(pow($this->val, $number));
 	}
 
 	public function ratio(){
@@ -99,28 +104,28 @@ class Number{
 
 	public function negate(){
 
-		return new Number(-1*$this->number);
+		return new Number(-1*$this->val);
 	}
 
 	public function equals($number){
 
 		$number = Number::deject($number);
 
-		return $this->number == $number;
+		return $this->val == $number;
 	}
 
 	public function gt($number){
 
 		$number = Number::deject($number);
 
-		return $this->number > $number;
+		return $this->val > $number;
 	}
 
 	public function lt($number){
 
 		$number = Number::deject($number);
 
-		return $this->number < $number;
+		return $this->val < $number;
 	}
 
 	public function lte($number){
@@ -135,20 +140,20 @@ class Number{
 
 	public function type(){
 
-		return gettype($this->number);
+		return gettype($this->val);
 	}
 
 	public function yield(){
 
-		if(!is_numeric($this->number))
+		if(!is_numeric($this->val))
 			new \Strukt\Raise("NaN");
 
-		return $this->number;
+		return $this->val;
 	}
 
 	public function __toString(){
 
-		return (string) $this->number;
+		return (string) $this->val;
 	}
 
 	public static function random($qty, $min=null, $max=null){

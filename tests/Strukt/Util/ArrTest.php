@@ -25,8 +25,10 @@ class ArrTest extends PHPUnit\Framework\TestCase{
 	public function testItr(){
 
 		$this->assertTrue($this->arr->current()->equals($this->rawarr["othernames"]));
-		$this->arr->next();
+		$this->assertTrue($this->arr->next());
 		$this->assertTrue($this->arr->current()->equals($this->rawarr["surname"]));
+		$this->arr->last();
+		$this->assertFalse($this->arr->next());
 		$this->arr->last();
 		$this->assertTrue($this->arr->current()->equals($this->rawarr["contact"]));
 		$this->arr->reset();

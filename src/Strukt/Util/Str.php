@@ -8,37 +8,37 @@ class Str{
 
 	public function __construct($str = ""){
 
-		$this->str = (string)$str;
+		$this->val = (string)$str;
 	}
 
-	public static function getNew($str){
+	public static function create($str){
 
 		return new self($str);
 	}
 
 	public function prepend($str){
 
-		return new Str(sprintf("%s%s", $str, $this->str));
+		return new Str(sprintf("%s%s", $str, $this->val));
 	}
 
 	public function concat($str){
 
-		return new Str(sprintf("%s%s", $this->str, $str));
+		return new Str(sprintf("%s%s", $this->val, $str));
 	}
 
 	public function len(){
 
-		return strlen($this->str);
+		return strlen($this->val);
 	}
 
 	public function count($needle){
 
-		return substr_count($this->str, $needle);
+		return substr_count($this->val, $needle);
 	}
 
 	public function split($delimiter){
 
-		return explode($delimiter, $this->str);
+		return explode($delimiter, $this->val);
 	}
 
 	public function slice($start, $length = null){
@@ -46,17 +46,17 @@ class Str{
 		if(is_null($length))
 			$length = $this->len();
 
-		return new Str(substr($this->str, $start, $length));
+		return new Str(substr($this->val, $start, $length));
 	}
 
 	public function toUpper(){
 
-		return new Str(strtoupper($this->str));
+		return new Str(strtoupper($this->val));
 	}
 
 	public function toLower(){
 
-		return new Str(strtolower($this->str));
+		return new Str(strtolower($this->val));
 	}
 
 	/**
@@ -66,7 +66,7 @@ class Str{
 
 		$pattern = "/(?<=\d)(?=[A-Za-z])|(?<=[A-Za-z])(?=\d)|(?<=[a-z])(?=[A-Z])/";
 
-		$newStr = new Str(preg_replace($pattern, "_", $this->str));
+		$newStr = new Str(preg_replace($pattern, "_", $this->val));
 	
     	return $newStr->toLower();
 	}
@@ -77,7 +77,7 @@ class Str{
 
 			return ucfirst($part);
 
-		}, preg_split("/[_ ]/", $this->str)));
+		}, preg_split("/[_ ]/", $this->val)));
 
 		return new Str($newStr);
 	}
@@ -87,7 +87,7 @@ class Str{
 	*/
 	public function startsWith($needle){
 
-		$strNeedle = Str::getNew($needle);
+		$strNeedle = Str::create($needle);
 
 	    $length = $strNeedle->len();
 
@@ -96,7 +96,7 @@ class Str{
 
 	public function endsWith($needle){
 
-		$strNeedle = Str::getNew($needle);
+		$strNeedle = Str::create($needle);
 
 	    $length = $strNeedle->len();
 
@@ -108,22 +108,22 @@ class Str{
 
 	public function contains($needle){
 
-		return strpos($this->str, $needle) !== false;
+		return strpos($this->val, $needle) !== false;
 	}
 
 	public function equals($str){
 
 		$str = (string)$str;
 
-		return $this->str === $str;
+		return $this->val === $str;
 	}
 
 	public function at($needle, $offset = null){
 
 		if(is_null($offset))
-			return strpos($this->str, $needle);
+			return strpos($this->val, $needle);
 
-		return strpos($this->str, $needle, $offset);
+		return strpos($this->val, $needle, $offset);
 	}
 
 	/**
@@ -132,9 +132,9 @@ class Str{
 	public function startBackwardFindAt($needle, $offset = null){
 
 		if(is_null($offset))
-			return strrpos($this->str, $needle);
+			return strrpos($this->val, $needle);
 
-		return strrpos($this->str, $needle, $offset);
+		return strrpos($this->val, $needle, $offset);
 	}
 
 	/**
@@ -142,27 +142,27 @@ class Str{
 	*/
 	public function btwn($from, $to){
 
-		$sub = $this->slice($this->at($from) + Str::getNew($from)->len(), $this->len());
+		$sub = $this->slice($this->at($from) + Str::create($from)->len(), $this->len());
 
 		return $sub->slice(0, $sub->at($to));
 	}
 
 	public function replace($search, $replace){
 
-		return new Str(str_replace($search, $replace, $this->str));
+		return new Str(str_replace($search, $replace, $this->val));
 	}
 
 	public function replaceAt($replace, $start, $length = null){
 
 		if(is_null($length))
-			return new Str(substr_replace($this->str, $replace, $start));
+			return new Str(substr_replace($this->val, $replace, $start));
 
-		return new Str(substr_replace($this->str, $replace, $start, $length));
+		return new Str(substr_replace($this->val, $replace, $start, $length));
 	}
 
 	public function replaceFirst($search, $replace){
 
-    	return new Str(preg_replace("/".$search."/", $replace, $this->str, 1));
+    	return new Str(preg_replace("/".$search."/", $replace, $this->val, 1));
 	}
 
 	/**
@@ -176,7 +176,7 @@ class Str{
 	    $pos = $this->startBackwardFindAt($search);
 
 	    if($pos !== false)
-	        return $this->replaceAt($replace, $pos, Str::getNew($search)->len());
+	        return $this->replaceAt($replace, $pos, Str::create($search)->len());
 
 	    return $this;
 	}
@@ -193,7 +193,7 @@ class Str{
 
 	public function isEmpty(){
 
-		return empty($this->str);
+		return empty($this->val);
 	}
 
 	public function isRegEx($string) {
@@ -203,6 +203,6 @@ class Str{
 
 	public function __toString(){
 
-		return $this->str;
+		return $this->val;
 	}
 }

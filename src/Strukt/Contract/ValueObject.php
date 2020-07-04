@@ -1,6 +1,6 @@
 <?php
 
-namespace Strukt\Util;
+namespace Strukt\Contract;
 
 class ValueObject{
 
@@ -16,7 +16,7 @@ class ValueObject{
 		return new self($val);
 	}
 
-	public function get(){
+	public function yield(){
 
 		return $this->val;
 	}

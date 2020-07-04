@@ -2,13 +2,15 @@
 
 namespace Strukt\Util;
 
-class Arr{
+use Strukt\Contract\ValueObject as ValueObject; 
+
+class Arr extends ValueObject{
 
 	private $arr;
 
 	public function __construct(array $arr){
 
-		$this->arr = $arr;
+		$this->val = $arr;
 	}
 
 	public static function create(array $arr){
@@ -23,7 +25,7 @@ class Arr{
 
 	public function length(){
 
-		return count($this->arr);
+		return count($this->val);
 	}
 
 	public function only(int $num){
@@ -33,33 +35,31 @@ class Arr{
 
 	public function reset():void{
 
-		reset($this->arr);
+		reset($this->val);
 	}
 
 	public function key(){
 
-		return key($this->arr);
+		return key($this->val);
 	}
 
 	public function current(){
 
-		$curr_elem = current($this->arr);
+		$curr_elem = current($this->val);
 
 		return new ValueObject($curr_elem);
 	}
 
 	public function next(){
 
-		$curr_elem = $this->current();
+		$elem_exists = !!next($this->val);
 
-		$next_elem = next($this->arr);
-
-		return $curr_elem != $next_elem;
+		return $elem_exists;
 	}
 
 	public function last(){
 
-		$last_elem = end($this->arr);
+		$last_elem = end($this->val);
 
 		return new ValueObject($last_elem);
 	}
@@ -67,7 +67,7 @@ class Arr{
 	public function map(array $maps){
 
 		$builder = \Strukt\Builder\CollectionBuilder::getInstance();
-		$collection = $builder->fromAssoc($this->arr);
+		$collection = $builder->fromAssoc($this->val);
 
 		foreach($maps as $key=>$name){
 
@@ -93,10 +93,5 @@ class Arr{
 		}
 
 		return $result;
-	}
-
-	public function yield(){
-
-		return $this->arr; 
 	}
 }

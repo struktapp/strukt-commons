@@ -84,8 +84,8 @@ class DateTime extends \DateTime{
 
 	    if($this->gt($today))
 	     	return sprintf("in %s", implode(', ', $string));
-	    else
-	     	return sprintf("%s ago", implode(', ', $string));
+	    
+	    return sprintf("%s ago", implode(', ', $string));
 	}
 
 	public function gte(\DateTime $to){
