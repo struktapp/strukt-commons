@@ -4,7 +4,7 @@ namespace Strukt\Contract;
 
 class ValueObject{
 
-	private $val;
+	protected $val;
 
 	public function __construct($val){
 

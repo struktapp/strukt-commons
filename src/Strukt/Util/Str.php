@@ -2,16 +2,14 @@
 
 namespace Strukt\Util;
 
-class Str{
+class Str extends \Strukt\Contract\ValueObject{
 
-	private $str;
+	public function __construct(string $str = ""){
 
-	public function __construct($str = ""){
-
-		$this->val = (string)$str;
+		parent::__construct($str);
 	}
 
-	public static function create($str){
+	public static function create(string $str = ""){
 
 		return new self($str);
 	}

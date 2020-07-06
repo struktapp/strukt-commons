@@ -4,8 +4,6 @@ namespace Strukt\Util;
 
 class Number extends \Strukt\Contract\ValueObject{
 
-	private $val;
-
 	public function __construct($number = 0){
 
 		if(!is_numeric($number))

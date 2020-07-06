@@ -36,6 +36,41 @@ class ArrTest extends PHPUnit\Framework\TestCase{
 		$this->assertEquals($this->arr->key(), "othernames");
 	}
 
+	public function testEach(){
+
+		$val = array(
+
+			"firstname"=>"Peter",
+			"second_name"=>"Pan",
+			"last_name"=>"Joe"
+		);
+
+		$arr = Strukt\Util\Arr::create($val)->each(function($key, $val){
+
+			if($key == "last_name")
+				$val = "Dennis";
+
+			return $val;
+		});
+
+		$this->assertTrue($arr->last()->equals("Dennis"));
+	}
+
+	public function testRecurItr(){
+
+		$arr = Strukt\Util\Arr::create($this->rawarr)->recur(function($key, $val){
+
+			if($key == "mobile")
+				$val = "N/A";
+
+			return $val;
+		});
+
+		$newarr = $arr->yield();
+
+		$this->assertEquals($newarr["contact"]["mobile"], "N/A");
+	}
+
 	public function testEmpty(){
 
 		$this->assertFalse($this->arr->empty());
@@ -58,22 +93,16 @@ class ArrTest extends PHPUnit\Framework\TestCase{
 		$nested = array(
 
 			array(
-
 				"name" => "pitsolu"
 			),
 			array(
-
 				array(
-
 					"phone" => "0800-PITSOLU"
 				)
 			),
 			array(
-
 				array(
-
 					array(
-
 						"email" => "pitsolu@gmail.com"
 					)
 				)
@@ -87,7 +116,7 @@ class ArrTest extends PHPUnit\Framework\TestCase{
 			"email" => "pitsolu@gmail.com"
 		);
 
-		$this->assertEquals($flattened, \Strukt\Util\Arr::flat($nested));
+		$this->assertEquals($flattened, Strukt\Util\Arr::level($nested));
 	}
 
 	public function testMap(){

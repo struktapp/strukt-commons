@@ -6,14 +6,15 @@ use Strukt\Contract\ValueObject as ValueObject;
 
 class Arr extends ValueObject{
 
-	private $arr;
-
 	public function __construct(array $arr){
 
 		$this->val = $arr;
 	}
 
-	public static function create(array $arr){
+	public static function create($arr){
+
+		if(!is_array($arr))
+			new \Strukt\Raise(sprintf("%s::create requires an array!", static::class));
 
 		return new self($arr);
 	}
@@ -64,6 +65,31 @@ class Arr extends ValueObject{
 		return new ValueObject($last_elem);
 	}
 
+	public function each(\Closure $func){
+
+		$each = new \Strukt\Event\Event($func);
+
+		foreach($this->val as $key=>$val)
+			$this->val[$key] = $each->apply($key, $val)->exec();
+
+		return $this;
+	}
+
+	public function recur(\Closure $func){
+
+		$each = new \Strukt\Event\Event($func);
+
+		foreach($this->val as $key=>$val){
+
+			if(!is_array($val))
+				$this->val[$key] = $each->apply($key, $val)->exec();
+			else
+				$this->val[$key] = self::create($val)->each($func)->yield();
+		}
+
+		return $this;
+	}
+
 	public function map(array $maps){
 
 		$builder = \Strukt\Builder\CollectionBuilder::getInstance();
@@ -78,7 +104,7 @@ class Arr extends ValueObject{
 		return $arr;
 	}
 
-	public static function flat($arr){
+	public static function level(array $arr){
 
 		$result = array();
 
