@@ -161,3 +161,56 @@ $sdo->concat(" = Strukt Do");//Doctrine + Strukt Framework = Strukt Do
 $str->split(" ");//['Strukt', "Framework"]
 (new Str("blah blah blah"))->count("blah");//3
 ```
+
+## Array
+
+```php
+use Strukt\Util\Arr;
+
+$rr = array(
+
+    "firstname"=>"Bruce",
+    "lastname"=>"Wayne",
+    "alias"=>"Joker",
+    "contacts" =>array(
+        "email"=>"brucewayne@wayneent.com",
+        "address"=>array(
+
+            "street"=>"Boulavard of Broken Dreams",
+            "building"=>"Wayne Co."
+        )
+    )
+);
+
+$arr = new Arr($rr);//Arr::create($rr)
+$arr->empty();//false
+$arr->length();//3
+$arr->only(3);//true
+$arr->next();//true
+$arr->current()->yield();//Wayne
+$arr->key();//lastname
+$arr->last()->equals($rr["contacts"]);
+$arr->reset();
+$arr = $arr->each(function($key, $val){ //loop
+
+    if($key == "alias")
+        $val = "Batman";
+
+    return $val;
+});
+$arr = $arr->recur(function($key, $val){ //recursive iterate 
+
+    if($key == "building")
+        $val = "Wayne Co. & Associates";
+
+    return $val;
+});
+$origarr = $arr->yield();
+$rawarr = $arr->map(array( //reformat array
+
+    "email_contact"=>"contacts.email",
+    "address_street"=>"contacts.address.street",
+    "address_building"=>"contacts.address.building"
+));
+$flatarr = Arr::level($rr);//flattens multidimentional array
+```
