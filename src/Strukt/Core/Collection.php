@@ -57,6 +57,16 @@ class Collection{
 	}
 
 	/**
+	* Getter for collection keys
+	* 
+	* @return array
+	*/
+	public function getKeys():array{
+
+		return array_keys($this->collection);
+	}
+
+	/**
 	* Setter for collection items
 	*
 	* @param string $key
