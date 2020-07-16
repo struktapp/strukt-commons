@@ -1,5 +1,8 @@
 <?php
 
+use Strukt\Core\Collection;
+use Strukt\Builder\Collection as CollectionBuilder;
+
 class CollectionBuilderTest extends PHPUnit\Framework\TestCase{
 
 	public function testBuilder(){
@@ -26,9 +29,9 @@ class CollectionBuilderTest extends PHPUnit\Framework\TestCase{
 			)
 		);
 
-		$x = Strukt\Builder\CollectionBuilder::getInstance()->fromAssoc($s);
+		$x = CollectionBuilder::create()->fromAssoc($s);
 
-		$c = new \Strukt\Core\Collection("config");
+		$c = new Collection("config");
 		$c->set("username", "root");
 		$c->set("password", "_root!");
 

@@ -39,7 +39,7 @@ class Registry{
 	*
 	* @return \Strukt\Framework\Registry
 	*/
-	public static function getInstance(){
+	public static function getSingleton(){
 
 		if(is_null(static::$registry))
 			static::$registry = new self;

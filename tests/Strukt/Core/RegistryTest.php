@@ -1,15 +1,19 @@
 <?php
 
+use Strukt\Builder\Collection as CollectionBuilder;
+use Strukt\Core\Registry;
+use Strukt\Core\Collection;
+
 class RegistryTest extends PHPUnit\Framework\TestCase{
 
 	public function testRegistry(){
 
-		$r = \Strukt\Core\Registry::getInstance();
+		$r = Registry::getSingleton();
 		$r->set("user.firstname", "Donald");
 		$r->set("user.surname", "Trump");
 
 		$u = $r->get("user");
-		$c = \Strukt\Builder\CollectionBuilder::getInstance(new \Strukt\Core\Collection($u->getName()))
+		$c = CollectionBuilder::create(new Collection($u->getName()))
 			->fromAssoc(array(
 
 				"firstname"=>"Donald",
@@ -22,7 +26,7 @@ class RegistryTest extends PHPUnit\Framework\TestCase{
 
 	public function testPersistence(){
 
-		$r = \Strukt\Core\Registry::getInstance();
+		$r = \Strukt\Core\Registry::getSingleton();
 		
 		$this->assertEquals($r->get("user.surname"), "Trump");
 	}

@@ -3,6 +3,9 @@
 namespace Strukt\Util;
 
 use Strukt\Contract\ValueObject as ValueObject; 
+use Strukt\Builder\Collection as CollectionBuilder;
+use Strukt\Raise;
+use Strukt\Event\Event;
 
 class Arr extends ValueObject{
 
@@ -14,7 +17,7 @@ class Arr extends ValueObject{
 	public static function create($arr){
 
 		if(!is_array($arr))
-			new \Strukt\Raise(sprintf("%s::create requires an array!", static::class));
+			new Raise(sprintf("%s::create requires an array!", static::class));
 
 		return new self($arr);
 	}
@@ -67,7 +70,7 @@ class Arr extends ValueObject{
 
 	public function each(\Closure $func){
 
-		$each = new \Strukt\Event\Event($func);
+		$each = new Event($func);
 
 		foreach($this->val as $key=>$val)
 			$this->val[$key] = $each->apply($key, $val)->exec();
@@ -77,7 +80,7 @@ class Arr extends ValueObject{
 
 	public function recur(\Closure $func){
 
-		$each = new \Strukt\Event\Event($func);
+		$each = new Event($func);
 
 		foreach($this->val as $key=>$val){
 
@@ -92,8 +95,7 @@ class Arr extends ValueObject{
 
 	public function map(array $maps){
 
-		$builder = \Strukt\Builder\CollectionBuilder::getInstance();
-		$collection = $builder->fromAssoc($this->val);
+		$collection = CollectionBuilder::create()->fromAssoc($this->val);
 
 		foreach($maps as $key=>$name){
 

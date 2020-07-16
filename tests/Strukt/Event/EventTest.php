@@ -1,27 +1,29 @@
 <?php
 
+use Strukt\Event\Event;
+
 class EventTest extends PHPUnit\Framework\TestCase{
 
 	public function testExec(){
 
-		$sHelloWorld = "Hello World";
+		$adele = "Hello World";
 
-		$helloWorld = new Strukt\Event\Event(function() use($sHelloWorld){
+		$helloWorld = Event::create(function() use($adele){
 
-			return $sHelloWorld;
+			return $adele;
 		});
 
-		$this->assertEquals($sHelloWorld, $helloWorld->exec());
+		$this->assertEquals($adele, $helloWorld->exec());
 	}
 
 	public function testParamType(){
 
-		$forEach = new Strukt\Event\Event(function(Array $list){
+		$forEach = Event::create(function(Array $list){
 
 			//
 		});
 
-		$person = new Strukt\Event\Event(function(int $id, string $name){
+		$person = Event::create(function(int $id, string $name){
 
 			//
 		});
@@ -35,38 +37,38 @@ class EventTest extends PHPUnit\Framework\TestCase{
 
 		$credentials = array("admin", "p@55w0rd");
 
-		$isLoginSuccess = new Strukt\Event\Event(function($username, $password) use ($credentials){
+		$login = Event::create(function($username, $password) use ($credentials){
 
 			return $username == reset($credentials) && $password == end($credentials);
 		});
 
 		list($username, $password) = $credentials;
 
-		$this->assertTrue($isLoginSuccess->apply($username, $password)->exec());
+		$this->assertTrue($login->apply($username, $password)->exec());
 	}
 
 	public function testApplyArgsSequentialInput(){
 
 		$credentials = array("admin", "p@55w0rd");
 
-		$isLoginSuccess = new Strukt\Event\Event(function($username, $password) use ($credentials){
+		$login = Event::create(function($username, $password) use ($credentials){
 
 			return $username == reset($credentials) && $password == end($credentials);
 		});
 
-		$this->assertTrue($isLoginSuccess->applyArgs($credentials)->exec());
+		$this->assertTrue($login->applyArgs($credentials)->exec());
 	}
 
 	public function testApplyArgsAssocInput(){
 
 		$credentials = array("password"=>"p@55w0rd", "username"=>"admin");
 
-		$isLoginSuccess = new Strukt\Event\Event(function($username, $password) use ($credentials){
+		$login = Event::create(function($username, $password) use ($credentials){
 
 			return $username == $credentials["username"] && $password == $credentials["password"];
 		});
 
-		$this->assertTrue($isLoginSuccess->applyArgs($credentials)->exec());
+		$this->assertTrue($login->applyArgs($credentials)->exec());
 	}
 
 	public function testReflectedMethodClosure(){
@@ -75,6 +77,6 @@ class EventTest extends PHPUnit\Framework\TestCase{
 		$m = $r->getMethod("getId");
 		$c = $m->getClosure($r->newInstance());
 
-		$this->assertTrue(is_object(new Strukt\Event\Event($c)));
+		$this->assertTrue(is_object(new Event($c)));
 	}
 }

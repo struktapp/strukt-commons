@@ -2,12 +2,14 @@
 
 namespace Strukt\Util;
 
+use Strukt\Raise;
+
 class Str extends \Strukt\Contract\ValueObject{
 
 	public function __construct($str){
 
 		if(!is_string($str))
-			new \Strukt\Raise(sprintf("%s requires string!", static::class));
+			new Raise(sprintf("%s requires string!", static::class));
 
 		parent::__construct($str);
 	}

@@ -1,6 +1,8 @@
 <?php
 
 use Strukt\Core\Collection;
+use Strukt\Exception\KeyOverlapException;
+use Strukt\Exception\KeyNotFoundException;
 
 class CollectionTest extends PHPUnit\Framework\TestCase{
 
@@ -37,14 +39,14 @@ class CollectionTest extends PHPUnit\Framework\TestCase{
 
 	function testExpectValueOnValueException(){
 
-		$this->expectException(Strukt\Exception\KeyOverlapException::class);
+		$this->expectException(KeyOverlapException::class);
 
 		$this->collection->set("firstname", "_Gene_");
 	}
 
 	function testExpectNonExistentKeyException(){
 
-		$this->expectException(Strukt\Exception\KeyNotFoundException::class);
+		$this->expectException(KeyNotFoundException::class);
 
 		$this->collection->get("middlename");
 	}

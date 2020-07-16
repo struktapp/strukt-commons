@@ -2,6 +2,7 @@
 
 use Strukt\Core\Map;
 use Strukt\Core\Collection;
+use Strukt\Exception\KeyOverlapException;
 
 class MapTest extends PHPUnit\Framework\TestCase{
 
@@ -35,7 +36,7 @@ class MapTest extends PHPUnit\Framework\TestCase{
 
 	function testExpectValueOnValueException(){
 
-		$this->expectException(Strukt\Exception\KeyOverlapException::class);
+		$this->expectException(KeyOverlapException::class);
 
 		$this->map->set("db", "_Gene_");
 	}

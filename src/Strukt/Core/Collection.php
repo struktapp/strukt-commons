@@ -5,6 +5,7 @@ namespace Strukt\Core;
 use Strukt\Exception\KeyOverlapException;
 use Strukt\Exception\KeyNotFoundException;
 use Strukt\Exception\InvalidKeyException;
+use Strukt\Builder\Collection as CollectionBuilder;
 
 /**
 * Collection class
@@ -164,7 +165,7 @@ class Collection{
 	* @param mixed $val
 	* @param \Strukt\Core\Collection $collection
 	*/
-	public static function marshal($hashKey, $newVal, \Strukt\Core\Collection $collection){
+	public static function marshal($hashKey, $newVal, Collection $collection){
 
 		if($collection->exists($hashKey))
 			if(!empty($collection->get($hashKey)))
@@ -179,20 +180,20 @@ class Collection{
 			if($collection->exists($key)){
 
 				$val = $collection->get($key);
-				if($val instanceof \Strukt\Core\Collection)
+				if($val instanceof Collection)
 					$collection = $val;
 
 				continue;
 			}
 
-			$obj = new \Strukt\Core\Collection();
+			$obj = new Collection();
 			$collection->set($key, $obj);
 			$collection = $obj;
 		}
 
 		if(is_array($newVal))
 			if(is_array(reset($newVal)))
-				$newVal = \Strukt\Builder\CollectionBuilder::getInstance()->fromAssoc($newVal);
+				$newVal = CollectionBuilder::create()->fromAssoc($newVal);
 
 		$collection->set($lastKey, $newVal);
 	}

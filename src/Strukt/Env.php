@@ -10,7 +10,7 @@ class Env{
 
 		$key = sprintf("env.%s", $key);
 
-		$registry = Registry::getInstance();
+		$registry = Registry::getSingleton();
 
 		if(!$registry->exists($key))
 			throw new \Exception(sprintf("Couldn't get [%s], may not be set by %s!", $key, __CLASS__));
@@ -24,6 +24,6 @@ class Env{
 			throw new \Exception(sprintf("%s::set(key,val) key and val must be strings!", 
 											get_class($this)));
 			
-		Registry::getInstance()->set(sprintf("env.%s", $key), $val);
+		Registry::getSingleton()->set(sprintf("env.%s", $key), $val);
 	}
 }

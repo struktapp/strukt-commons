@@ -56,7 +56,7 @@ class Event{
 	*
 	* @param $event \Closure
 	*/
-	public static function newEvent(\Closure $event){
+	public static function create(\Closure $event){
 
 		return new self($event);
 	}

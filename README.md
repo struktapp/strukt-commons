@@ -47,10 +47,10 @@ $s = array(
         )
     )
 );
-//use Strukt\Builder\CollectionBuilder
+//use Strukt\Builder\Collection as CollectionBuilder
 //use Strukt\Core\Collection
-// $x = CollectionBuilder::getInstance(new Collection())->fromAssoc($s);
-// $b = CollectionBuilder(new Collection());
+// $x = CollectionBuilder::create(new Collection())->fromAssoc($s);
+// $b = new CollectionBuilder(new Collection());
 $b = new CollectionBuilder();
 $x = $b->fromAssoc($s); //returns \Collection
 ```
@@ -76,7 +76,7 @@ Both `Map` and `Collection` have functions `set` , `get` , `exist` , `remove` Th
 //use Strukt\Event\Event
 $credentials = array("username"=>"admin", "password"=>"p@55w0rd");
 
-$login = Event::newEvent(function($username, $password) use($credentials){
+$login = Event::create(function($username, $password) use($credentials){
 
     return $username == $credentials["username"] && $password == $credentials["password"];
 });

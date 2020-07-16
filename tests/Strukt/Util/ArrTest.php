@@ -1,5 +1,7 @@
 <?php
 
+use Strukt\Util\Arr;
+
 class ArrTest extends PHPUnit\Framework\TestCase{
 
 	public function setUp():void{
@@ -19,7 +21,7 @@ class ArrTest extends PHPUnit\Framework\TestCase{
 			)
 		);
 
-		$this->arr = new \Strukt\Util\Arr($this->rawarr);
+		$this->arr = new Arr($this->rawarr);
 	}
 
 	public function testItr(){
@@ -45,7 +47,7 @@ class ArrTest extends PHPUnit\Framework\TestCase{
 			"last_name"=>"Joe"
 		);
 
-		$arr = Strukt\Util\Arr::create($val)->each(function($key, $val){
+		$arr = Arr::create($val)->each(function($key, $val){
 
 			if($key == "last_name")
 				$val = "Dennis";
@@ -58,7 +60,7 @@ class ArrTest extends PHPUnit\Framework\TestCase{
 
 	public function testRecurItr(){
 
-		$arr = Strukt\Util\Arr::create($this->rawarr)->recur(function($key, $val){
+		$arr = Arr::create($this->rawarr)->recur(function($key, $val){
 
 			if($key == "mobile")
 				$val = "N/A";
@@ -116,7 +118,7 @@ class ArrTest extends PHPUnit\Framework\TestCase{
 			"email" => "pitsolu@gmail.com"
 		);
 
-		$this->assertEquals($flattened, Strukt\Util\Arr::level($nested));
+		$this->assertEquals($flattened, Arr::level($nested));
 	}
 
 	public function testMap(){
