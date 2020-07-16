@@ -14,17 +14,17 @@ class Str extends \Strukt\Contract\ValueObject{
 		parent::__construct($str);
 	}
 
-	public static function create($str){
+	public static function create(string $str){
 
 		return new self($str);
 	}
 
-	public function prepend($str){
+	public function prepend(string $str){
 
 		return new Str(sprintf("%s%s", $str, $this->val));
 	}
 
-	public function concat($str){
+	public function concat(string $str){
 
 		return new Str(sprintf("%s%s", $this->val, $str));
 	}
@@ -34,22 +34,31 @@ class Str extends \Strukt\Contract\ValueObject{
 		return strlen($this->val);
 	}
 
-	public function count($needle){
+	/**
+	* Count the number of substring occurrences
+	*/
+	public function count(string $needle){
 
 		return substr_count($this->val, $needle);
 	}
 
-	public function split($delimiter){
+	/**
+	* Explode string
+	*/
+	public function split(string $delimiter){
 
 		return explode($delimiter, $this->val);
 	}
 
-	public function slice($start, $length = null){
+	/**
+	* Extracts parts of a string and returns the extracted parts in a new string
+	*/
+	public function slice(int $start, int $length = null){
 
 		if(is_null($length))
 			$length = $this->len();
 
-		return new Str(substr($this->val, $start, $length));
+		return $this->part($start, $length);
 	}
 
 	public function toUpper(){
@@ -69,39 +78,39 @@ class Str extends \Strukt\Contract\ValueObject{
 
 		$pattern = "/(?<=\d)(?=[A-Za-z])|(?<=[A-Za-z])(?=\d)|(?<=[a-z])(?=[A-Z])/";
 
-		$newStr = new Str(preg_replace($pattern, "_", $this->val));
+		$str = new Str(preg_replace($pattern, "_", $this->val));
 	
-    	return $newStr->toLower();
+    	return $str->toLower();
 	}
 
-	public function toCamel($first = false){
+	public function toCamel(){
 
-		$newStr = implode("", array_map(function($part){
+		$str = implode("", array_map(function($part){
 
 			return ucfirst($part);
 
 		}, preg_split("/[_ ]/", $this->val)));
 
-		return new Str($newStr);
+		return new Str($str);
 	}
 
 	/**
 	* @link https://goo.gl/fj7W89
 	*/
-	public function startsWith($needle){
+	public function startsWith(string $needle){
 
-		$strNeedle = Str::create($needle);
+		$oNeedle = Str::create($needle);
 
-	    $length = $strNeedle->len();
+	    $length = $oNeedle->len();
 
 	    return $this->slice(0, $length)->equals($needle);
 	}
 
-	public function endsWith($needle){
+	public function endsWith(string $needle){
 
-		$strNeedle = Str::create($needle);
+		$oNeedle = Str::create($needle);
 
-	    $length = $strNeedle->len();
+	    $length = $oNeedle->len();
 
 	    if($length == 0)
 	        return true;
@@ -109,19 +118,22 @@ class Str extends \Strukt\Contract\ValueObject{
 	    return $this->slice(-$length)->equals($needle);
 	}
 
-	public function contains($needle){
+	public function contains(string $needle){
 
 		return strpos($this->val, $needle) !== false;
 	}
 
-	public function equals($str){
+	public function equals(string $str){
 
 		$str = (string)$str;
 
 		return $this->val === $str;
 	}
 
-	public function at($needle, $offset = null){
+	/**
+	* Find the position of the first occurrence of a substring in a string
+	*/
+	public function at(string $needle, $offset = null){
 
 		if(is_null($offset))
 			return strpos($this->val, $needle);
@@ -130,9 +142,9 @@ class Str extends \Strukt\Contract\ValueObject{
 	}
 
 	/**
-	* Opposite of (at) method
+	* Opposite of (Strukt\Util\Str::at) method
 	*/
-	public function startBackwardFindAt($needle, $offset = null){
+	public function startBackwardFindAt(string $needle, $offset = null){
 
 		if(is_null($offset))
 			return strrpos($this->val, $needle);
@@ -141,9 +153,11 @@ class Str extends \Strukt\Contract\ValueObject{
 	}
 
 	/**
+	* Extract a substring between two characters in a string
+	*
 	* @link https://goo.gl/2rBv3y
 	*/
-	public function btwn($from, $to){
+	public function btwn(string $from, string $to){
 
 		$sub = $this->slice($this->at($from) + Str::create($from)->len(), $this->len());
 
@@ -155,6 +169,10 @@ class Str extends \Strukt\Contract\ValueObject{
 		return new Str(str_replace($search, $replace, $this->val));
 	}
 
+	/**
+	* Replaces a copy of string delimited by the start and (optionally) 
+	* length parameters with the string given in replacement
+	*/
 	public function replaceAt($replace, $start, $length = null){
 
 		if(is_null($length))
@@ -163,12 +181,17 @@ class Str extends \Strukt\Contract\ValueObject{
 		return new Str(substr_replace($this->val, $replace, $start, $length));
 	}
 
+	/**
+	* Replace first occurence
+	*/
 	public function replaceFirst($search, $replace){
 
     	return new Str(preg_replace("/".$search."/", $replace, $this->val, 1));
 	}
 
 	/**
+	* Replace last occurence
+	*
 	* @link https://goo.gl/68KiQt
 	*/
 	public function replaceLast($search, $replace){
@@ -184,14 +207,28 @@ class Str extends \Strukt\Contract\ValueObject{
 	    return $this;
 	}
 
-	public function first($length){
+	/**
+	* Return part of string from beginning
+	*/
+	public function first(int $length){
 
 		return $this->slice(0, $length);
 	}
 
-	public function last($length){
+	/**
+	* Return part of string from end
+	*/
+	public function last(int $length){
 
 		return $this->slice($this->len()-$length, $this->len());
+	}
+
+	/**
+	* Return part of a string
+	*/
+	public function part(int $start, int $end){
+
+		return new Str(substr($this->val, $start, $end));
 	}
 
 	public function isEmpty(){
@@ -199,7 +236,7 @@ class Str extends \Strukt\Contract\ValueObject{
 		return empty($this->val);
 	}
 
-	public function isRegEx($string) {
+	public function isRegEx(string $string) {
 
 		return @preg_match($string, '') !== FALSE;
 	}
