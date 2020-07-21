@@ -123,7 +123,7 @@ class Str extends \Strukt\Contract\ValueObject{
 		return strpos($this->val, $needle) !== false;
 	}
 
-	public function equals(string $str){
+	public function equals($str){
 
 		$str = (string)$str;
 
