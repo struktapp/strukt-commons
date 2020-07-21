@@ -1,11 +1,11 @@
 <?php
 
-namespace Strukt\Util;
+namespace Strukt\Type;
 
 use Strukt\Contract\ValueObject as ValueObject; 
 use Strukt\Builder\Collection as CollectionBuilder;
 use Strukt\Raise;
-use Strukt\Event\Event;
+use Strukt\Event;
 
 class Arr extends ValueObject{
 

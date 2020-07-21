@@ -1,6 +1,6 @@
 <?php
 
-use Strukt\Util\Json;
+use Strukt\Type\Json;
 
 class JsonTest extends PHPUnit\Framework\TestCase{
 

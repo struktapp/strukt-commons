@@ -1,6 +1,6 @@
 <?php
 
-namespace Strukt\Util;
+namespace Strukt\Type;
 
 class Number extends \Strukt\Contract\ValueObject{
 

@@ -1,6 +1,6 @@
 <?php
 
-use Strukt\Util\Number;
+use Strukt\Type\Number;
 
 class NumberTest extends PHPUnit\Framework\TestCase{
 

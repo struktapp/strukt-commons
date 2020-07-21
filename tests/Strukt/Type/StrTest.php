@@ -1,6 +1,6 @@
 <?php
 
-use Strukt\Util\Str;
+use Strukt\Type\Str;
 
 class StrTest extends PHPUnit\Framework\TestCase{
 

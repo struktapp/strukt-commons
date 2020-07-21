@@ -1,6 +1,6 @@
 <?php
 
-use Strukt\Util\Arr;
+use Strukt\Type\Arr;
 
 class ArrTest extends PHPUnit\Framework\TestCase{
 

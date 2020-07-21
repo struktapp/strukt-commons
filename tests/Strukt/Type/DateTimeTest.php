@@ -4,8 +4,8 @@ class DateTimeTest extends PHPUnit\Framework\TestCase{
 
 	public function setUp():void{
 
-		$this->start = new \Strukt\Util\DateTime();
-		$this->end = new \Strukt\Util\DateTime("+30 days");
+		$this->start = new \Strukt\Type\DateTime();
+		$this->end = new \Strukt\Type\DateTime("+30 days");
 	}
 
 	public function testRandDateIsInBtwn(){

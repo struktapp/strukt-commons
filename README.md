@@ -19,7 +19,6 @@ $contact->set("work-phone", "+2540202345678");
 
 $user = new Collection("User");
 $user->set("contacts", $contact);
-
 $user->get("contacts.mobile"); //outputs +2540770123456
 ```
 
@@ -73,7 +72,7 @@ Both `Map` and `Collection` have functions `set` , `get` , `exist` , `remove` Th
 ## Events
 
 ```php
-//use Strukt\Event\Event
+//use Strukt\Event
 $credentials = array("username"=>"admin", "password"=>"p@55w0rd");
 
 $login = Event::create(function($username, $password) use($credentials){
@@ -90,7 +89,7 @@ $isLoggedIn = $login->getEvent()->apply("admin","p@55w0rd")->exec();
 ## Number
 
 ```php
-use Strukt\Util\Number;
+use Strukt\Type\Number;
 
 $num = new Number(1000);
 $num = $num->add(200);//1200
@@ -109,14 +108,14 @@ $num->lte(302501);//true lessthanorequals
 $num->negate()->equals(-302500)  
 $num->yield() //return native number
 Number::random(4, 10, 20); //return 4 random numbers between 10 and 20
-(new Number(10.1))->type();//double
+Number::create(10.1)->type();//double
 echo $num;//return native number
 ```
 
 ## DateTime
 
 ```php
-use Strukt\Util\DateTime;//inherits native \DateTime object
+use Strukt\Type\DateTime;//inherits native \DateTime object
 
 //DateTime::create("10-31-2010", "m-d-Y")
 //DateTime::fromTimestamp(1198998987)
@@ -138,7 +137,7 @@ echo $start; //return date as string
 ## String
 
 ```php
-use Strukt\Util\Str;
+use Strukt\Type\Str;
 
 $str = new Str("Strukt Framework");
 $str->startsWith("Str");//true
@@ -165,7 +164,7 @@ $str->split(" ");//['Strukt', "Framework"]
 ## Array
 
 ```php
-use Strukt\Util\Arr;
+use Strukt\Type\Arr;
 
 $rr = array(
 

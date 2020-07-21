@@ -1,6 +1,6 @@
 <?php
 
-namespace Strukt\Event;
+namespace Strukt;
 
 /**
 * Event Executor class
@@ -28,14 +28,14 @@ class Event{
 	*
 	* @var \ReflectionFunction
 	*/
-	private $reflEvent = null;
+	private $refEvent = null;
 
 	/**
 	* List of reflected parameters
 	*
 	* @var Array
 	*/
-	private $reflParams = null;
+	private $refParams = null;
 
 	/**
 	* Constructor
@@ -46,9 +46,9 @@ class Event{
 
 		$this->event = $event;
 
-		$this->reflEvent = new \ReflectionFunction($this->event);
+		$this->refEvent = new \ReflectionFunction($this->event);
 
-		$this->reflParams = $this->reflEvent->getParameters();
+		$this->refParams = $this->refEvent->getParameters();
 	}
 
 	/**
@@ -66,7 +66,7 @@ class Event{
 	*
 	* @param mixed ...
 	*
-	* @return \Strukt\Event\Single
+	* @return \Strukt\Event
 	*/
 	public function apply(){
 
@@ -80,7 +80,7 @@ class Event{
 	*
 	* @param $args Array
 	*
-	* @return \Strukt\Event\Single
+	* @return \Strukt\Event
 	*/
 	public function applyArgs(Array $args){
 
@@ -97,9 +97,9 @@ class Event{
 	public function getParams(){
 
 		$params = [];
-		foreach($this->reflParams as $reflParam){
+		foreach($this->refParams as $refParam){
 
-			$params[(string)$reflParam->getName()] = (string)$reflParam->getType();
+			$params[(string)$refParam->getName()] = (string)$refParam->getType();
 		}
 
 		return $params;
@@ -107,9 +107,9 @@ class Event{
 
 	public function expects($type){
 
-		foreach($this->reflParams as $reflParam)
-			if($reflParam->hasType())
-				if($type == $reflParam->getType())
+		foreach($this->refParams as $refParam)
+			if($refParam->hasType())
+				if($type == $refParam->getType())
 					return true;
 
 		return false;
@@ -125,19 +125,19 @@ class Event{
 		if(is_null($this->args))
 			return call_user_func($this->event);
 
-		if(!is_null($this->reflEvent)){
+		if(!is_null($this->refEvent)){
 			
 			$isNotAssoc = is_numeric(key($this->args));
 
 			$args=null;
 			if(!$isNotAssoc)
-				foreach($this->reflParams as $reflParam)
-					$args[] = $this->args[$reflParam->getName()];
+				foreach($this->refParams as $refParam)
+					$args[] = $this->args[$refParam->getName()];
 
 			if(!is_null($args))
 				$this->args = $args;
 
-			return $this->reflEvent->invokeArgs($this->args);
+			return $this->refEvent->invokeArgs($this->args);
 		}
 
 		return call_user_func_array($this->event, $this->args);				

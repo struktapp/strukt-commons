@@ -1,6 +1,6 @@
 <?php
 
-use Strukt\Event\Event;
+use Strukt\Event;
 
 class EventTest extends PHPUnit\Framework\TestCase{
 
