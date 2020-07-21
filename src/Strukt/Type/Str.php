@@ -14,7 +14,7 @@ class Str extends \Strukt\Contract\ValueObject{
 		parent::__construct($str);
 	}
 
-	public static function create(string $str){
+	public static function create($str){
 
 		return new self($str);
 	}
