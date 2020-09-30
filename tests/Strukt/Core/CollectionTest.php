@@ -14,12 +14,12 @@ class CollectionTest extends PHPUnit\Framework\TestCase{
 		$this->collection->set("username", "genewilder");
 	}
 
-	function testGetValue(){
+	public function testGetValue(){
 
 		$this->assertEquals($this->collection->get("firstname"), "Gene");
 	}
 
-	function testGetNestedValue(){
+	public function testGetNestedValue(){
 
 		$collection = new Collection("contacts");
 		$collection->set("mobile", "+2540770123456");
@@ -30,21 +30,21 @@ class CollectionTest extends PHPUnit\Framework\TestCase{
 		$this->assertEquals($this->collection->get("contacts.mobile"), $collection->get("mobile"));
 	}
 
-	function testRemoveValue(){
+	public function testRemoveValue(){
 
 		$this->collection->remove("surname");
 		
 		$this->assertFalse($this->collection->exists("surname"));
 	}
 
-	function testExpectValueOnValueException(){
+	public function testExpectValueOnValueException(){
 
 		$this->expectException(KeyOverlapException::class);
 
 		$this->collection->set("firstname", "_Gene_");
 	}
 
-	function testExpectNonExistentKeyException(){
+	public function testExpectNonExistentKeyException(){
 
 		$this->expectException(KeyNotFoundException::class);
 

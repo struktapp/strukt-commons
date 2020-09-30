@@ -3,6 +3,7 @@
 namespace Strukt;
 
 use Strukt\Core\Registry;
+use Strukt\Raise;
 
 class Env{
 
@@ -13,7 +14,7 @@ class Env{
 		$registry = Registry::getSingleton();
 
 		if(!$registry->exists($key))
-			throw new \Exception(sprintf("Couldn't get [%s], may not be set by %s!", $key, __CLASS__));
+			new Raise(sprintf("Couldn't get [%s], may not be set by %s!", $key, __CLASS__));
 
 		return $registry->get($key);
 	}
@@ -21,8 +22,7 @@ class Env{
 	public static function set($key, $val){
 
 		if(!is_string($key) && !is_string($val))
-			throw new \Exception(sprintf("%s::set(key,val) key and val must be strings!", 
-											get_class($this)));
+			new Raise(sprintf("%s::set(key,val) key and val must be strings!", get_class($this)));
 			
 		Registry::getSingleton()->set(sprintf("env.%s", $key), $val);
 	}

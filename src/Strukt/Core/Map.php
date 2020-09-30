@@ -35,6 +35,16 @@ class Map{
 	}
 
 	/**
+	* Getter for collection keys
+	* 
+	* @return array
+	*/
+	public function getKeys():array{
+
+		return $this->collection->getKeys();
+	}
+
+	/**
 	* Remove items from map
 	*
 	* @param string $hashKey
