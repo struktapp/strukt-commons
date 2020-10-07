@@ -7,6 +7,18 @@ use Strukt\Raise;
 
 class Env{
 
+	public static function withFile($path=".env"){
+
+		$lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+
+		foreach($lines as $line){
+
+			list($key, $val) = explode("=", $line);
+
+			static::set(trim($key), trim($val));
+		}
+	}
+
 	public static function get($key){
 
 		$key = sprintf("env.%s", $key);
@@ -22,7 +34,7 @@ class Env{
 	public static function set($key, $val){
 
 		if(!is_string($key) && !is_string($val))
-			new Raise(sprintf("%s::set(key,val) key and val must be strings!", get_class($this)));
+			new Raise(sprintf("%s::set(key,val) key and val must be strings!", __CLASS__));
 			
 		Registry::getSingleton()->set(sprintf("env.%s", $key), $val);
 	}
