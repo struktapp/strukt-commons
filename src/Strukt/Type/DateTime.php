@@ -2,14 +2,37 @@
 
 namespace Strukt\Type;
 
-class DateTime extends \DateTime{
+use Strukt\Core\Today;
+use Strukt\Contract\DateRange;
+use Strukt\Raise;
+
+class DateTime extends DateRange{
 
 	private $format;
 
-	public function __construct($datetime="", $format=""){
+	public function __construct($datetime="", string $format=""){
 
-		if(!empty($format))
+		$now = new Today();
+		if(empty($datetime))
+			$datetime = $now;
+
+		if(!empty($format) && is_string($datetime))
 			$datetime = \DateTime::createFromFormat($format, $datetime);
+
+		if(Today::hasRange()){
+
+			extract(Today::getState());
+
+			if(!$now->withDate($datetime)->useRange()->isValid())
+				new Raise(sprintf("Date [%s] not within [%s:range]",
+									$datetime->format("Y-m-d H:i:s"),
+									json_encode(array(
+
+										"today"=>$today->format("Y-m-d H:i:s"),
+										"start_date"=>$start_date->format("Y-m-d H:i:s"),
+										"end_date"=>$end_date->format("Y-m-d H:i:s"),
+									))));
+		}
 
 		if(is_object($datetime))
 			$datetime = $datetime->format("Y-m-d H:i:s.u");
@@ -27,11 +50,6 @@ class DateTime extends \DateTime{
 	public static function fromTimestamp($timestamp){
 
 		return (new self)->setTimestamp($timestamp);
-	}
-
-	public function rand(\DateTime $end){
-
-		return $this->fromTimestamp(rand($this->getTimestamp(), $end->getTimestamp()));
 	}
 
 	/**
@@ -86,31 +104,6 @@ class DateTime extends \DateTime{
 	     	return sprintf("in %s", implode(', ', $string));
 	    
 	    return sprintf("%s ago", implode(', ', $string));
-	}
-
-	public function gte(\DateTime $to){
-
-		return $this->getTimestamp() >= $to->getTimestamp();
-	}
-
-	public function gt(\DateTime $to){
-
-		return $this->getTimestamp() > $to->getTimestamp();
-	}
-
-	public function lte(\DateTime $to){
-
-		return $this->getTimestamp() <= $to->getTimestamp();
-	}
-
-	public function lt(\DateTime $to){
-
-		return $this->getTimestamp() < $to->getTimestamp();
-	}
-
-	public function equals(\DateTime $to){
-
-		return $this->getTimestamp() == $to->getTimestamp();
 	}
 
 	public function reset(){

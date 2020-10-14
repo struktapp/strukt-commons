@@ -6,3 +6,4 @@ src/Strukt/Common/Container.php
 ..travis.yml.swp
 composer.lock
 .env
+.phpunit.result.cache

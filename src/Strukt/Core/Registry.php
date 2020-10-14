@@ -32,6 +32,9 @@ class Registry{
 	private function __construct(){
 
 		$this->register = new Map(new Collection("Strukt Registry"));
+
+		if(!$this->register->exists("today"))
+			$this->register->set("today", new Today);
 	}
 
 	/**
