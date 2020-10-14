@@ -2,32 +2,7 @@
 
 namespace Strukt\Contract;
 
-abstract class DateRange extends \DateTime{
-
-	public function gte(\DateTime $to){
-
-		return $this->getTimestamp() >= $to->getTimestamp();
-	}
-
-	public function gt(\DateTime $to){
-
-		return $this->getTimestamp() > $to->getTimestamp();
-	}
-
-	public function lte(\DateTime $to){
-
-		return $this->getTimestamp() <= $to->getTimestamp();
-	}
-
-	public function lt(\DateTime $to){
-
-		return $this->getTimestamp() < $to->getTimestamp();
-	}
-
-	public function equals(\DateTime $to){
-
-		return $this->getTimestamp() == $to->getTimestamp();
-	}
+abstract class DateRange extends DateCompare{
 
 	public function rand(\DateTime $end){
 

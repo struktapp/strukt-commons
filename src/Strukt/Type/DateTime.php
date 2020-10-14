@@ -23,6 +23,9 @@ class DateTime extends DateRange{
 
 			extract(Today::getState());
 
+			if(is_string($datetime))
+				$datetime = new \DateTime($datetime);
+
 			if(!$now->withDate($datetime)->useRange()->isValid())
 				new Raise(sprintf("Date [%s] not within [%s:range]",
 									$datetime->format("Y-m-d H:i:s"),
