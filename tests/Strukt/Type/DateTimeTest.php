@@ -48,4 +48,11 @@ class DateTimeTest extends PHPUnit\Framework\TestCase{
 
 		$this->assertTrue($this->end->gt($endClone));
 	}
+
+	public function testBtwn(){
+
+		$date = new \Strukt\Type\DateTime("1998-12-25");
+		$this->assertTrue($date->btwn(new \DateTime("1998-01-01"), new \DateTime("1999-01-01")));
+		$this->assertFalse($date->btwn(new \DateTime("1998-12-31"), new \DateTime("1999-01-01")));
+	}
 }

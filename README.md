@@ -80,8 +80,8 @@ $login = Event::create(function($username, $password) use($credentials){
     return $username == $credentials["username"] && $password == $credentials["password"];
 });
 
-$isLoggedIn = $login->getEvent()->apply("admin","p@55w0rd")->exec();
-// $isLoggedIn = $login->getEvent()->applyArgs($credentials)->exec();
+$isLoggedIn = $login->apply("admin","p@55w0rd")->exec();
+// $isLoggedIn = $login->applyArgs($credentials)->exec();
 ```
 
 # Value Objects

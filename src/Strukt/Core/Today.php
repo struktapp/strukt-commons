@@ -35,8 +35,14 @@ class Today extends DateRange{
 						"end_date"=>static::$end);
 	}
 
-	public static function reset(\DateTime $date){
+	public static function reset(\DateTime $date = null){
 
+		if(is_null($date)){
+
+			static::$start = null;
+			static::$end = null;
+		}		
+		
 		static::$today = $date;
 	}
 
