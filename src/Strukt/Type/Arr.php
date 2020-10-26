@@ -54,6 +54,11 @@ class Arr extends ValueObject{
 		return new ValueObject($curr_elem);
 	}
 
+	public function valid(){
+
+		return $this->current()->yield();
+	}
+
 	public function next(){
 
 		$elem_exists = !!next($this->val);

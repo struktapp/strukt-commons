@@ -36,6 +36,11 @@ class ArrTest extends PHPUnit\Framework\TestCase{
 		$this->arr->reset();
 		$this->assertTrue($this->arr->current()->equals($this->rawarr["othernames"]));
 		$this->assertEquals($this->arr->key(), "othernames");
+		$this->arr->next();
+		$this->arr->next();
+		$this->arr->next();
+		$this->assertFalse($this->arr->next());
+		$this->assertFalse($this->arr->valid());
 	}
 
 	public function testEach(){
