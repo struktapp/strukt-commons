@@ -119,7 +119,7 @@ class Arr extends ValueObject{
 
 		foreach ($it as $key => $value){
 
-			if(empty($key)) 
+			if(empty($key) || array_key_exists($key, $result)) 
 				$key = rand();
 				
 			$result[$key] = $value;
