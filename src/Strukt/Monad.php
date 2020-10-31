@@ -3,34 +3,61 @@
 namespace Strukt;
 
 use Strukt\Event;
+use Strukt\Type\Arr;
 
 class Monad{
 
 	private $result;
+	private $params;
+	private $params_assoc;
 
-	private function __construct(){
+	public function __construct(array $params){
 
-		//
+		$this->params_assoc = Arr::onlyAssoc($params);
+
+		$this->params = $params;
 	}
 
-	public static function create(){
+	public static function create(array $params){
 
-		return new self;
+		return new self($params);
 	}
 
-	public function next(array $args, \Closure $step){
+	private function withAssocParams(\Closure $step){
+
+		$evt = Event::create($step);
 
 		if(!empty($this->result)){
 
-			if(is_array($this->result))
-				array_unshift($args, ...$this->result);
-			else
-				array_unshift($args, $this->result);
+			$evtParams = $evt->getParams();
 
-			unset($this->result);
+			$paramKey = array_key_first($evtParams);
+
+			$this->params[$paramKey] = $this->result;
 		}
 
-		$this->result = Event::create($step)->applyArgs($args)->exec();
+		$this->result = $evt->applyArgs($this->params)->exec();
+	}
+
+	private function withNoAssocParams(\Closure $step){
+
+		$evt = Event::create($step);
+
+		$evtParams = $evt->getParams();
+
+		$this->result = $evt->applyArgs($this->params)->exec();
+
+		$this->params = array_slice($this->params, count($evtParams));
+
+		array_unshift($this->params, $this->result);		
+	}
+
+	public function next(\Closure $step){
+
+		if($this->params_assoc)
+			$this->withAssocParams($step);
+		else
+			$this->withNoAssocParams($step);			
 
 		return $this;
 	}

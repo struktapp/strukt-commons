@@ -6,31 +6,36 @@ use Strukt\Type\Arr;
 
 class MonadTest extends PHPUnit\Framework\TestCase{
 
-	public function testMathExample(){
+	//y = mx+c
+	public function linearEq($params){
 
-		// y = mx+c
+		$y = Monad::create($params)
+			->next(function($m, $x){
 
-		$m = 3;
-		$x = 2;
-		$c = 12;
+				$mx = $m * $x;
 
-		$y = Monad::create()
-			->next([$m, $x],function($m, $x){
-
-				$p = $m * $x;
-
-				return $p;
+				return $mx;
 			})
-			->next([$c], function($mx, $c){
+			->next(function($mx, $c){
 
 				return $mx + $c;
 			})
-			->next([], function($r){
+			->next(function($r){
 
 				return $r;
 			});
 
-		$this->assertEquals($y->yield(), 18);
+		return $y->yield();
+	}
+
+	public function testMathWithAssocExample(){
+
+		$this->assertEquals($this->linearEq(array("c"=>12, "m"=>3, "x"=>2)), 18);
+	}
+
+	public function testMathWithNoAssocExample(){
+
+		$this->assertEquals($this->linearEq(array(12, 3, 2)), 38);
 	}
 
 	public function testRulesExample(){
@@ -39,12 +44,12 @@ class MonadTest extends PHPUnit\Framework\TestCase{
 		// $rules = "contra:yy-yy-yy";
 		$rules = "has:withholding-tax@0.2|contra:blah-blah";
 
-		$ruleset = Monad::create()
-			->next([$rules], function($rules){
+		$ruleset = Monad::create([$rules])
+			->next(function($rules){
 
-				return [Str::create($rules)->split("|")];
+				return Str::create($rules)->split("|");
 			})
-			->next([], function($rules){
+			->next(function($rules){
 
 				$rules = Arr::create($rules)->each(function($key, $rule){
 

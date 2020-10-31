@@ -111,6 +111,16 @@ class Arr extends ValueObject{
 		return $arr;
 	}
 
+	public static function isAssoc(array $arr){
+
+		return !empty($arr) && array_keys($arr) !== range(0, count($arr) - 1);
+	}
+
+	public static function onlyAssoc(array $arr){
+
+		return self::isAssoc($arr) && empty(array_filter(array_keys($arr), "is_numeric"));
+	}
+
 	public static function level(array $arr){
 
 		$result = array();
