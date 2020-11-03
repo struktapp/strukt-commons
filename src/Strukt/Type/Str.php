@@ -123,11 +123,6 @@ class Str extends \Strukt\Contract\ValueObject{
 		return strpos($this->val, $needle) !== false;
 	}
 
-	public function existsIn(array $haystack){
-
-		return in_array($this->val, $haystack);
-	}
-
 	public function equals($str){
 
 		$str = (string)$str;
