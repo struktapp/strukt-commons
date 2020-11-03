@@ -22,6 +22,7 @@ class StrTest extends PHPUnit\Framework\TestCase{
 
 		$this->assertTrue($this->str->contains("Frame"));
 		$this->assertTrue($this->str->slice(7,5)->equals("Frame"));
+		$this->assertTrue($this->str->notEquals("Sanjay"));
 	}
 
 	public function testReplace(){

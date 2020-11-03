@@ -135,6 +135,11 @@ class Str extends \Strukt\Contract\ValueObject{
 		return $this->val === $str;
 	}
 
+	public function notEquals($str){
+
+		return !$this->equals($str);
+	}
+
 	/**
 	* Find the position of the first occurrence of a substring in a string
 	*/
