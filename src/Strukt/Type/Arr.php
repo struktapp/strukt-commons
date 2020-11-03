@@ -22,6 +22,11 @@ class Arr extends ValueObject{
 		return new self($arr);
 	}
 
+	public function has($val){
+
+		return in_array($val, $this->val);
+	}
+
 	public function empty(){
 
 		return $this->only(0);
@@ -111,14 +116,14 @@ class Arr extends ValueObject{
 		return $arr;
 	}
 
-	public static function isAssoc(array $arr){
+	/**
+	* Is array fully associative
+	*/
+	public static function isMap(array $arr){
 
-		return !empty($arr) && array_keys($arr) !== range(0, count($arr) - 1);
-	}
-
-	public static function onlyAssoc(array $arr){
-
-		return self::isAssoc($arr) && empty(array_filter(array_keys($arr), "is_numeric"));
+		return !empty($arr) && 
+				array_keys($arr) !== range(0, count($arr) - 1) && 
+				empty(array_filter(array_keys($arr), "is_numeric"));
 	}
 
 	public static function level(array $arr){

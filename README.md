@@ -106,7 +106,8 @@ $num->gte(302500);//true greaterthanorequals
 $num->lt(302499);//false lessthan
 $num->lte(302501);//true lessthanorequals
 $num->negate()->equals(-302500)  
-$num->yield() //return native number
+$num->yield();//return native number
+$num->reset();//0
 Number::random(4, 10, 20); //return 4 random numbers between 10 and 20
 Number::create(10.1)->type();//double
 echo $num;//return native number
@@ -182,6 +183,7 @@ $rr = array(
 );
 
 $arr = new Arr($rr);//Arr::create($rr)
+$arr->has("Banner")//false
 $arr->empty();//false
 $arr->length();//3
 $arr->only(3);//true
@@ -212,4 +214,5 @@ $rawarr = $arr->map(array( //reformat array
     "address_building"=>"contacts.address.building"
 ));
 $flatarr = Arr::level($rr);//flattens multidimentional array
+$is_assoc = Arr::isMap(["username"=>"pitsolu", "password"="redacted"]);//is fully associative arr
 ```

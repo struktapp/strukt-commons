@@ -24,21 +24,34 @@ class ArrTest extends PHPUnit\Framework\TestCase{
 		$this->arr = new Arr($this->rawarr);
 	}
 
+	public function testHasValue(){
+
+		$this->assertTrue($this->arr->has("Johnliver"));
+	}
+
 	public function testItr(){
 
 		$this->assertTrue($this->arr->current()->equals($this->rawarr["othernames"]));
 		$this->assertTrue($this->arr->next());
 		$this->assertTrue($this->arr->current()->equals($this->rawarr["surname"]));
+
 		$this->arr->last();
+
 		$this->assertFalse($this->arr->next());
+
 		$this->arr->last();
+
 		$this->assertTrue($this->arr->current()->equals($this->rawarr["contact"]));
+
 		$this->arr->reset();
+
 		$this->assertTrue($this->arr->current()->equals($this->rawarr["othernames"]));
 		$this->assertEquals($this->arr->key(), "othernames");
+
 		$this->arr->next();
 		$this->arr->next();
 		$this->arr->next();
+		
 		$this->assertFalse($this->arr->next());
 		$this->assertFalse($this->arr->valid());
 	}
@@ -140,5 +153,12 @@ class ArrTest extends PHPUnit\Framework\TestCase{
 			"contact_address_home"=>$this->rawarr["contact"]["address"]["home"]
 
 		), $arr);
+	}
+
+	public function testIsAssociative(){
+
+		$this->assertTrue(Arr::isMap(["firstname"=>"Ludivar", "lastname"=>"Drascos"]));
+		$this->assertFalse(Arr::isMap(["firstname"=>"Peter", "lastname"=>"Parker", 22]));
+		$this->assertFalse(Arr::isMap([1, 2, 3]));
 	}
 }

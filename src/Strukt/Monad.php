@@ -13,7 +13,7 @@ class Monad{
 
 	public function __construct(array $params){
 
-		$this->params_assoc = Arr::onlyAssoc($params);
+		$this->params_assoc = Arr::isMap($params);
 
 		$this->params = $params;
 	}

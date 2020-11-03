@@ -17,6 +17,11 @@ class Number extends \Strukt\Contract\ValueObject{
 		return new self($number);
 	}
 
+	public function reset(){
+
+		$this->val = 0;
+	}
+
 	private static function objectify($number){
 
 		if(!Number::valid($number))
