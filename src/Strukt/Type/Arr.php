@@ -22,6 +22,21 @@ class Arr extends ValueObject{
 		return new self($arr);
 	}
 
+	public function pop(){
+
+		return array_pop($this->val);
+	}
+
+	public function dequeque(){
+
+		return array_shift($this->val);
+	}
+
+	public function concat($delimiter){
+
+		return implode($delimiter, $this->val);
+	}
+
 	public function has($val){
 
 		return in_array($val, $this->val);
