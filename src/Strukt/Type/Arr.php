@@ -27,7 +27,7 @@ class Arr extends ValueObject{
 		return array_pop($this->val);
 	}
 
-	public function dequeque(){
+	public function dequeue(){
 
 		return array_shift($this->val);
 	}
