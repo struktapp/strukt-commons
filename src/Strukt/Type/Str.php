@@ -236,7 +236,7 @@ class Str extends \Strukt\Contract\ValueObject{
 		return new Str(substr($this->val, $start, $end));
 	}
 
-	public function isEmpty(){
+	public function empty(){
 
 		return empty($this->val);
 	}

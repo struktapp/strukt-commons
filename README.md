@@ -141,6 +141,7 @@ echo $start; //return date as string
 use Strukt\Type\Str;
 
 $str = new Str("Strukt Framework");
+$str->empty();//false
 $str->startsWith("Str");//true
 $str->endsWith("work");//true
 $str->first(3);//Str

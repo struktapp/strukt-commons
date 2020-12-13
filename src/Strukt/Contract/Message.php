@@ -32,4 +32,9 @@ abstract class Message{
 			}
 		};
 	}
+
+	public static function clear(){
+
+		static::$messages = [];
+	}
 }
