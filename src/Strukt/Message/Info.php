@@ -4,8 +4,8 @@ namespace Strukt\Message;
 
 class Info extends \Strukt\Contract\Message{
 
-	private static $messages = [];
-	private static $limit = 9;
+	protected static $messages = [];
+	protected static $limit = 9;
 
 	public function __construct(string $message){
 
