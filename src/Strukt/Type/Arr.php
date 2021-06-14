@@ -22,6 +22,11 @@ class Arr extends ValueObject{
 		return new self($arr);
 	}
 
+	public function push($item){
+
+		return array_push($this->val, $item);
+	}
+
 	public function pop(){
 
 		return array_pop($this->val);
@@ -33,6 +38,10 @@ class Arr extends ValueObject{
 	}
 
 	public function concat($delimiter){
+
+		foreach($this->val as $item)
+			if(!is_string($item) && !is_numeric($item))
+				new Raise("Array items must be at least alphanumeric!");
 
 		return implode($delimiter, $this->val);
 	}
@@ -141,6 +150,9 @@ class Arr extends ValueObject{
 				empty(array_filter(array_keys($arr), "is_numeric"));
 	}
 
+	/**
+	* Flatten array
+	*/
 	public static function level(array $arr){
 
 		$result = array();

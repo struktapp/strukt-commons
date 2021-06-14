@@ -30,7 +30,7 @@ class Number extends \Strukt\Contract\ValueObject{
 		return $number;
 	}
 
-	private static function deject($number){
+	private static function eject($number){
 
 		if(Number::valid($number))
 			$number = $number->yield();
@@ -45,7 +45,7 @@ class Number extends \Strukt\Contract\ValueObject{
 
 	public function add($number){
 
-		$number = Number::deject($number);
+		$number = Number::eject($number);
 	
 		return new Number($this->val + $number);
 	}
@@ -61,28 +61,28 @@ class Number extends \Strukt\Contract\ValueObject{
 
 	public function times($number){
 
-		$number = Number::deject($number);
+		$number = Number::eject($number);
 
 		return new Number($number*$this->val);
 	}
 
 	public function parts($number){
 
-		$number = Number::deject($number);
+		$number = Number::eject($number);
 
 		return new Number($this->val/$number);
 	}
 
 	public function mod($number){
 
-		$number = Number::deject($number);
+		$number = Number::eject($number);
 
 		return new Number($this->val%$number);
 	}
 
 	public function raise($number){
 
-		$number = Number::deject($number);
+		$number = Number::eject($number);
 
 		return new Number(pow($this->val, $number));
 	}
@@ -112,21 +112,21 @@ class Number extends \Strukt\Contract\ValueObject{
 
 	public function equals($number){
 
-		$number = Number::deject($number);
+		$number = Number::eject($number);
 
 		return $this->val == $number;
 	}
 
 	public function gt($number){
 
-		$number = Number::deject($number);
+		$number = Number::eject($number);
 
 		return $this->val > $number;
 	}
 
 	public function lt($number){
 
-		$number = Number::deject($number);
+		$number = Number::eject($number);
 
 		return $this->val < $number;
 	}
