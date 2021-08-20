@@ -38,7 +38,7 @@ class Collection{
 	*
 	* @return Strukt\Builder\Collection
 	*/
-	public function create(CoreCollection $collection = null){
+	public static function create(CoreCollection $collection = null){
 
 		return new self($collection);
 	}
