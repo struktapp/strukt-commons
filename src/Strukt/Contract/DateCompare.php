@@ -28,4 +28,12 @@ abstract class DateCompare extends \DateTime{
 
 		return $this->getTimestamp() == $to->getTimestamp();
 	}
+
+	public function same(\DateTime $to){
+
+		$date = $this->format("Y-m-d");
+		$toDate = $to->format("Y-m-d");
+
+		return $date == $toDate;
+	}
 }

@@ -71,6 +71,9 @@ class Today extends DateRange{
 
 	public function withDate(\DateTime $date){
 
+		if(!static::hasRange())
+			new Raise("Period not set!");
+
 		return new class($date, static::$start, static::$end) extends DateRange{
 
 			private $date;

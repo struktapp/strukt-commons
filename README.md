@@ -128,11 +128,35 @@ $end->gte($start);//true
 $start->lt($end);
 $end->lte($end);//true
 $start->equals($end);//false
+$start->same(new DateTime);//true -- is the same day
 $newStart = $start->clone();
 $newStartPlusOneDay = $start->clone("+1 day");
 $start->reset();//reset time to 00:00:00 000000
 $start->last();//reset time to 23:59:59 1000000
 echo $start; //return date as string
+```
+
+### Today (Date Influence)
+
+```php
+use Strukt\Core\Today;
+// use Strukt\Type\DateTime;
+
+//In order for date influence to work the first 2 line below must be 
+// called before any further date manipulation
+// messing arround with dates can create headaches
+Today::validBtwn(new DateTime("1900-01-01"), new DateTime("1963-12-31")); //period
+Today::reset(new DateTime("1960-03-23"));//create fake today
+$fakeToday = new Today();
+
+//All dates created with Strukt\Type\DateTime will be in 1960
+$fakeToday->same(new DateTime); //false
+$fakeToday->same(new Strukt\Type\DateTime);//true
+Today::hasRange()//true -- has period
+$fakeToday->withDate(new DateTime("1959-04-01"))->useRange()->isValid()); //true -- is date valid with period
+
+Today::getState();//get state of date manipulation
+Today::reset();//reset back to original today
 ```
 
 ## String
@@ -216,4 +240,57 @@ $rawarr = $arr->map(array( //reformat array
 ));
 $flatarr = Arr::level($rr);//flattens multidimentional array
 $is_assoc = Arr::isMap(["username"=>"pitsolu", "password"="redacted"]);//is fully associative arr
+```
+
+### Monad
+
+```php
+// Linear Equation y = mx + c
+
+$params = array("c"=>12, "m"=>3, "x"=>2)
+
+$y = Monad::create($params)
+    ->next(function($m, $x){
+
+        $mx = $m * $x;
+
+        return $mx;
+    })
+    ->next(function($mx, $c){
+
+        return $mx + $c;
+    })
+    ->next(function($r){
+
+        return $r;
+    });
+
+echo $y->yield();
+```
+
+### Messages
+
+```php
+use Strukt\Message\Error;
+// use Strukt\Message\Info; //Works the same way as Strukt\Messgae\Error
+
+new Error("error 401!");
+new Error("error 402!");
+new Error("error 404!");
+
+$errors = Error::getMessages();
+
+$message = $errors->last()->yield(); //error 404!
+$errors->reset();
+$message = $errors->current()->yield(); //error 401!
+$errors->next();
+$message = $errors->current()->yield(); //error 402!
+```
+
+### Json
+
+```php
+$l = Strukt\Type\Json::encode(array("fname"=>"Peter", "lname"=>"Pan"));//json string
+$m = Strukt\Type\Json::pp($l);//pretty print
+$n = Strukt\Type\Json::decode($m);//array
 ```
