@@ -27,6 +27,13 @@ class Registry{
 	private $register = null;
 
 	/**
+	 * Registry Keys
+	 * 
+	 * @var array
+	 */
+	private $keys = [];
+
+	/**
 	* Constructor initialize Strukt global register
 	*/
 	private function __construct(){
@@ -72,6 +79,8 @@ class Registry{
 	*/
 	public function set($key, $val){
 
+		$this->keys[$key] = null;
+
 		$this->register->set($key, $val);
 	}
 
@@ -83,6 +92,8 @@ class Registry{
 	* @return void
 	*/
 	public function remove($key){
+
+		unset($this->keys[$key]);
 
 		$this->register->remove($key);
 	}
@@ -97,5 +108,15 @@ class Registry{
 	public function exists($key){
 
 		return $this->register->exists($key);
+	}
+
+	/**
+	* List registry keys
+	*
+	* @return array
+	*/
+	public function ls(){
+
+		return array_keys($this->keys);
 	}
 }
