@@ -70,4 +70,11 @@ class StrTest extends PHPUnit\Framework\TestCase{
 
 		$this->assertEquals($this->blah->count("blah"), 2);
 	}
+
+	public function testEmpty(){
+
+		$this->assertEquals(Str::create(" ")->empty(), true);
+		$this->assertEquals(Str::create("")->empty(), true);
+		$this->assertEquals(Str::create("1")->empty(), false);
+	}
 }

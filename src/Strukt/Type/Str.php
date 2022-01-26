@@ -238,7 +238,7 @@ class Str extends \Strukt\Contract\ValueObject{
 
 	public function empty(){
 
-		return empty($this->val);
+		return strlen($this->val) === substr_count($this->val, ' ') ? true : false;
 	}
 
 	public function isRegEx(string $string) {
