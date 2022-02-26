@@ -136,7 +136,7 @@ $start->last();//reset time to 23:59:59 1000000
 echo $start; //return date as string
 ```
 
-### Today (Date Influence)
+## Today (Date Influence)
 
 ```php
 use Strukt\Core\Today;
@@ -240,6 +240,41 @@ $rawarr = $arr->map(array( //reformat array
 ));
 $flatarr = Arr::level($rr);//flattens multidimentional array
 $is_assoc = Arr::isMap(["username"=>"pitsolu", "password"="redacted"]);//is fully associative arr
+```
+# Others
+
+## Token Query
+
+```php
+/**
+ * Basic Token 
+ */
+$token = "user:pitsolu|status:active|is_superuser:true";
+
+$query = new Strukt\Core\TokenQuery($token);
+
+$query->get("user");//pitsolu
+$query->get("status");//active
+$query->get("is_superuser");//true
+
+$query->has("role");//false
+$query->keys();//["user","status","is_superuser"]
+
+$query->token();//original token -- user:pitsolu|status:active|is_superuser:true
+$query->set("role","admin");
+$token = sprintf("%s|role:admin", $query->token());
+$query->reMake();//user:pitsolu|status:active|is_superuser:true|role:admin
+
+/**
+ * Complex Token
+ */
+$token = "contact:1|is:tenant,landlord,prospect";
+
+$query = new Strukt\Core\TokenQuery($token);
+
+$query->get("is");//["tenant","landlord","prospect"];
+$query->set("status", ["active","published"]);
+$query->reMake();//contact:1|is:tenant,landlord,prospect|status:active,published
 ```
 
 ### Monad
