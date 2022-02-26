@@ -277,7 +277,7 @@ $query->set("status", ["active","published"]);
 $query->reMake();//contact:1|is:tenant,landlord,prospect|status:active,published
 ```
 
-### Monad
+## Monad
 
 ```php
 // Linear Equation y = mx + c
@@ -303,7 +303,7 @@ $y = Monad::create($params)
 echo $y->yield();
 ```
 
-### Messages
+## Messages
 
 ```php
 use Strukt\Message\Error;
@@ -322,7 +322,7 @@ $errors->next();
 $message = $errors->current()->yield(); //error 402!
 ```
 
-### Json
+## Json
 
 ```php
 $l = Strukt\Type\Json::encode(array("fname"=>"Peter", "lname"=>"Pan"));//json string
