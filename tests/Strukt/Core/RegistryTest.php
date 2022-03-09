@@ -30,4 +30,18 @@ class RegistryTest extends PHPUnit\Framework\TestCase{
 		
 		$this->assertEquals($r->get("user.surname"), "Trump");
 	}
+
+	public function testRegistryAlias(){
+
+		$r = \Strukt\Core\Registry::getSingleton();
+		$r->set("user.email", "pitsolu@gmail.com");
+
+
+		$this->assertTrue(\Strukt\Reg::exists("user.email"));
+		$this->assertEquals(\Strukt\Reg::get("user.email"), "pitsolu@gmail.com");
+
+		\Strukt\Reg::set("user.alt_email", "spiderman@gmail.com");
+
+		$this->assertTrue($r->exists("user.alt_email"));
+	}
 }
