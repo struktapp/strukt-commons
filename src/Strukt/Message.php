@@ -1,8 +1,8 @@
 <?php
 
-namespace Strukt\Message;
+namespace Strukt;
 
-class Info extends \Strukt\Contract\Message{
+class Message extends \Strukt\Contract\Message{
 
 	protected $message;
 	protected static $messages = [];

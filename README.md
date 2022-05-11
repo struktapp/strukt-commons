@@ -26,21 +26,16 @@ $user->get("contacts.mobile"); //outputs +2540770123456
 
 ```php
 $s = array(
-
     "user"=>array(
-
         "firstname"=>"Gene",
 		"surname"=>"Wilder",	
 		"db"=>array(
-
             "config"=>array(
-
                 "username"=>"root",
 				"password"=>"_root!"
             )
         ),
         "mobile_numbers"=>array( //Non Assoc Array
-
             "777111222",
             "770234567"
         )
@@ -69,49 +64,9 @@ $map->set("db.config.password", "_root");
 
 Both `Map` and `Collection` have functions `set` , `get` , `exist` , `remove` The difference between both utilities is that `Map` can `set` and `remove` deep values while `Collection` cannot.
 
-## Events
-
-```php
-//use Strukt\Event
-$credentials = array("username"=>"admin", "password"=>"p@55w0rd");
-
-$login = Event::create(function($username, $password) use($credentials){
-
-    return $username == $credentials["username"] && $password == $credentials["password"];
-});
-
-$isLoggedIn = $login->apply("admin","p@55w0rd")->exec();
-// $isLoggedIn = $login->applyArgs($credentials)->exec();
-```
-
 # Value Objects
 
-## Number
-
-```php
-use Strukt\Type\Number;
-
-$num = new Number(1000);
-$num = $num->add(200);//1200
-$num = $num->subtract(100);//1100
-$num = $num->times(2);//2200 multiplication
-$num = $num->parts(4);//550 division
-$rem = $num->mod(9);//1 modulus
-$num = $num->raise(2);//302500 power
-list($num1, $num2) = $num->ratio(1,1);//151250, 151250
-list($num1, $num2) = $num->ratio(1,3);//75625,226875
-list($num1, $num2, $num3) = $num->ratio(1,1,3);//60500,60500,181500
-$num->gt(302499);//true; greaterthan
-$num->gte(302500);//true greaterthanorequals
-$num->lt(302499);//false lessthan
-$num->lte(302501);//true lessthanorequals
-$num->negate()->equals(-302500)  
-$num->yield();//return native number
-$num->reset();//0
-Number::random(4, 10, 20); //return 4 random numbers between 10 and 20
-Number::create(10.1)->type();//double
-echo $num;//return native number
-```
+You may also find `Number` object via package `strukt/math` that is a dependency of this package.
 
 ## DateTime
 
@@ -193,7 +148,6 @@ $str->split(" ");//['Strukt', "Framework"]
 use Strukt\Type\Arr;
 
 $rr = array(
-
     "firstname"=>"Bruce",
     "lastname"=>"Wayne",
     "alias"=>"Joker",
@@ -277,49 +231,23 @@ $query->set("status", ["active","published"]);
 $query->reMake();//contact:1|is:tenant,landlord,prospect|status:active,published
 ```
 
-## Monad
-
-```php
-// Linear Equation y = mx + c
-
-$params = array("c"=>12, "m"=>3, "x"=>2)
-
-$y = Monad::create($params)
-    ->next(function($m, $x){
-
-        $mx = $m * $x;
-
-        return $mx;
-    })
-    ->next(function($mx, $c){
-
-        return $mx + $c;
-    })
-    ->next(function($r){
-
-        return $r;
-    });
-
-echo $y->yield();
-```
-
 ## Messages
 
 ```php
-use Strukt\Message\Error;
+use Strukt\Message;
 // use Strukt\Message\Info; //Works the same way as Strukt\Messgae\Error
 
-new Error("error 401!");
-new Error("error 402!");
-new Error("error 404!");
+new Message("error 401!");
+new Message("error 402!");
+new Message("error 404!");
 
-$errors = Error::getMessages();
+$errors = Message::get();
 
-$message = $errors->last()->yield(); //error 404!
+$errors->last()->yield(); //error 404!
 $errors->reset();
-$message = $errors->current()->yield(); //error 401!
+$errors->current()->yield(); //error 401!
 $errors->next();
-$message = $errors->current()->yield(); //error 402!
+$errors->current()->yield(); //error 402!
 ```
 
 ## Json

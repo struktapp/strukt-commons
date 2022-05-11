@@ -6,10 +6,10 @@ abstract class Message{
 
 	public function __construct(string $message){
 
-		$this->addMessage($message);
+		$this->add($message);
 	}
 
-	public function addMessage($message){
+	public function add($message){
 
 		if(count(static::$messages) > static::$limit)
 			array_shift(static::$messages);
@@ -17,12 +17,12 @@ abstract class Message{
 		static::$messages[] = $message;
 	}
 
-	public static function setLimit(int $limit){
+	public static function withLimit(int $limit){
 
 		static::$limit = $limit;
 	}
 
-	public static function getMessages(){
+	public static function get(){
 
 		return new class(static::$messages) extends \Strukt\Type\Arr{
 

@@ -4,6 +4,7 @@ namespace Strukt\Type;
 
 use Strukt\Contract\ValueObject as ValueObject; 
 use Strukt\Builder\Collection as CollectionBuilder;
+use Strukt\Contract\AbstractArr;
 use Strukt\Raise;
 use Strukt\Event;
 
@@ -145,9 +146,7 @@ class Arr extends ValueObject{
 	*/
 	public static function isMap(array $arr){
 
-		return !empty($arr) && 
-				array_keys($arr) !== range(0, count($arr) - 1) && 
-				empty(array_filter(array_keys($arr), "is_numeric"));
+		return AbstractArr::isMap($arr);
 	}
 
 	/**
