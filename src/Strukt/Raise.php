@@ -2,7 +2,7 @@
 
 namespace Strukt;
 
-class Raise extends \Strukt\Message\Error{
+class Raise extends \Strukt\Message{
 
 	public function __construct($error, $code = null){
 
