@@ -16,6 +16,8 @@ class Today extends DateRange{
 		if(is_null(static::$today))
 			static::$today = new \DateTime();
 
+		static::$today = static::reMake();
+
 		parent::__construct(static::$today->format("Y-m-d H:i:s.u"));
 
 		if(static::hasRange()){
@@ -28,11 +30,25 @@ class Today extends DateRange{
 		}
 	}
 
+	private static function reMake(){
+
+		$now = new \DateTime;
+		$time = $now->format("H:i:s.u");
+
+		if(is_null(static::$today))
+			new Raise("Today must be set!");
+
+		return new \DateTime(sprintf("%s %s", static::$today->format("Y-m-d"), $time));
+	}
+
 	public static function getState(){
 
-		return array("today"=>static::$today,
-						"start_date"=>static::$start,
-						"end_date"=>static::$end);
+		return array(
+			
+			"today"=>static::reMake(),
+			"start_date"=>static::$start,
+			"end_date"=>static::$end
+		);
 	}
 
 	public static function reset(\DateTime $date = null){

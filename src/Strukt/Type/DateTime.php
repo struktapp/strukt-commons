@@ -116,7 +116,7 @@ class DateTime extends DateRange{
 
 	public function last(){
 
-		$this->setTime(23,59,59,1000000);
+		$this->setTime(23,59,59,000000);
 	}
 
 	public function clone($how = null) {
