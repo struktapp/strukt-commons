@@ -23,28 +23,95 @@ class Arr extends ValueObject{
 		return new self($arr);
 	}
 
+	/**
+	* Append element to array
+	*/
 	public function push($item){
 
-		return array_push($this->val, $item);
+		array_push($this->val, $item);
+
+		$this->last();
+
+		return $this;
 	}
 
+	/**
+	* Remove element at end of array
+	*/
 	public function pop(){
 
 		return array_pop($this->val);
 	}
 
+	/**
+	* Remove element at beginning of array
+	*/
 	public function dequeue(){
 
 		return array_shift($this->val);
 	}
 
+	/**
+	* Add element at end of array. Allows adding by $key
+	*/
+	public function enqueue($element, $key = null){
+
+		if(is_null($key))
+			$this->push($element);
+
+		if(!is_null($key))
+			$this->val[$key] = $element;
+
+		$this->last();
+
+		return $this;
+	}
+
+	/**
+	* Add element at beginning of array. Allows adding by key
+	*/
+	public function prequeue($element, $key = null){
+
+		if(!is_null($key))
+			$this->val = array_merge(array($key=>$element), $this->val);
+
+		if(is_null($key))
+			array_unshift($this->val, $element);
+
+		$this->reset();
+
+		return $this;
+	}
+
+	public function column(string $key){
+
+		$column = array_column($this->val, $key);
+
+		return $column;
+	}
+
 	public function concat($delimiter){
 
-		foreach($this->val as $item)
-			if(!is_string($item) && !is_numeric($item))
-				new Raise("Array items must be at least alphanumeric!");
+		if(!empty(array_filter($this->val, "is_object")))
+			new Raise("Array items must be at least alphanumeric!");
 
 		return implode($delimiter, $this->val);
+	}
+
+	public function tokenize(array $keys = null){
+
+		if(!self::isMap($this->val) || !empty(array_filter($this->val, "is_object")))
+			new Raise("Array [Values & Keys] must be at least alphanumeric!");
+
+		if(is_null($keys))
+			$keys = array_keys($this->val);
+
+		$token = [];
+		foreach($this->val as $key=>$val)
+			if(in_array($key, $keys))
+				$token[] = sprintf("%s:%s", $key, $val);
+
+		return implode("|", $token);
 	}
 
 	public function has($val){
