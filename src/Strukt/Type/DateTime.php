@@ -19,14 +19,14 @@ class DateTime extends DateRange{
 		if(!empty($format) && is_string($datetime))
 			$datetime = \DateTime::createFromFormat($format, $datetime);
 
-		if(Today::hasRange()){
+		if(Today::hasPeriod()){
 
 			extract(Today::getState());
 
 			if(is_string($datetime))
 				$datetime = new \DateTime($datetime);
 
-			if(!$now->withDate($datetime)->useRange()->isValid())
+			if(!$now->withDate($datetime)->isValid())
 				new Raise(sprintf("Date [%s] not within [%s:range]",
 									$datetime->format("Y-m-d H:i:s"),
 									json_encode(array(

@@ -26,9 +26,13 @@ class Arr extends ValueObject{
 	/**
 	* Append element to array
 	*/
-	public function push($item){
+	public function push($item, string $key = null){
 
-		array_push($this->val, $item);
+		if(is_null($key))
+			array_push($this->val, $item);
+
+		if(!is_null($key))
+			$this->val[$key] = $item;
 
 		$this->last();
 
@@ -52,19 +56,11 @@ class Arr extends ValueObject{
 	}
 
 	/**
-	* Add element at end of array. Allows adding by $key
+	* Arr.push alias
 	*/
 	public function enqueue($element, $key = null){
 
-		if(is_null($key))
-			$this->push($element);
-
-		if(!is_null($key))
-			$this->val[$key] = $element;
-
-		$this->last();
-
-		return $this;
+		return $this->push($element, $key);
 	}
 
 	/**

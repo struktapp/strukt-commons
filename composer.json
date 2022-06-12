@@ -11,7 +11,7 @@
     "require": {
 
         "php": ">=7.4",
-        "strukt/math":"v1.0.0-alpha"
+        "strukt/math":"v1.0.1-alpha"
     },
     "require-dev": {
 

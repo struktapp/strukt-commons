@@ -100,7 +100,7 @@ use Strukt\Core\Today;
 //In order for date influence to work the first 2 line below must be 
 // called before any further date manipulation
 // messing arround with dates can create headaches
-Today::validBtwn(new DateTime("1900-01-01"), new DateTime("1963-12-31")); //period
+Today::makePeriod(new DateTime("1900-01-01"), new DateTime("1963-12-31")); //period
 Today::reset(new DateTime("1960-03-23"));//create fake today
 $fakeToday = new Today();
 
@@ -108,7 +108,7 @@ $fakeToday = new Today();
 $fakeToday->same(new DateTime); //false
 $fakeToday->same(new Strukt\Type\DateTime);//true
 Today::hasRange()//true -- has period
-$fakeToday->withDate(new DateTime("1959-04-01"))->useRange()->isValid()); //true -- is date valid with period
+$fakeToday->withDate(new DateTime("1959-04-01"))->isValid()); //true -- is date valid with period
 
 Today::getState();//get state of date manipulation
 Today::reset();//reset back to original today
@@ -192,8 +192,31 @@ $rawarr = $arr->map(array( //reformat array
     "address_street"=>"contacts.address.street",
     "address_building"=>"contacts.address.building"
 ));
+$arr->pop();// remove at end of array.
+$arr->push("brucebatman", "username");//add at end of queue. key is optional
+$arr->enqueue("active", "status");//same as Arr.push. key is optional
+$arr->prequeue("admin", "type");//add at beginning of queue. key is optional
+$arr->dequeue();//remove at beginning of array. returns Bruce
 $flatarr = Arr::level($rr);//flattens multidimentional array
 $is_assoc = Arr::isMap(["username"=>"pitsolu", "password"="redacted"]);//is fully associative arr
+$arr = Arr::create(array(
+    array(
+        "username"=>"pitsolu",
+        "type"=>"admin"
+    ),
+    array(
+        "username"=>"peterparker",
+        "type"=>"user"
+    )
+));
+$arr->column("type");//returns array("admin", "user")
+$arr = Arr::create(array(
+
+    "user"=>"pitsolu",
+    "type"=>"admin",
+    "status"=>"active"
+));
+$arr->tokenize();//returns user:pitsolu|type:admin|status:active
 ```
 # Others
 

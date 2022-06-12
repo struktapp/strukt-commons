@@ -7,7 +7,7 @@ class TodayTest extends PHPUnit\Framework\TestCase{
 
 	public function setUp():void{
 
-		Today::validBtwn(new DateTime("1900-01-01"), new DateTime("1963-12-31"));
+		Today::makePeriod(new DateTime("1900-01-01"), new DateTime("1963-12-31"));
 		Today::reset(new DateTime("1960-03-23"));
 
 		$this->today = new Today();
@@ -27,13 +27,13 @@ class TodayTest extends PHPUnit\Framework\TestCase{
 
 	public function testIsBtwnPeriod(){
 
-		$this->assertTrue(Today::hasRange());
+		$this->assertTrue(Today::hasPeriod());
 
 		$past = new DateTime("1959-04-01");
-		$this->assertTrue($this->today->withDate($past)->useRange()->isValid());
+		$this->assertTrue($this->today->withDate($past)->isValid());
 
 		$now = new DateTime();
-		$this->assertFalse($this->today->withDate($now)->useRange()->isValid());
+		$this->assertFalse($this->today->withDate($now)->isValid());
 	}
 
 	public function tearDown():void{

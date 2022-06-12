@@ -20,7 +20,7 @@ class Today extends DateRange{
 
 		parent::__construct(static::$today->format("Y-m-d H:i:s.u"));
 
-		if(static::hasRange()){
+		if(static::hasPeriod()){
 
 			if(!$this->btwn(static::$start, static::$end))	
 				new Raise(sprintf("Invalid date [%s] btwn [%s to %s]!", 
@@ -62,7 +62,7 @@ class Today extends DateRange{
 		static::$today = $date;
 	}
 
-	public static function validBtwn(\DateTime $start, \DateTime $end){
+	public static function makePeriod(\DateTime $start, \DateTime $end){
 
 		static::$start = new class($start) extends DateRange{
 
@@ -80,14 +80,14 @@ class Today extends DateRange{
 		static::$end = $end;
 	}
 
-	public static function hasRange(){
+	public static function hasPeriod(){
 
 		return !empty(static::$start) && !empty(static::$end);
 	}
 
-	public function withDate(\DateTime $date){
+	public static function withDate(\DateTime $date){
 
-		if(!static::hasRange())
+		if(!static::hasPeriod())
 			new Raise("Period not set!");
 
 		return new class($date, static::$start, static::$end) extends DateRange{
@@ -105,13 +105,8 @@ class Today extends DateRange{
 				$this->valid = null;
 
 				parent::__construct($date->format("Y-m-d H:i:s.u"));
-			}
-
-			public function useRange(){
 
 				$this->valid = $this->btwn($this->start, $this->end);
-
-				return $this;
 			}
 
 			public function isValid(){

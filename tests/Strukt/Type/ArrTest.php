@@ -161,4 +161,69 @@ class ArrTest extends PHPUnit\Framework\TestCase{
 		$this->assertFalse(Arr::isMap(["firstname"=>"Peter", "lastname"=>"Parker", 22]));
 		$this->assertFalse(Arr::isMap([1, 2, 3]));
 	}
+
+	public function testColumn(){
+
+		$users = array(
+
+			array(
+				"username"=>"pitsolu",
+				"type"=>"admin"
+			),
+			array(
+				"username"=>"peterparker",
+				"type"=>"user"
+			),
+			array(
+				"username"=>"ludivar",
+				"type"=>"user"
+			)
+		);
+
+		$usernames = Arr::create($users)->column("username");
+
+		foreach($users as $user)
+			$this->assertTrue(in_array($user["username"], $usernames));
+	}
+
+	public function testEnqueue(){
+
+		$this->arr->enqueue("wellsander", "username");//Key is optional
+
+		$username = $this->arr->last()->yield();
+
+		$this->assertEquals($username, "wellsander");
+	}
+
+	public function testPrequeue(){
+
+		$this->arr->prequeue("administrator", "type");//Key is optional
+
+		$this->arr->reset();
+		$type = $this->arr->current()->yield();
+
+		$this->assertEquals($type, "administrator");
+	}
+
+	public function testDequeue(){
+
+		$othernames = $this->arr->dequeue();
+
+		$this->assertEquals($othernames, "Sander Wellington");
+		$this->assertFalse($this->arr->has("othernames"));
+	}
+
+	public function testPop(){
+
+		$contacts = $this->arr->pop();
+		$this->assertTrue(array_key_exists("mobile", $contacts));
+		$this->assertFalse($this->arr->has("contacts"));
+	}
+
+	public function testPush(){
+
+		$this->arr->push("Active", "status");//Key is optional
+		$status = $this->arr->last()->yield();
+		$this->assertEquals($status, "Active");
+	}
 }
