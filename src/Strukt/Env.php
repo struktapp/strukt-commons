@@ -19,6 +19,15 @@ class Env{
 		}
 	}
 
+	public static function has($key){
+
+		$key = sprintf("env.%s", $key);
+
+		$registry = Registry::getSingleton();
+
+		return $registry->exists($key);
+	}
+
 	public static function get($key){
 
 		$key = sprintf("env.%s", $key);
