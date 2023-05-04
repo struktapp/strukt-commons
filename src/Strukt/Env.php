@@ -4,6 +4,7 @@ namespace Strukt;
 
 use Strukt\Core\Registry;
 use Strukt\Raise;
+use Strukt\Type\Str;
 
 class Env{
 
@@ -13,9 +14,18 @@ class Env{
 
 		foreach($lines as $line){
 
+			$currLine = Str::create(trim($line));
+			if($currLine->startsWith("#") || $currLine->startsWith("//"))
+				continue;
+
 			list($key, $val) = explode("=", $line);
 
-			static::set(trim($key), trim($val));
+			$val = trim($val);
+			$states = ["true"=>true,"false"=>false];
+			if(array_key_exists($val, $states))
+				$val = $states[$val];
+
+			static::set(trim($key), $val);
 		}
 	}
 
