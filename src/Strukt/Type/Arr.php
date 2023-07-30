@@ -166,7 +166,27 @@ class Arr extends ValueObject{
 		return new ValueObject($last_elem);
 	}
 
+	public function remove($key){
+
+		if(!is_callable($key))
+			unset($this->val[$key]);
+
+		if(is_callable($key)){
+
+			$func = $key->bindTo($this);
+
+			$each = new Event($func);
+			foreach($this->val as $key=>$val)
+				if($each->apply($key, $val)->exec())
+					unset($this->val[$key]);
+		}
+
+		return $this;
+	}
+
 	public function each(\Closure $func){
+
+		$func = $func->bindTo($this);
 
 		$each = new Event($func);
 
@@ -177,6 +197,8 @@ class Arr extends ValueObject{
 	}
 
 	public function recur(\Closure $func){
+
+		$func = $func->bindTo($this);
 
 		$each = new Event($func);
 
