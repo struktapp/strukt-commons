@@ -12,19 +12,14 @@ Strukt Commons
 ## Collection
 
 ```php
-//use Strukt\Core\Collection
-$contact = new Collection("Contacts");
+$contact = collect([]);
 $contact->set("mobile", "+2540770123456");
 $contact->set("work-phone", "+2540202345678");
 
-$user = new Collection("User");
+$user = collect([]);
 $user->set("contacts", $contact);
 $user->get("contacts.mobile"); //outputs +2540770123456
-```
 
-## Collection Builder
-
-```php
 $s = array(
     "user"=>array(
         "firstname"=>"Gene",
@@ -41,28 +36,10 @@ $s = array(
         )
     )
 );
-//use Strukt\Builder\Collection as CollectionBuilder
-//use Strukt\Core\Collection
-// $x = CollectionBuilder::create(new Collection())->fromAssoc($s);
-// $b = new CollectionBuilder(new Collection());
-$b = new CollectionBuilder();
-$x = $b->fromAssoc($s); //returns \Collection
+
+$b = collect($s);
+$x = $b->get("user.db.config.username"); //returns root
 ```
-
-## Map
-
-```php
-//use Strukt\Core\Map
-//use Strukt\Core\Collection
-$map = new Map(new Collection());
-$map->set("session.user.username", "genewilder");
-$map->set("session.user.firstname", "Gene");
-$map->set("session.user.surname", "Wilder");
-$map->set("db.config.username", "root");
-$map->set("db.config.password", "_root");
-```
-
-Both `Map` and `Collection` have functions `set` , `get` , `exist` , `remove` The difference between both utilities is that `Map` can `set` and `remove` deep values while `Collection` cannot.
 
 # Value Objects
 
@@ -71,12 +48,8 @@ You may also find `Number` object via package `strukt/math` that is a dependency
 ## DateTime
 
 ```php
-use Strukt\Type\DateTime;//inherits native \DateTime object
-
-//DateTime::create("10-31-2010", "m-d-Y")
-//DateTime::fromTimestamp(1198998987)
-$start = new DateTime();
-$end = new DateTime("+30 days");
+$start = when()
+$end = wheny("+30 days");
 $rand = $start->rand($end);//make start date random date between start and end
 $end->gt($start);//true
 $end->gte($start);//true
@@ -94,32 +67,29 @@ echo $start; //return date as string
 ## Today (Date Influence)
 
 ```php
-use Strukt\Core\Today;
-// use Strukt\Type\DateTime;
+$p = period()
 
 //In order for date influence to work the first 2 line below must be 
 // called before any further date manipulation
 // messing arround with dates can create headaches
-Today::makePeriod(new DateTime("1900-01-01"), new DateTime("1963-12-31")); //period
-Today::reset(new DateTime("1960-03-23"));//create fake today
-$fakeToday = new Today();
+$p->create(new DateTime("1900-01-01"), new DateTime("1963-12-31")); //period
+$p->reset(new DateTime("1960-03-23"));//create fake today
+$fakeToday = today();
 
 //All dates created with Strukt\Type\DateTime will be in 1960
 $fakeToday->same(new DateTime); //false
-$fakeToday->same(new Strukt\Type\DateTime);//true
-Today::hasRange()//true -- has period
-$fakeToday->withDate(new DateTime("1959-04-01"))->isValid()); //true -- is date valid with period
+$fakeToday->same(when());//true
+$fakeToday->hasPeriod()//true -- has period
+$fakeToday->withDate(new DateTime("1959-04-01"))->isValid(); //true -- is date valid with period
 
-Today::getState();//get state of date manipulation
-Today::reset();//reset back to original today
+$fakeToday->getState();//get state of date manipulation
+$fakeToday->reset();//reset back to original today
 ```
 
 ## String
 
 ```php
-use Strukt\Type\Str;
-
-$str = new Str("Strukt Framework");
+$str = str("Strukt Framework");
 $str->empty();//false
 $str->startsWith("Str");//true
 $str->endsWith("work");//true
@@ -133,20 +103,18 @@ $str->replaceLast("k","d")->equals("Struct Frameword");
 $str->replaceAt("ing", 3, 3)->equals("String Framwork")
 $str->toUpper();//STRUKT FRAMEWORK
 $str->toLower();//strukt framework
-$camel = new Str("thisIsCamelCase");
+$camel = str("thisIsCamelCase");
 $camel->toSnake();//this_is_camel_case
 $camel->toSnake()->toCamel();//ThisIsCamelCase
 $sdo = $str->prepend("Doctrine + ");//Doctrine + Strukt Framework
 $sdo->concat(" = Strukt Do");//Doctrine + Strukt Framework = Strukt Do
 $str->split(" ");//['Strukt', "Framework"]
-(new Str("blah blah blah"))->count("blah");//3
+str("blah blah blah")->count("blah");//3
 ```
 
 ## Array
 
 ```php
-use Strukt\Type\Arr;
-
 $rr = array(
     "firstname"=>"Bruce",
     "lastname"=>"Wayne",
@@ -161,7 +129,7 @@ $rr = array(
     )
 );
 
-$arr = new Arr($rr);//Arr::create($rr)
+$arr = arr($rr);//Arr::create($rr)
 $arr->has("Banner")//false
 $arr->empty();//false
 $arr->length();//3
@@ -197,9 +165,9 @@ $arr->push("brucebatman", "username");//add at end of queue. key is optional
 $arr->enqueue("active", "status");//same as Arr.push. key is optional
 $arr->prequeue("admin", "type");//add at beginning of queue. key is optional
 $arr->dequeue();//remove at beginning of array. returns Bruce
-$flatarr = Arr::level($rr);//flattens multidimentional array
-$is_assoc = Arr::isMap(["username"=>"pitsolu", "password"="redacted"]);//is fully associative arr
-$arr = Arr::create(array(
+$flatarr = $arr->level($rr);//flattens multidimentional array
+$is_assoc = $arr->isMap(["username"=>"pitsolu", "password"="redacted"]);//is fully associative arr
+$arr = arr(array(
     array(
         "username"=>"pitsolu",
         "type"=>"admin"
@@ -210,7 +178,7 @@ $arr = Arr::create(array(
     )
 ));
 $arr->column("type");//returns array("admin", "user")
-$arr = Arr::create(array(
+$arr = arr(array(
 
     "user"=>"pitsolu",
     "type"=>"admin",

@@ -22,7 +22,7 @@ if(!function_exists("arr")){
 
 		return new class($bundle) extends \Strukt\Contract\AbstractArrOps{
 
-			private $val;
+			protected $val;
 
 			public function __construct(array $bundle){
 
