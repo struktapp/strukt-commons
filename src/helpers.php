@@ -162,3 +162,18 @@ if(!function_exists("json")){
 		};
 	}
 }
+
+if(!function_exists("msg")){
+
+	function msg(string|array $message = null){
+
+		return new class($message) extends \Strukt\Message{
+
+			public function __construct($message){
+
+				if(!is_null($message))
+					parent::__construct($message);
+			}
+		};
+	}
+}

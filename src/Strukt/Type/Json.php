@@ -37,7 +37,7 @@ class Json{
 
 	public static function isJson($args) {
 
-	    json_decode($args);
+	    json_decode($args, true);
 
 	    return (json_last_error()===JSON_ERROR_NONE);
 	}

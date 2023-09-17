@@ -6,7 +6,7 @@ class JsonTest extends PHPUnit\Framework\TestCase{
 
 	public function setUp():void{
 
-		$this->encCred = '{"username":"adm","password":"ce0b2b771f7d468c0141918daea704e0e5ad45db"}';
+		$this->encCred = sprintf('{"username":"adm","password":"%s"}', sha1("p@55w0rd"));
 
 		$this->decCred = array(
 

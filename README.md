@@ -72,15 +72,15 @@ $p = period()
 //In order for date influence to work the first 2 line below must be 
 // called before any further date manipulation
 // messing arround with dates can create headaches
-$p->create(new DateTime("1900-01-01"), new DateTime("1963-12-31")); //period
-$p->reset(new DateTime("1960-03-23"));//create fake today
+$p->create(when("1900-01-01"), when("1963-12-31")); //period
+$p->reset(when("1960-03-23"));//create fake today
 $fakeToday = today();
 
 //All dates created with Strukt\Type\DateTime will be in 1960
 $fakeToday->same(new DateTime); //false
 $fakeToday->same(when());//true
 $fakeToday->hasPeriod()//true -- has period
-$fakeToday->withDate(new DateTime("1959-04-01"))->isValid(); //true -- is date valid with period
+$fakeToday->withDate(when("1959-04-01"))->isValid(); //true -- is date valid with period
 
 $fakeToday->getState();//get state of date manipulation
 $fakeToday->reset();//reset back to original today
@@ -165,8 +165,8 @@ $arr->push("brucebatman", "username");//add at end of queue. key is optional
 $arr->enqueue("active", "status");//same as Arr.push. key is optional
 $arr->prequeue("admin", "type");//add at beginning of queue. key is optional
 $arr->dequeue();//remove at beginning of array. returns Bruce
-$flatarr = $arr->level($rr);//flattens multidimentional array
-$is_assoc = $arr->isMap(["username"=>"pitsolu", "password"="redacted"]);//is fully associative arr
+$flatarr = $arr->level();//flattens multidimentional array
+$is_assoc = arr(["username"=>"pitsolu", "password"="redacted"])->isMap();//is fully associative arr
 $arr = arr(array(
     array(
         "username"=>"pitsolu",
@@ -196,7 +196,7 @@ $arr->tokenize();//returns user:pitsolu|type:admin|status:active
  */
 $token = "user:pitsolu|status:active|is_superuser:true";
 
-$query = new Strukt\Core\TokenQuery($token);
+$query = token($token);
 
 $query->get("user");//pitsolu
 $query->get("status");//active
@@ -207,7 +207,6 @@ $query->keys();//["user","status","is_superuser"]
 
 $query->token();//original token -- user:pitsolu|status:active|is_superuser:true
 $query->set("role","admin");
-$token = sprintf("%s|role:admin", $query->token());
 $query->reMake();//user:pitsolu|status:active|is_superuser:true|role:admin
 
 /**
@@ -215,7 +214,7 @@ $query->reMake();//user:pitsolu|status:active|is_superuser:true|role:admin
  */
 $token = "contact:1|is:tenant,landlord,prospect";
 
-$query = new Strukt\Core\TokenQuery($token);
+$query = token($token);
 
 $query->get("is");//["tenant","landlord","prospect"];
 $query->set("status", ["active","published"]);
@@ -225,14 +224,11 @@ $query->reMake();//contact:1|is:tenant,landlord,prospect|status:active,published
 ## Messages
 
 ```php
-use Strukt\Message;
-// use Strukt\Message\Info; //Works the same way as Strukt\Messgae\Error
+msg("error 401!");
+msg("error 402!");
+msg("error 404!");
 
-new Message("error 401!");
-new Message("error 402!");
-new Message("error 404!");
-
-$errors = Message::get();
+$errors = msg()->get();
 
 $errors->last()->yield(); //error 404!
 $errors->reset();
@@ -244,7 +240,9 @@ $errors->current()->yield(); //error 402!
 ## Json
 
 ```php
-$l = Strukt\Type\Json::encode(array("fname"=>"Peter", "lname"=>"Pan"));//json string
-$m = Strukt\Type\Json::pp($l);//pretty print
-$n = Strukt\Type\Json::decode($m);//array
+$l = json(array("fname"=>"Peter", "lname"=>"Pan"));//json string
+$l->encode();//json string
+$m = $l->pp();//pretty print
+$n = $l->decode();//array
+json("{}")->valid();// is valid json. will return true
 ```
