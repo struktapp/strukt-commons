@@ -49,7 +49,7 @@ You may also find `Number` object via package `strukt/math` that is a dependency
 
 ```php
 $start = when()
-$end = wheny("+30 days");
+$end = when("+30 days");
 $rand = $start->rand($end);//make start date random date between start and end
 $end->gt($start);//true
 $end->gte($start);//true
