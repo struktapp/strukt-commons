@@ -20,7 +20,7 @@ if(!function_exists("arr")){
 
 	function arr(array $bundle){
 
-		return new class($bundle) extends \Strukt\Contract\AbstractArrOps{
+		return new class($bundle) extends \Strukt\Contract\Arr{
 
 			protected $val;
 
@@ -28,15 +28,6 @@ if(!function_exists("arr")){
 
 				$this->val = $bundle;
 			}
-
-			/**
-			* Is array fully associative
-			*/
-			public function isMap(){
-
-				return AbstractArr::isMap($this->val);
-			}
-
 
 			public function level(){
 

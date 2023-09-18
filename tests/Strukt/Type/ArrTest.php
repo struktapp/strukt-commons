@@ -4,6 +4,8 @@ use Strukt\Type\Arr;
 
 class ArrTest extends PHPUnit\Framework\TestCase{
 
+	use \Strukt\Helper\Arr;
+
 	public function setUp():void{
 
 		$this->rawarr = array(
@@ -157,9 +159,9 @@ class ArrTest extends PHPUnit\Framework\TestCase{
 
 	public function testIsAssociative(){
 
-		$this->assertTrue(Arr::isMap(["firstname"=>"Ludivar", "lastname"=>"Drascos"]));
-		$this->assertFalse(Arr::isMap(["firstname"=>"Peter", "lastname"=>"Parker", 22]));
-		$this->assertFalse(Arr::isMap([1, 2, 3]));
+		$this->assertTrue($this->isMap(["firstname"=>"Ludivar", "lastname"=>"Drascos"]));
+		$this->assertFalse($this->isMap(["firstname"=>"Peter", "lastname"=>"Parker", 22]));
+		$this->assertFalse($this->isMap([1, 2, 3]));
 	}
 
 	public function testColumn(){

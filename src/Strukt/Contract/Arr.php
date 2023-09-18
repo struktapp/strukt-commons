@@ -3,11 +3,15 @@
 namespace Strukt\Contract;
 
 use Strukt\Contract\ValueObject as ValueObject; 
-use Strukt\Contract\AbstractArr;
 use Strukt\Builder\Collection as CollectionBuilder;
 use Strukt\Event;
 
-abstract class AbstractArrOps extends ValueObject{
+abstract class Arr extends ValueObject{
+
+	use \Strukt\Helper\Arr{
+
+		isMap as protected traitIsMap;
+	}
 
 	/**
 	* Append element to array
@@ -80,9 +84,18 @@ abstract class AbstractArrOps extends ValueObject{
 		return implode($delimiter, $this->val);
 	}
 
+	/**
+	* Is array fully assosicative
+	* 
+	*/
+	public function isMap(){
+
+		return $this->traitIsMap($this->val);		
+	}
+
 	public function tokenize(array $keys = null){
 
-		if(!$this->isMap($this->val) || !empty(array_filter($this->val, "is_object")))
+		if(!$this->isMap() || !empty(array_filter($this->val, "is_object")))
 			new Raise("Array [Values & Keys] must be at least alphanumeric!");
 
 		if(is_null($keys))

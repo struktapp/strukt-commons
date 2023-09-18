@@ -5,11 +5,11 @@ namespace Strukt\Type;
 use Strukt\Contract\ValueObject as ValueObject; 
 use Strukt\Builder\Collection as CollectionBuilder;
 use Strukt\Contract\AbstractArrOps;
-use Strukt\Contract\AbstractArr;
+use Strukt\Contract\Arr as ContractArr;
 use Strukt\Raise;
 use Strukt\Event;
 
-class Arr extends AbstractArrOps{
+class Arr extends ContractArr{
 
 	public function __construct(array $arr){
 
@@ -22,14 +22,6 @@ class Arr extends AbstractArrOps{
 			new Raise(sprintf("%s::create requires an array!", static::class));
 
 		return new self($arr);
-	}
-
-	/**
-	* Is array fully associative
-	*/
-	public static function isMap(array $arr){
-
-		return AbstractArr::isMap($arr);
 	}
 
 	/**
