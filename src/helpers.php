@@ -105,10 +105,13 @@ if(!function_exists("env")){
 
 if(!function_exists("reg")){
 
-	function reg(string $key = null){
+	function reg(string $key = null, mixed $val = null){
 
 		$reg = Strukt\Core\Registry::getSingleton();
-		if(!is_null($key))
+		if(!is_null($key) && !is_null($val))
+			$reg->set($key, $val);
+
+		if(!is_null($key) && is_null($val))
 			return $reg->get($key);
 
 		return $reg;
