@@ -168,3 +168,18 @@ if(!function_exists("msg")){
 		};
 	}
 }
+
+use Symfony\Component\VarDumper\Cloner\VarCloner;
+use Symfony\Component\VarDumper\Dumper\CliDumper;
+use Symfony\Component\VarDumper\Dumper\HtmlDumper;
+use Symfony\Component\VarDumper\VarDumper;
+
+if(!function_exists("dd")){
+
+	VarDumper::setHandler(function (mixed $var): void {
+	    $cloner = new VarCloner();
+	    $dumper = 'cli' === PHP_SAPI ? new CliDumper() : new HtmlDumper();
+
+	    $dumper->dump($cloner->cloneVar($var));
+	});
+}

@@ -11,7 +11,8 @@
     "require": {
 
         "php": "^8.1",
-        "strukt/math":"v1.1.0-alpha"
+        "strukt/math":"v1.1.0-alpha",
+        "symfony/var-dumper": "6.4.x-dev"
     },
     "autoload": {
 
