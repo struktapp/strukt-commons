@@ -8,7 +8,7 @@ use Strukt\Type\Str;
 
 class Env{
 
-	public static function withFile($path=".env"){
+	public static function withFile(string $path=".env"){
 
 		$lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
 
@@ -29,7 +29,7 @@ class Env{
 		}
 	}
 
-	public static function has($key){
+	public static function has(string $key){
 
 		$key = sprintf("env.%s", $key);
 
@@ -38,7 +38,7 @@ class Env{
 		return $registry->exists($key);
 	}
 
-	public static function get($key){
+	public static function get(string $key){
 
 		$key = sprintf("env.%s", $key);
 
@@ -50,10 +50,7 @@ class Env{
 		return $registry->get($key);
 	}
 
-	public static function set($key, $val){
-
-		if(!is_string($key) && !is_string($val))
-			new Raise(sprintf("%s::set(key,val) key and val must be strings!", __CLASS__));
+	public static function set(string $key, string|int|bool $val){
 			
 		Registry::getSingleton()->set(sprintf("env.%s", $key), $val);
 	}

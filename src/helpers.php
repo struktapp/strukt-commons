@@ -94,9 +94,9 @@ if(!function_exists("today")){
 
 if(!function_exists("env")){
 
-	function env(string $key, string|array|int $val = null){
+	function env(string $key, string|int|bool $val = null){
 
-		if(!empty($val) && !is_null($val))
+		if(!is_null($val))
 			Env::set($key, $val);
 
 		return Env::get($key);
