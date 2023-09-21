@@ -7,6 +7,15 @@ use Strukt\Contract\AbstractArr;
 use Strukt\Type\Arr;
 use Strukt\Type\Json;
 use Strukt\Env;
+use Strukt\Raise;
+
+if(!function_exists("raise")){
+
+	function raise($error, $code = 500){
+
+		return new Raise($error, $code);
+	}
+}
 
 if(!function_exists("collect")){
 
