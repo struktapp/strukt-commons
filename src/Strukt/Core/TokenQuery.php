@@ -18,9 +18,9 @@ class TokenQuery{
 
 		foreach($map as $item){
 
-			list($key, $val) = explode(":", $item);
+			list($key, $val) = explode(":", $item, limit:2);
 			if(preg_match("/,/", $val))
-				$val = explode(",", $val,2);
+				$val = explode(",", $val);
 
 			$this->parts[$key] = $val;
 		}
