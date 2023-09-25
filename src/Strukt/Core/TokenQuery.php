@@ -20,7 +20,7 @@ class TokenQuery{
 
 			list($key, $val) = explode(":", $item);
 			if(preg_match("/,/", $val))
-				$val = explode(",", $val);
+				$val = explode(",", $val,2);
 
 			$this->parts[$key] = $val;
 		}
