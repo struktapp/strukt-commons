@@ -39,6 +39,11 @@ class TokenQuery{
 		return null;
 	}
 
+	public function remove($key){
+
+		unset($this->parts[$key]);
+	}
+
 	public function set(string $key, $val){
 
 		if(!is_array($val) && !is_string($val))
