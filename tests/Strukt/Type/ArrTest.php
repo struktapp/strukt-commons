@@ -100,7 +100,11 @@ class ArrTest extends PHPUnit\Framework\TestCase{
 
 	public function testCount(){
 
-		$this->assertTrue($this->arr->only($this->arr->length()));
+		$keys = ["othernames", "surname"];
+
+		$arr = $this->arr->only($keys);
+
+		$this->assertTrue(array_keys($arr) == $keys);
 	}
 
 	public function testLast(){

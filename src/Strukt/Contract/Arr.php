@@ -10,7 +10,7 @@ abstract class Arr extends ValueObject{
 
 	use \Strukt\Helper\Arr{
 
-		isMap as protected traitIsMap;
+		isMap as protected _isMap;
 	}
 
 	/**
@@ -90,7 +90,7 @@ abstract class Arr extends ValueObject{
 	*/
 	public function isMap(){
 
-		return $this->traitIsMap($this->val);		
+		return $this->_isMap($this->val);		
 	}
 
 	public function tokenize(array $keys = null){
@@ -116,7 +116,7 @@ abstract class Arr extends ValueObject{
 
 	public function empty(){
 
-		return $this->only(0);
+		return $this->length() == 0;
 	}
 
 	public function length(){
@@ -124,9 +124,13 @@ abstract class Arr extends ValueObject{
 		return count($this->val);
 	}
 
-	public function only(int $num){
+	public function only(array $haystack){
 
-		return $this->length() == $num;
+		return array_filter($this->val, function($needle) use($haystack){
+
+			return in_array($needle, $haystack);
+
+		}, ARRAY_FILTER_USE_KEY);
 	}
 
 	public function reset():void{
@@ -185,9 +189,7 @@ abstract class Arr extends ValueObject{
 
 	public function each(\Closure $func){
 
-		$func = $func->bindTo($this);
-
-		$each = new Event($func);
+		$each = new Event($func->bindTo($this));
 
 		foreach($this->val as $key=>$val)
 			$this->val[$key] = $each->apply($key, $val)->exec();
@@ -197,16 +199,14 @@ abstract class Arr extends ValueObject{
 
 	public function recur(\Closure $func){
 
-		$func = $func->bindTo($this);
-
-		$each = new Event($func);
+		$each = new Event($func->bindTo($this));
 
 		foreach($this->val as $key=>$val){
 
-			if(!is_array($val))
-				$this->val[$key] = $each->apply($key, $val)->exec();
-			else
-				$this->val[$key] = $this->create($val)->each($func)->yield();
+			if(is_array($val))
+				$val = \Strukt\Type\Arr::create($val)->each($func)->yield();
+
+			$this->val[$key] = $each->apply($key, $val)->exec();
 		}
 
 		return $this;
