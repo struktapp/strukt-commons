@@ -52,6 +52,11 @@ if(!function_exists("token")){
 
 		return new \Strukt\Core\TokenQuery($token);
 	}
+
+	function tokenize(array $parts){
+
+		return arr($parts)->tokenize();
+	}
 }
 
 if(!function_exists("str")){

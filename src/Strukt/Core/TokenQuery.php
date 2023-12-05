@@ -44,16 +44,18 @@ class TokenQuery{
 		unset($this->parts[$key]);
 	}
 
-	public function set(string $key, $val){
+	public function set(string $key, string|array|int|float $val){
 
-		if(!is_array($val) && !is_string($val))
-			new Raise("Value must be string or array");
+		// if(!is_array($val) && !is_string($val))
+			// new Raise("Value must be string or array");
 
 		if(is_array($val))
 			if(array_sum(array_map('is_string', $val)) != count($val))
 				new Raise("Array must be of strings");
 
 		$this->parts[$key] = $val;
+
+		return $this;
 	}	
 
 	public function keys(){

@@ -104,7 +104,7 @@ abstract class Arr extends ValueObject{
 		$token = [];
 		foreach($this->val as $key=>$val)
 			if(in_array($key, $keys))
-				$token[] = sprintf("%s:%s", $key, $val);
+				$token[] = sprintf("%s:%s", $key, is_array($val)?implode(",", $val):$val);
 
 		return implode("|", $token);
 	}
