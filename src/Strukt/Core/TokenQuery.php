@@ -42,6 +42,8 @@ class TokenQuery{
 	public function remove($key){
 
 		unset($this->parts[$key]);
+
+		return $this;
 	}
 
 	public function set(string $key, string|array|int|float $val){
@@ -79,5 +81,10 @@ class TokenQuery{
 		}
 
 		return implode("|", $map);
+	}
+
+	public function yield(){
+
+		return $this->reMake();
 	}
 }
