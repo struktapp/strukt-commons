@@ -29,6 +29,13 @@ class Fs implements CacheDriverInterface{
 		$this->filename = $filename;
 	}
 
+	public function empty():bool{
+
+		$data = json($this->fs->cat($this->filename))->decode();
+
+		return empty($data);
+	}
+
 	public function put(string $key, string|array $val):self{
 
 		$this->buffer->set($key, $val);

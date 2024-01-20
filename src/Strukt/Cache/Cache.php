@@ -35,6 +35,11 @@ class Cache{
 		return $this;
 	}
 
+	public function empty():bool{
+
+		return $this->cache->empty();
+	}
+
 	public function save(){
 
 		$this->cache->save();
