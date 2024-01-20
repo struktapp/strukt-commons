@@ -133,7 +133,6 @@ $arr = arr($rr);//Arr::create($rr)
 $arr->has("Banner")//false
 $arr->empty();//false
 $arr->length();//3
-$arr->only(3);//true
 $arr->next();//true
 $arr->current()->yield();//Wayne
 $arr->key();//lastname
@@ -207,7 +206,7 @@ $query->keys();//["user","status","is_superuser"]
 
 $query->token();//original token -- user:pitsolu|status:active|is_superuser:true
 $query->set("role","admin");
-$query->reMake();//user:pitsolu|status:active|is_superuser:true|role:admin
+$query->yield();//user:pitsolu|status:active|is_superuser:true|role:admin
 
 /**
  * Complex Token
@@ -218,7 +217,7 @@ $query = token($token);
 
 $query->get("is");//["tenant","landlord","prospect"];
 $query->set("status", ["active","published"]);
-$query->reMake();//contact:1|is:tenant,landlord,prospect|status:active,published
+$query->yield();//contact:1|is:tenant,landlord,prospect|status:active,published
 ```
 
 ## Messages

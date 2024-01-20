@@ -10,7 +10,7 @@ use Strukt\Core\Map;
 *
 * @author Moderator <pitsolu@gmail.com>
 */
-class Registry{
+class Registry implements \Strukt\Contract\CollectionInterface{
 
 	/**
 	* Singleton Registry Instance
@@ -64,7 +64,7 @@ class Registry{
 	*
 	* @return mixed
 	*/
-	public function get($key){
+	public function get(string $key){
 
 		return $this->register->get($key);
 	}
@@ -77,7 +77,7 @@ class Registry{
 	*
 	* @return void
 	*/
-	public function set($key, $val){
+	public function set(string $key, $val):void{
 
 		$this->keys[$key] = null;
 
@@ -91,7 +91,7 @@ class Registry{
 	*
 	* @return void
 	*/
-	public function remove($key){
+	public function remove(string $key):void{
 
 		unset($this->keys[$key]);
 
@@ -105,7 +105,7 @@ class Registry{
 	*
 	* @return boolean
 	*/
-	public function exists($key){
+	public function exists(string $key):bool{
 
 		return $this->register->exists($key);
 	}
@@ -115,8 +115,18 @@ class Registry{
 	*
 	* @return array
 	*/
-	public function ls(){
+	public function keys():array{
 
 		return array_keys($this->keys);
+	}
+
+	/**
+	* fn keys alias
+	*
+	* @return array
+	*/
+	public function ls():array{
+
+		return $this->keys();
 	}
 }

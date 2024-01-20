@@ -2,7 +2,7 @@
 
 namespace Strukt\Contract;
 
-abstract class Message{
+abstract class NoteList{
 
 	public function __construct(string $message){
 

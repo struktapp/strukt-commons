@@ -14,7 +14,7 @@ use Strukt\Builder\Collection as CollectionBuilder;
 * 
 * @author Moderator <pitsolu@gmail.com>
 */
-class Collection{
+class Collection implements \Strukt\Contract\CollectionInterface{
 
 	/**
 	* Raw collection
@@ -35,7 +35,7 @@ class Collection{
 	*
 	* @param string $name
 	*/
-	public function __construct($name = null){
+	public function __construct(string $name = null){
 
 		if(!is_null($name))
 			$this->name = $name;
@@ -61,7 +61,7 @@ class Collection{
 	* 
 	* @return array
 	*/
-	public function getKeys():array{
+	public function keys():array{
 
 		return array_keys($this->collection);
 	}
@@ -74,7 +74,7 @@ class Collection{
 	*
 	* @return void
 	*/
-	public function set($key, $val){
+	public function set(string $key, $val):void{
 
 		if (strpos($key, '.') !== false)
 			throw new InvalidKeyException($key);
@@ -94,7 +94,7 @@ class Collection{
 	*
 	* @return void
 	*/
-	public function remove($key){
+	public function remove(string $key):void{
 
 		unset($this->collection[$key]);
 	}
@@ -110,7 +110,7 @@ class Collection{
 	*
 	* @return mixed
 	*/
-	public function get($key){
+	public function get(string $key){
 
 		$keyList = explode(".", $key);
 
@@ -154,7 +154,7 @@ class Collection{
 	*
 	* @return boolean
 	*/
-	public function exists($key){
+	public function exists(string $key):bool{
 
 		try{
 
@@ -166,45 +166,5 @@ class Collection{
 
 			return false;
 		}	
-	}
-
-	/**
-	* Marshal dot-notationed key into a \Strukt\Core\Collection
-	*
-	* @param string $hashKey
-	* @param mixed $val
-	* @param \Strukt\Core\Collection $collection
-	*/
-	public static function marshal($hashKey, $newVal, Collection $collection){
-
-		if($collection->exists($hashKey))
-			if(!empty($collection->get($hashKey)))
-				throw new KeyOverlapException($hashKey);
-
-		$keyList = explode(".", $hashKey);
-
-		$lastKey = array_pop($keyList);
-
-		foreach($keyList as $key){
-
-			if($collection->exists($key)){
-
-				$val = $collection->get($key);
-				if($val instanceof Collection)
-					$collection = $val;
-
-				continue;
-			}
-
-			$obj = new Collection();
-			$collection->set($key, $obj);
-			$collection = $obj;
-		}
-
-		if(is_array($newVal))
-			if(is_array(reset($newVal)))
-				$newVal = CollectionBuilder::create()->fromAssoc($newVal);
-
-		$collection->set($lastKey, $newVal);
 	}
 }

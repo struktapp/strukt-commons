@@ -30,7 +30,7 @@ class TokenQueryTest extends PHPUnit\Framework\TestCase{
 
 		$query->set("role","admin");
 		$token = sprintf("%s|role:admin", $query->token());
-		$this->assertEquals($query->reMake(), $token);
+		$this->assertEquals($query->yield(), $token);
 	}
 
 	public function testComplexToken(){
@@ -46,10 +46,10 @@ class TokenQueryTest extends PHPUnit\Framework\TestCase{
 			"prospect"
 		]);
 
-		$this->assertEquals($query->reMake(), $token);
+		$this->assertEquals($query->yield(), $token);
 
 		$query->set("status", ["active","published"]);
 
-		$this->assertEquals($query->reMake(), sprintf("%s|status:active,published", $token));
+		$this->assertEquals($query->yield(), sprintf("%s|status:active,published", $token));
 	}
 }

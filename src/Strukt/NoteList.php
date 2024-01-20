@@ -2,11 +2,11 @@
 
 namespace Strukt;
 
-class Message extends \Strukt\Contract\Message{
+class NoteList extends \Strukt\Contract\NoteList{
 
 	protected $message;
 	protected static $messages = [];
-	protected static $limit = 9;
+	protected static $limit = 100;
 
 	public function __construct(string $message){
 

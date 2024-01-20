@@ -2,12 +2,35 @@
 
 use Strukt\Builder\Collection as CollectionBuilder;
 use Strukt\Core\Collection;
+use Strukt\Core\Map;
 use Strukt\Core\Today;
 use Strukt\Contract\AbstractArr;
 use Strukt\Type\Arr;
 use Strukt\Type\Json;
 use Strukt\Env;
 use Strukt\Raise;
+use Strukt\Cache\Cache;
+
+if(!function_exists("cache")){
+
+	function cache(string $filename, string|array $val = null){
+		
+		if(preg_match("/\./", $filename)){
+
+			$arr = arr(str($filename)->split("."));
+			$filename = $arr->dequeue();
+			$key = $arr->concat(".");
+
+			$cache = Cache::make($filename);
+			if(!is_null($val))
+				return $cache->put($key, $val);
+
+			return $cache->get($key);
+		}
+
+		return new Cache($filename);
+	}
+}
 
 if(!function_exists("raise")){
 
@@ -21,7 +44,16 @@ if(!function_exists("collect")){
 
 	function collect(array $assoc){
 
-		return CollectionBuilder::create(new Collection())->fromAssoc($assoc);
+		return CollectionBuilder::create()->fromAssoc($assoc);
+	}
+}
+
+
+if(!function_exists("map")){
+
+	function map(array $assoc){
+
+		return new Map(collect($assoc));
 	}
 }
 
@@ -52,6 +84,9 @@ if(!function_exists("token")){
 
 		return new \Strukt\Core\TokenQuery($token);
 	}
+}
+
+if(!function_exists("tokenize")){
 
 	function tokenize(array $parts){
 
@@ -173,9 +208,9 @@ if(!function_exists("json")){
 
 if(!function_exists("msg")){
 
-	function msg(string|array $message = null){
+	function msg(string|array|int $message = null){
 
-		return new class($message) extends \Strukt\Message{
+		return new class($message) extends \Strukt\NoteList{
 
 			public function __construct($message){
 

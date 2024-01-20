@@ -48,9 +48,6 @@ class TokenQuery{
 
 	public function set(string $key, string|array|int|float $val){
 
-		// if(!is_array($val) && !is_string($val))
-			// new Raise("Value must be string or array");
-
 		if(is_array($val))
 			if(array_sum(array_map('is_string', $val)) != count($val))
 				new Raise("Array must be of strings");
@@ -70,7 +67,7 @@ class TokenQuery{
 		return $this->token;
 	}
 
-	public function reMake(){
+	public function yield(){
 
 		foreach($this->parts as $key=>$val){
 
@@ -81,10 +78,5 @@ class TokenQuery{
 		}
 
 		return implode("|", $map);
-	}
-
-	public function yield(){
-
-		return $this->reMake();
 	}
 }

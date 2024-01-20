@@ -11,7 +11,9 @@ namespace Strukt\Core;
 * 
 * @author Moderator <pitsolu@gmail.com>
 */
-class Map{
+class Map implements \Strukt\Contract\CollectionInterface{
+
+	use \Strukt\Traits\Collection;
 
 	/**
 	* List of items
@@ -39,9 +41,9 @@ class Map{
 	* 
 	* @return array
 	*/
-	public function getKeys():array{
+	public function keys():array{
 
-		return $this->collection->getKeys();
+		return $this->collection->keys();
 	}
 
 	/**
@@ -51,7 +53,7 @@ class Map{
 	*
 	* @return void
 	*/
-	public function remove($hashKey){
+	public function remove(string $hashKey):void{
 
 		$keyList = explode(".", $hashKey);
 		$collection = $this->collection;
@@ -77,9 +79,9 @@ class Map{
 	*
 	* @return void
 	*/
-	public function set($key, $val){
+	public function set(string $key, $val):void{
 
-		Collection::marshal($key, $val, $this->collection);
+		$this->assemble($key, $val, $this->collection);
 	}
 
 	/**
@@ -87,7 +89,7 @@ class Map{
 	*
 	* @return mixed
 	*/
-	public function get($key){
+	public function get(string $key){
 
 		return $this->collection->get($key);
 	}
@@ -97,7 +99,7 @@ class Map{
 	*
 	* @return boolean
 	*/
-	public function exists($key){
+	public function exists(string $key):bool{
 
 		return $this->collection->exists($key);
 	}
