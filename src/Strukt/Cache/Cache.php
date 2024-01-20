@@ -16,6 +16,11 @@ class Cache{
 		return new self($filename);
 	}
 
+	public function exists(string $key):bool{
+
+		return $this->cache->exists($key);
+	}
+
 	public function put(string $key, string|array $val){
 
 		$this->cache->put($key, $val);

@@ -29,6 +29,11 @@ class Fs implements CacheDriverInterface{
 		$this->filename = $filename;
 	}
 
+	public function exists(string $key):bool{
+
+		return $this->buffer->exists($key);		
+	}
+
 	public function empty():bool{
 
 		$data = json($this->fs->cat($this->filename))->decode();
