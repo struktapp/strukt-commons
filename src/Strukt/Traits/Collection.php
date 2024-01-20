@@ -26,7 +26,9 @@ trait Collection{
 			$last = $keys->last()->equals($keyPart);
 			if($last){
 
-				$tmp->set($keyPart, $val);
+				if(!$tmp->exists($keyPart))
+					$tmp->set($keyPart, $val);
+
 				continue;
 			}
 
