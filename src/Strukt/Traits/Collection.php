@@ -3,52 +3,48 @@
 namespace Strukt\Traits;
 
 use Strukt\Contract\CollectionInterface;
+use Strukt\Exception\KeyOverlapException;
 
 trait Collection{
 
 	/**
-	* Marshal dot-notationed key into a \Strukt\Core\Collection
+	* Marshal dot-notationed key into a Strukt\Contract\CollectionInterface
 	*
 	* @param string $key
 	* @param mixed $val
-	* @param \Strukt\Core\Collection $collection
+	* @param Strukt\Contract\CollectionInterface $collection
 	*/
-	protected function assemble(string $key, $val, CollectionInterface $collection){
+	public static function assemble($key, $val, CollectionInterface $collection){
 
 		if($collection->exists($key))
 			if(!empty($collection->get($key)))
-				throw new \Strukt\Exception\KeyOverlapException($key);
-			
-		$keys = arr(explode(".", $key));
+				throw new KeyOverlapException($key);
 
-		while($key = $keys->dequeue()){
+		$keyChain = explode(".", $key);
 
-			if(!$keys->empty()){
+		$lastKey = array_pop($keyChain);
 
-				if($collection->exists($key)){
+		foreach($keyChain as $keyPart){
 
-					$collection = $collection->get($key);
-					continue;
-				}
+			if($collection->exists($keyPart)){
 
-				if(!$collection->exists($key)){
+				$val = $collection->get($keyPart);
+				if($val instanceof CollectionInterface)
+					$collection = $val;
 
-					$tmp = collect([]);
-					$collection->set($key, $tmp);
-					$collection = $tmp;
-				}
+				continue;
 			}
 
-			if($keys->empty()){
-
-				if(is_array($val))
-					if(arr($val)->isMap())
-						$collection->set($key, collect($val));
-
-				if(!is_array($val))
-					$collection->set($key, $val);
-			}
+			$tmp = collect([]);
+			$collection->set($keyPart, $tmp);
+			$collection = $tmp;
 		}
+
+		if(is_array($val))
+			if(is_array(reset($val)))
+				$val = collect($val);
+
+		$collection->set($lastKey, $val);
 	}
 
 	/**

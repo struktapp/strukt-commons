@@ -11,34 +11,74 @@ use Strukt\Env;
 use Strukt\Raise;
 use Strukt\Cache\Cache;
 
+if(!function_exists("collect")){
+
+	function collect(array $assoc){
+
+		return CollectionBuilder::create()->fromAssoc($assoc);
+	}
+}
+
+
+if(!function_exists("map")){
+
+	function map(array $assoc){
+
+		return new Map(collect($assoc));
+	}
+}
+
+if(!function_exists("arr")){
+
+	function arr(array $bundle){
+
+		return new class($bundle) extends \Strukt\Contract\Arr{
+
+			protected $val;
+
+			public function __construct(array $bundle){
+
+				$this->val = $bundle;
+			}
+
+			public function level(){
+
+				return Arr::level($this->val);
+			}
+		};
+	}
+}
+
+if(!function_exists("reg")){
+
+	function reg(string $key = null, mixed $val = null){
+
+		$reg = Strukt\Core\Registry::getSingleton();
+		if(!is_null($key) && !is_null($val))
+			$reg->set($key, $val);
+
+		if(!is_null($key) && is_null($val))
+			return $reg->get($key);
+
+		return $reg;
+	}
+}
 
 if(!function_exists("config")){
 
 	function config(string $key, array|string $options = null){
 
-		if(!reg()->exists("config")){
-
+		if(!reg()->exists("config"))
 			if(fs()->isDir("cfg")){
 
-				$cfg_dir = fs("cfg");
-				$ini_files = $cfg_dir->ls();
-				foreach($ini_files as $ini_file){
+				foreach(fs("cfg")->ls() as $ini_file)
+					$configs[trim($ini_file, ".ini")] = fs("cfg")->ini($ini_file);
 
-					$facet = str($ini_file)->replace(".ini","")->yield();
-					$configs = $cfg_dir->ini($ini_file);
-					foreach($configs as $name=>$val)
-						reg(sprintf("config.%s.%s", $facet, $name), $val);
-				}
-
-				if(reg("config")->exists("app")){
-					
-					$app_config = reg("config.app");
-					$app_name = $app_config->get("app-name");
-					$app_config->remove("app-name");
-					$app_config->set("name", $app_name);
-				}
+				reg("config", $configs);
+				$app_name = reg("config.app")->get("app-name");
+				reg("config.app")->remove("app-name");
+				reg("config.app")->set("name", $app_name);
 			}
-		}
 
 		$nkey = sprintf("config.%s", rtrim($key, "*"));
 		if(str($key)->endsWith("*"))
@@ -84,44 +124,6 @@ if(!function_exists("raise")){
 	function raise($error, $code = 500){
 
 		return new Raise($error, $code);
-	}
-}
-
-if(!function_exists("collect")){
-
-	function collect(array $assoc){
-
-		return CollectionBuilder::create()->fromAssoc($assoc);
-	}
-}
-
-
-if(!function_exists("map")){
-
-	function map(array $assoc){
-
-		return new Map(collect($assoc));
-	}
-}
-
-if(!function_exists("arr")){
-
-	function arr(array $bundle){
-
-		return new class($bundle) extends \Strukt\Contract\Arr{
-
-			protected $val;
-
-			public function __construct(array $bundle){
-
-				$this->val = $bundle;
-			}
-
-			public function level(){
-
-				return Arr::level($this->val);
-			}
-		};
 	}
 }
 
@@ -196,21 +198,6 @@ if(!function_exists("env")){
 			Env::set($key, $val);
 
 		return Env::get($key);
-	}
-}
-
-if(!function_exists("reg")){
-
-	function reg(string $key = null, mixed $val = null){
-
-		$reg = Strukt\Core\Registry::getSingleton();
-		if(!is_null($key) && !is_null($val))
-			$reg->set($key, $val);
-
-		if(!is_null($key) && is_null($val))
-			return $reg->get($key);
-
-		return $reg;
 	}
 }
 

@@ -7,3 +7,4 @@ src/Strukt/Common/Container.php
 composer.lock
 .phpunit.result.cache
 .cache
+cfg

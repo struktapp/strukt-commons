@@ -54,6 +54,14 @@ abstract class Arr extends ValueObject{
 	}
 
 	/**
+	* Arr.push batch
+	*/
+	public function enqueueBatch($element){
+
+		return array_push($this->val, ...$element);
+	}
+
+	/**
 	* Add element at beginning of array. Allows adding by key
 	*/
 	public function prequeue($element, $key = null){
