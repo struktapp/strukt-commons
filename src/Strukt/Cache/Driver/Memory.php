@@ -8,8 +8,6 @@ class Memory implements CacheDriverInterface{
 
 	use \Strukt\Traits\Collection;
 
-	// private $fs;
-	// private $filename;
 	private static $cache = [];
 	private $buffer;
 

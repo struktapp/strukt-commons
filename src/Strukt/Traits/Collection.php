@@ -19,30 +19,34 @@ trait Collection{
 			if(!empty($collection->get($key)))
 				throw new \Strukt\Exception\KeyOverlapException($key);
 			
-		$tmp = $collection;
 		$keys = arr(explode(".", $key));
-		foreach($keys->yield() as $keyPart){
 
-			$last = $keys->last()->equals($keyPart);
-			if($last){
+		while($key = $keys->dequeue()){
 
-				if(!$tmp->exists($keyPart))
-					$tmp->set($keyPart, $val);
+			if(!$keys->empty()){
 
-				continue;
-			}
+				if($collection->exists($key)){
 
-			if(!$last){
-
-				if(!$tmp->exists($keyPart)){
-
-					$newTmp = collect([]);
-					$tmp->set($keyPart, $newTmp);
-					$tmp = $newTmp;
+					$collection = $collection->get($key);
+					continue;
 				}
 
-				if($tmp->exists($keyPart))
-					$tmp = $tmp->get($keyPart);
+				if(!$collection->exists($key)){
+
+					$tmp = collect([]);
+					$collection->set($key, $tmp);
+					$collection = $tmp;
+				}
+			}
+
+			if($keys->empty()){
+
+				if(is_array($val))
+					if(arr($val)->isMap())
+						$collection->set($key, collect($val));
+
+				if(!is_array($val))
+					$collection->set($key, $val);
 			}
 		}
 	}
