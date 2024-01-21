@@ -47,7 +47,13 @@ class Memory implements CacheDriverInterface{
 
 	public function get(string $key):mixed{
 
-		return $this->buffer->get($key);
+		$val = $this->buffer->get($key);
+
+		if(is_array($val))
+			if(arr($val)->isMap())
+				$val = collect($val);
+
+		return $val;
 	}
 
 	public function remove(string $key):self{
