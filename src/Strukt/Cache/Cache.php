@@ -8,6 +8,9 @@ class Cache{
 
 	public function __construct(string $filename, string $driver = Driver\Fs::class){
 
+		if(config("cache.disable"))
+			$driver = Driver\Memory::class;
+
 		$this->cache = new $driver($filename);
 	}
 

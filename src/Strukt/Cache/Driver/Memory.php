@@ -4,29 +4,21 @@ namespace Strukt\Cache\Driver;
 
 use Strukt\Contract\CacheDriverInterface;
 
-class Fs implements CacheDriverInterface{
+class Memory implements CacheDriverInterface{
 
 	use \Strukt\Traits\Collection;
 
-	private $fs;
-	private $filename;
+	// private $fs;
+	// private $filename;
+	private static $cache = [];
 	private $buffer;
 
 	public function __construct(string $file){
 
-		$filename = sprintf("%s.json", $file);
+		if(!array_key_exists($file, self::$cache))
+			self::$cache[$file] = map([]);
 
-		if(!fs()->isDir(".cache"))
-			fs()->mkdir(".cache");
-
-		$this->fs = fs(".cache");
-		if(!$this->fs->isFile($filename))
-			$this->fs->touchWrite($filename, "[]");
-
-		$data = json($this->fs->cat($filename))->decode();
-
-		$this->buffer = map($data);
-		$this->filename = $filename;
+		$this->buffer = self::$cache[$file];
 	}
 
 	public function exists(string $key):bool{
@@ -36,12 +28,17 @@ class Fs implements CacheDriverInterface{
 
 	public function empty():bool{
 
-		$data = json($this->fs->cat($this->filename))->decode();
-
-		return empty($data);
+		return empty($this->buffer->keys());
 	}
 
 	public function put(string $key, string|array $val):self{
+
+		if(is_array($val))
+			if(arr($val)->isMap())
+				$val = collect($val);
+
+		if($this->exists($key))
+			$this->remove($key);
 
 		$this->buffer->set($key, $val);
 		
@@ -62,8 +59,6 @@ class Fs implements CacheDriverInterface{
 
 	public function save():void{
 
-		$arr = $this->disassemble($this->buffer);
-
-		$this->fs->overwrite($this->filename, json($arr)->pp());
+		//
 	}
 }
