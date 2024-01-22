@@ -79,8 +79,6 @@ class Registry implements \Strukt\Contract\CollectionInterface{
 	*/
 	public function set(string $key, $val):void{
 
-		$this->keys[$key] = null;
-
 		$this->register->set($key, $val);
 	}
 
@@ -92,8 +90,6 @@ class Registry implements \Strukt\Contract\CollectionInterface{
 	* @return void
 	*/
 	public function remove(string $key):void{
-
-		unset($this->keys[$key]);
 
 		$this->register->remove($key);
 	}
@@ -117,7 +113,7 @@ class Registry implements \Strukt\Contract\CollectionInterface{
 	*/
 	public function keys():array{
 
-		return array_keys($this->keys);
+		return $this->register->keys();
 	}
 
 	/**
