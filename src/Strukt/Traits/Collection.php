@@ -20,31 +20,37 @@ trait Collection{
 			if(!empty($collection->get($key)))
 				throw new KeyOverlapException($key);
 
-		$keyChain = explode(".", $key);
+		$keyChain = arr(explode(".", $key));
 
-		$lastKey = array_pop($keyChain);
-
-		foreach($keyChain as $keyPart){
+		while($keyPart = $keyChain->dequeue()){
 
 			if($collection->exists($keyPart)){
 
-				$val = $collection->get($keyPart);
-				if($val instanceof CollectionInterface)
-					$collection = $val;
+				$next = $collection->get($keyPart);
+				if($next instanceof CollectionInterface)
+					$collection = $next;
 
 				continue;
 			}
 
-			$tmp = collect([]);
-			$collection->set($keyPart, $tmp);
-			$collection = $tmp;
+			if($keyChain->empty()){
+
+				if(is_array($val))
+					if(arr($val)->isMap())
+						$val = collect($val);
+			}
+
+			if(!$collection->exists($keyPart) && !$keyChain->empty()){
+
+				$tmp = collect([]);
+				$collection->set($keyPart, $tmp);
+				$collection = $tmp;
+
+				continue;
+			}
+
+			$collection->set($keyPart, $val);
 		}
-
-		if(is_array($val))
-			if(is_array(reset($val)))
-				$val = collect($val);
-
-		$collection->set($lastKey, $val);
 	}
 
 	/**
