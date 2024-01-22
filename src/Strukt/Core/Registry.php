@@ -27,18 +27,11 @@ class Registry implements \Strukt\Contract\CollectionInterface{
 	private $register = null;
 
 	/**
-	 * Registry Keys
-	 * 
-	 * @var array
-	 */
-	private $keys = [];
-
-	/**
 	* Constructor initialize Strukt global register
 	*/
 	private function __construct(){
 
-		$this->register = new Map(new Collection("Strukt Registry"));
+		$this->register = new Map(new Collection("strukt-registry"));
 
 		if(!$this->register->exists("today"))
 			$this->register->set("today", new Today);

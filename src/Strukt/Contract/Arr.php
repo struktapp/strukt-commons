@@ -5,6 +5,7 @@ namespace Strukt\Contract;
 use Strukt\Contract\ValueObject as ValueObject; 
 use Strukt\Builder\Collection as CollectionBuilder;
 use Strukt\Event;
+use Strukt\Raise;
 
 abstract class Arr extends ValueObject{
 
@@ -99,6 +100,14 @@ abstract class Arr extends ValueObject{
 	public function isMap(){
 
 		return $this->_isMap($this->val);		
+	}
+
+	public function isStr(){
+
+		if(array_sum(array_map('is_string', $this->val)) != count($this->val) || $this->empty())
+			return false;
+
+		return true;
 	}
 
 	public function tokenize(array $keys = null){
