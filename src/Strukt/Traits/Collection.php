@@ -22,6 +22,13 @@ trait Collection{
 
 		$keyChain = arr(explode(".", $key));
 
+		if(number($keyChain->length())->equals(1)){
+
+			$collection->set($key, $val);
+
+			return;
+		}
+
 		while($keyPart = $keyChain->dequeue()){
 
 			if($collection->exists($keyPart)){
