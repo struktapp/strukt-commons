@@ -2,7 +2,7 @@
 
 namespace Strukt;
 
-class Raise extends \Strukt\Message{
+class Raise extends \Strukt\NoteList{
 
 	public function __construct($error, $code = 500){
 
