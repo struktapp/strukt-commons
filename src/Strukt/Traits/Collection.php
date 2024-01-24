@@ -22,7 +22,7 @@ trait Collection{
 
 		$keyChain = arr(explode(".", $key));
 
-		if(number($keyChain->length())->equals(1)){
+		if(number($keyChain->length())->equals(1) && !is_array($val)){
 
 			$collection->set($key, $val);
 

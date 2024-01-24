@@ -75,9 +75,13 @@ if(!function_exists("config")){
 					$configs[trim($ini_file, ".ini")] = fs("cfg")->ini($ini_file);
 
 				reg("config", $configs);
-				$app_name = reg("config.app")->get("app-name");
-				reg("config.app")->remove("app-name");
-				reg("config.app")->set("name", $app_name);
+				
+				if(reg("config")->exists("app")){
+
+					$app_name = reg("config.app")->get("app-name");
+					reg("config.app")->remove("app-name");
+					reg("config.app")->set("name", $app_name);
+				}
 			}
 
 		$nkey = sprintf("config.%s", rtrim($key, "*"));
