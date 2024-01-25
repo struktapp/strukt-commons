@@ -14,7 +14,7 @@ trait Collection{
 	* @param mixed $val
 	* @param Strukt\Contract\CollectionInterface $collection
 	*/
-	public static function assemble($key, $val, CollectionInterface $collection){
+	protected static function assemble($key, $val, CollectionInterface $collection){
 
 		if($collection->exists($key))
 			if(!empty($collection->get($key)))
