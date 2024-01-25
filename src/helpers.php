@@ -11,7 +11,9 @@ use Strukt\Env;
 use Strukt\Raise;
 use Strukt\Cache\Cache;
 
-if(!function_exists("collect")){
+helper("commons");
+
+if(helper_add("collect")){
 
 	function collect(array $assoc){
 
@@ -20,7 +22,7 @@ if(!function_exists("collect")){
 }
 
 
-if(!function_exists("map")){
+if(helper_add("map")){
 
 	function map(array $assoc){
 
@@ -28,7 +30,7 @@ if(!function_exists("map")){
 	}
 }
 
-if(!function_exists("arr")){
+if(helper_add("arr")){
 
 	function arr(array $bundle){
 
@@ -49,7 +51,7 @@ if(!function_exists("arr")){
 	}
 }
 
-if(!function_exists("reg")){
+if(helper_add("reg")){
 
 	function reg(string $key = null, mixed $val = null){
 
@@ -64,7 +66,7 @@ if(!function_exists("reg")){
 	}
 }
 
-if(!function_exists("config")){
+if(helper_add("config")){
 
 	function config(string $key, array|string $options = null){
 
@@ -102,7 +104,7 @@ if(!function_exists("config")){
 	}
 }
 
-if(!function_exists("cache")){
+if(helper_add("cache")){
 
 	function cache(string $filename, string|array $val = null){
 		
@@ -123,7 +125,7 @@ if(!function_exists("cache")){
 	}
 }
 
-if(!function_exists("raise")){
+if(helper_add("raise")){
 
 	function raise($error, $code = 500){
 
@@ -131,7 +133,7 @@ if(!function_exists("raise")){
 	}
 }
 
-if(!function_exists("token")){
+if(helper_add("token")){
 
 	function token(string $token){
 
@@ -139,7 +141,7 @@ if(!function_exists("token")){
 	}
 }
 
-if(!function_exists("tokenize")){
+if(helper_add("tokenize")){
 
 	function tokenize(array $parts){
 
@@ -147,7 +149,7 @@ if(!function_exists("tokenize")){
 	}
 }
 
-if(!function_exists("str")){
+if(helper_add("str")){
 
 	function str(string $str){
 
@@ -155,7 +157,7 @@ if(!function_exists("str")){
 	}
 }
 
-if(!function_exists("when")){
+if(helper_add("when")){
 
 	function when(string $str = "now"){
 
@@ -163,7 +165,7 @@ if(!function_exists("when")){
 	}
 }
 
-if(!function_exists("period")){
+if(helper_add("period")){
 
 	function period(){
 
@@ -186,7 +188,7 @@ if(!function_exists("period")){
 	}
 }
 
-if(!function_exists("today")){
+if(helper_add("today")){
 
 	function today(){
 
@@ -194,7 +196,7 @@ if(!function_exists("today")){
 	}
 }
 
-if(!function_exists("env")){
+if(helper_add("env")){
 
 	function env(string $key, string|int|bool $val = null){
 
@@ -205,7 +207,7 @@ if(!function_exists("env")){
 	}
 }
 
-if(!function_exists("json")){
+if(helper_add("json")){
 
 	function json(string|array $obj){
 
@@ -244,7 +246,7 @@ if(!function_exists("json")){
 	}
 }
 
-if(!function_exists("msg")){
+if(helper_add("msg")){
 
 	function msg(string|array|int $message = null){
 
@@ -264,7 +266,7 @@ use Symfony\Component\VarDumper\Dumper\CliDumper;
 use Symfony\Component\VarDumper\Dumper\HtmlDumper;
 use Symfony\Component\VarDumper\VarDumper;
 
-if(!function_exists("dd")){
+if(helper_add("dd")){
 
 	VarDumper::setHandler(function (mixed $var): void {
 	    $cloner = new VarCloner();
