@@ -55,6 +55,20 @@ class DateTime extends DateRange{
 		return (new self)->setTimestamp($timestamp);
 	}
 
+	public static function isTimestamp(int $timestamp){
+
+	    try {
+
+	        new \DateTime(sprintf('@%d', $timestamp));
+	    } 
+	    catch(Exception $e) {
+
+	        return false;
+	    }
+
+	    return true;
+	}
+
 	/**
 	* http://bit.ly/2Ssd0RB
 	*/

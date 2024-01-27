@@ -159,9 +159,13 @@ if(helper_add("str")){
 
 if(helper_add("when")){
 
-	function when(string $str = "now"){
+	function when(string|int $date = "now"){
 
-		return new \Strukt\Type\DateTime($str);
+		if(is_numeric($date))
+			if(\Strukt\Type\DateTime::isTimestamp($date))
+				return new \Strukt\Type\DateTime(sprintf("@%s", $date));
+
+		return new \Strukt\Type\DateTime($date);
 	}
 }
 
