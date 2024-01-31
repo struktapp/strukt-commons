@@ -163,7 +163,7 @@ if(helper_add("when")){
 
 		if(is_numeric($date))
 			if(\Strukt\Type\DateTime::isTimestamp($date))
-				return new \Strukt\Type\DateTime(sprintf("@%s", $date));
+				return \Strukt\Type\DateTime::fromTimestamp($date);
 
 		return new \Strukt\Type\DateTime($date);
 	}
