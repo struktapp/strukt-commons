@@ -12,9 +12,13 @@ class Json{
 		return self::encode($json, true);
 	}
 
-	public static function decode(string $json, $isAssoc = true){
+	public static function decode(string $json, $isAssoc = true, $replaceQuotes = true){
 
-		$arrObj = json_decode(str_replace("'","\"", $json), $isAssoc);
+		if($replaceQuotes)
+			$arrObj = json_decode(str_replace("'","\"", $json), $isAssoc);
+
+		if(!$replaceQuotes)
+			$arrObj = json_decode($json, $isAssoc);
 
 		if(json_last_error() != JSON_ERROR_NONE)
 			throw new \Exception(sprintf("JSON Error: %s", json_last_error_msg()));

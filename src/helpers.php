@@ -232,7 +232,7 @@ if(helper_add("json")){
 				return Json::pp($this->obj);
 			}
 
-			public function decode(){
+			public function decode(bool $is_assoc = true, bool $replace_quotes = true){
 
 				return Json::decode($this->obj);
 			}
