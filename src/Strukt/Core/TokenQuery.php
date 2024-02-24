@@ -49,7 +49,7 @@ class TokenQuery{
 	public function set(string $key, string|array|int|float $val){
 
 		if(is_array($val))
-			if(!arr($val)->isStr())
+			if(!arr($val)->isOfStr())
 				new Raise("Array must be of strings");
 
 		$this->parts[$key] = $val;

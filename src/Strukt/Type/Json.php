@@ -4,10 +4,10 @@ namespace Strukt\Type;
 
 class Json{
 
-	public static function pp($json){
+	public static function pp($json, $isAssoc = true, $replaceQuotes = true){
 
 		if(is_string($json))
-			$json = self::decode($json);
+			$json = self::decode($json, $isAssoc, $replaceQuotes);
 			
 		return self::encode($json, true);
 	}

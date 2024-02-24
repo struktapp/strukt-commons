@@ -102,7 +102,7 @@ abstract class Arr extends ValueObject{
 		return $this->_isMap($this->val);		
 	}
 
-	public function isStr(){
+	public function isOfStr(){
 
 		if(array_sum(array_map('is_string', $this->val)) != count($this->val) || $this->empty())
 			return false;
@@ -139,6 +139,11 @@ abstract class Arr extends ValueObject{
 	public function length(){
 
 		return count($this->val);
+	}
+
+	public function count(){
+
+		return $this->length();
 	}
 
 	public function only(array $haystack){
@@ -240,5 +245,23 @@ abstract class Arr extends ValueObject{
 		}
 
 		return $arr;
+	}
+
+	public function sort(string $column = null, bool $desc = false){
+
+		$last = end($this->val);
+		if(!is_null($column))
+			if(!array_key_exists($column, $last))
+				new Raise("Column does not exists in array!");	
+
+		$is2d = array_sum(array_map("is_array", $this->val)) == count($this->val) || $this->empty();		
+
+		if($is2d)
+			$sorted = array_multisort(array_column($this->val, $column), $desc?SORT_DESC:SORT_ASC, $this->val);
+
+		if(!$is2d)
+			$sorted = $desc?arsort($this->val):asort($this->val);
+
+		return $this;
 	}
 }

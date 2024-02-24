@@ -227,9 +227,9 @@ if(helper_add("json")){
 				$this->obj = $obj;
 			}
 
-			public function pp(){
+			public function pp(bool $is_assoc = true, bool $replace_quotes = true){
 
-				return Json::pp($this->obj);
+				return Json::pp($this->obj, $is_assoc, $replace_quotes);
 			}
 
 			public function decode(bool $is_assoc = true, bool $replace_quotes = true){
