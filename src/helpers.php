@@ -234,7 +234,7 @@ if(helper_add("json")){
 
 			public function decode(bool $is_assoc = true, bool $replace_quotes = true){
 
-				return Json::decode($this->obj);
+				return Json::decode($this->obj, $is_assoc, $replace_quotes);
 			}
 
 			public function encode(){
