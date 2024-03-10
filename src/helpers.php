@@ -265,6 +265,22 @@ if(helper_add("msg")){
 	}
 }
 
+if(helper_add("negate")){
+
+	function negate(bool $any){
+
+		return !$any;
+	}
+}
+
+if(helper_add("notnull")){
+
+	function notnull(mixed $var){
+
+		return negate(is_null($var));
+	}
+}
+
 use Symfony\Component\VarDumper\Cloner\VarCloner;
 use Symfony\Component\VarDumper\Dumper\CliDumper;
 use Symfony\Component\VarDumper\Dumper\HtmlDumper;
