@@ -246,6 +246,40 @@ if(helper_add("json")){
 
 				return Json::isJson($this->obj);
 			}
+
+			public function has(mixed $val){
+
+				if(!$this->valid())
+					raise("Invalid JSON!");
+				
+				$obj = $this->decode($this->obj);
+
+				return arr($obj)->has($val);
+			}
+
+			public function assert(string $key, callable $fn = null){
+
+				if(!$this->valid())
+					raise("Invalid JSON!");
+				
+				$obj = $this->decode($this->obj);
+
+				if(array_key_exists($key, $obj)){
+
+					$val = $obj[$key];
+					if(is_callable($fn)){
+
+						if(is_array($val))
+							return $fn(json($val));
+						
+						return $fn(json($obj));
+					}
+
+					return true;
+				}
+
+				return false;
+			}
 		};
 	}
 }

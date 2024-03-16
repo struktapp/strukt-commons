@@ -126,9 +126,15 @@ abstract class Arr extends ValueObject{
 		return implode("|", $token);
 	}
 
-	public function has($val){
+	public function has(mixed $val){
 
-		return in_array($val, $this->val);
+		$vals = array_filter(array_map(function($piece){
+		    return serialize($piece);
+		}, $this->val));
+
+		$val = serialize($val);
+
+		return in_array($val, $vals);
 	}
 
 	public function empty(){
