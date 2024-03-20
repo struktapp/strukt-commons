@@ -247,6 +247,15 @@ if(helper_add("json")){
 				return Json::isJson($this->obj);
 			}
 
+			public function first(){
+
+				$arr = arr($this->decode());
+				if(negate($arr->isMap()))
+					return $arr->current()->yield();
+
+				return null;
+			}
+
 			public function has(mixed $val){
 
 				if(!$this->valid())
