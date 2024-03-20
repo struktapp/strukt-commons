@@ -270,4 +270,9 @@ abstract class Arr extends ValueObject{
 
 		return $this;
 	}
+
+	public function product(){
+
+		return array_product($this->val);
+	}
 }
