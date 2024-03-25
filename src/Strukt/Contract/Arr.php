@@ -9,6 +9,9 @@ use Strukt\Raise;
 
 abstract class Arr extends ValueObject{
 
+	private $stop_at = null;
+	private $ignore = false;
+
 	use \Strukt\Helper\Arr{
 
 		isMap as protected _isMap;
@@ -166,6 +169,13 @@ abstract class Arr extends ValueObject{
 		reset($this->val);
 	}
 
+	public function first(){
+
+		$this->reset();
+
+		return $this->current();
+	}
+
 	public function key(){
 
 		return key($this->val);
@@ -215,14 +225,20 @@ abstract class Arr extends ValueObject{
 		return $this;
 	}
 
+	public function stop(string $which, string $key){
+
+		if(negate($this->ignore))
+			$this->ignore = ($which == $key);
+
+		return $this->ignore;
+	}
+
 	public function each(\Closure $func){
 
-		$each = new Event($func->bindTo($this));
-
 		foreach($this->val as $key=>$val)
-			$this->val[$key] = $each->apply($key, $val)->exec();
+			$this->val[$key] = negate($this->ignore)?Event::create($func->bindTo($this))->apply($key, $val)->exec():$val;
 
-		return $this;
+		return new $this($this->val);
 	}
 
 	public function recur(\Closure $func){
