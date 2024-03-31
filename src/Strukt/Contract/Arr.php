@@ -291,4 +291,9 @@ abstract class Arr extends ValueObject{
 
 		return array_product($this->val);
 	}
+
+	public function contains(string $key){
+
+		return array_key_exists($key, $this->val);
+	}
 }
