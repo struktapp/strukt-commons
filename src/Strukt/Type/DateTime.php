@@ -70,57 +70,36 @@ class DateTime extends DateRange{
 	}
 
 	/**
-	* http://bit.ly/2Ssd0RB
+	* https://github.com/ramphor/date-human-readable
+	*  
+	* use Ramphor\Date\HumanReadable;
+
+	* HumanReadable::parse(new DateTime('now'));         // Moments ago
+	* HumanReadable::parse(new DateTime('+ 59 second')); // Seconds from now
+	* HumanReadable::parse(new DateTime('+ 1 minute'));  // In 1 minute
+	* HumanReadable::parse(new DateTime('- 59 minute')); // 59 minutes ago
+
+	* // You can supply a secondary argument to provide an alternate reference
+	* // DateTime. The default is the current DateTime, ie: DateTime('now'). In
+	* // addition, it takes into account the day of each DateTime. So in the next
+	* // two examples, even though they're only a second apart, 'Yesterday' and
+	* // 'Tomorrow' will be displayed
+
+	* $now = new DateTime('1991-05-18 00:00:00 UTC');
+	* $dateTime = new DateTime('1991-05-17 23:59:59 UTC');
+	* HumanReadable::parse($dateTime, $now); // Yesterday
+
+	* $now = new DateTime('1991-05-17 23:59:59 UTC');
+	* $dateTime = new DateTime('1991-05-18 00:00:00 UTC');
+	* HumanReadable::parse($dateTime, $now) // Tomorrow
 	*/
 	public function when($full = null){
 
-		$today = new DateTime();
-	    $diff = $this->diff($today);
+		$now = new \DateTime();
+		if(!is_null($full))
+			$now = new \DateTime($full);
 
-	    $diff->w = floor($diff->d / 7);
-	    $diff->d -= $diff->w * 7;
-
-	    $string = array(
-
-			'y' => 'year',
-			'm' => 'month',
-			'w' => 'week',
-			'd' => 'day',
-			'h' => 'hour',
-			'i' => 'minute',
-			's' => 'second',
-		);
-	     
-	    foreach ($string as $k => &$v){
-
-	    	if($diff->$k){
-
-	            $v = $diff->$k . ' ' . $v . ($diff->$k > 1 ? 's' : '');
-	        } 
-	        else{
-	            
-	            unset($string[$k]);
-	        }
-	    }
-
-	    $prefix = substr($full, 0, 7);
-
-	    if(is_null($full) || $prefix != "clearer"){
-
-	     	$string = array_slice($string, 0, 1);
-	    }
-	    elseif($prefix == "clearer"){
-
-	    	$len = strlen($full);
-	    	$others = substr($full, 5, $len);
-
-	    	$string = array_slice($string, 0, strlen(strchr($full, "r")));
-		}
-
-	    if($this->gt($today))
-	     	return sprintf("in %s", implode(', ', $string));
-	    
-	    return sprintf("%s ago", implode(', ', $string));
+		return \Ramphor\Date\HumanReadable::parse($this, $now);
 	}
 
 	public function reset(){
