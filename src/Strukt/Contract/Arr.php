@@ -241,6 +241,14 @@ abstract class Arr extends ValueObject{
 		return new $this($this->val);
 	}
 
+	public function filter(\Closure $func = null){
+
+		if(notnull($func))
+			return new $this(array_filter($this->val, $func, ARRAY_FILTER_USE_BOTH));
+
+		return new $this(array_filter($this->val));
+	}
+
 	public function recur(\Closure $func){
 
 		$each = new Event($func->bindTo($this));
