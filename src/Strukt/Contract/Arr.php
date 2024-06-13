@@ -113,6 +113,14 @@ abstract class Arr extends ValueObject{
 		return true;
 	}
 
+	public function isOfNum(){
+
+		if(array_sum(array_map('is_numeric', $this->val)) != count($this->val) || $this->empty())
+			return false;
+
+		return true;
+	}
+
 	public function tokenize(array $keys = null){
 
 		if(!$this->isMap() || !empty(array_filter($this->val, "is_object")))
@@ -127,17 +135,6 @@ abstract class Arr extends ValueObject{
 				$token[] = sprintf("%s:%s", $key, is_array($val)?implode(",", $val):$val);
 
 		return implode("|", $token);
-	}
-
-	public function has(mixed $val){
-
-		$vals = array_filter(array_map(function($piece){
-		    return serialize($piece);
-		}, $this->val));
-
-		$val = serialize($val);
-
-		return in_array($val, $vals);
 	}
 
 	public function empty(){
@@ -277,31 +274,126 @@ abstract class Arr extends ValueObject{
 		return $arr;
 	}
 
-	public function sort(string $column = null, bool $desc = false){
+	public function nested(){
 
-		$last = end($this->val);
-		if(!is_null($column))
-			if(!array_key_exists($column, $last))
-				new Raise("Column does not exists in array!");	
-
-		$is2d = array_sum(array_map("is_array", $this->val)) == count($this->val) || $this->empty();		
-
-		if($is2d)
-			$sorted = array_multisort(array_column($this->val, $column), $desc?SORT_DESC:SORT_ASC, $this->val);
-
-		if(!$is2d)
-			$sorted = $desc?arsort($this->val):asort($this->val);
-
-		return $this;
+		return array_sum(array_map("is_array", $this->val)) == count($this->val);
 	}
+
+	public function sort(bool $asc = true){
+
+		if($asc)
+			asort($this->val);
+
+		if(negate($asc))
+			arsort($this->val);
+
+		return new $this($this->val);
+	}
+
+	// public function sort(string $column = null, bool $desc = false){
+
+	// 	$last = end($this->val);
+	// 	if(!is_null($column))
+	// 		if(!array_key_exists($column, $last))
+	// 			new Raise("Column does not exists in array!");	
+
+	// 	$is2d = $this->nested() || $this->empty();
+
+	// 	if($is2d)
+	// 		$sorted = array_multisort(array_column($this->val, $column), $desc?SORT_DESC:SORT_ASC, $this->val);
+
+	// 	if(!$is2d)
+	// 		$sorted = $desc?arsort($this->val):asort($this->val);
+
+	// 	return $this;
+	// }
 
 	public function product(){
 
 		return array_product($this->val);
 	}
 
+
+	public function has(mixed $val){
+
+		$vals = array_filter(array_map(function($piece){
+		    return serialize($piece);
+		}, $this->val));
+
+		$val = serialize($val);
+
+		return in_array($val, $vals);
+	}
+
 	public function contains(string $key){
 
 		return array_key_exists($key, $this->val);
+	}
+
+	public function values(){
+
+		return new $this(array_values($this->val));
+	}
+
+	public function merge(array $arr){
+
+		return new $this(array_merge($this->val, $arr));
+	}
+
+	public function uniq(){
+
+		return new $this(array_unique($this->val));
+	}
+
+	public function reverse(){
+
+		return new $this(array_reverse($this->val));
+	}
+
+	public function order(){
+
+		if(negate(arr($this->val)->nested()))
+			raise("Array must be of nested values!");
+
+		return new class($this->val){
+
+			private $by;
+			private $val;
+
+			public function __construct(array $val){
+
+				$this->val = $val;
+				$this->by = [];
+			}
+
+			public function asc(string $column){
+
+				$column = arr($this->val)->column($column);
+				$this->by = array_merge($this->by, [$column, SORT_ASC]);
+				if(arr($column)->isOfNum())
+					$this->by = array_merge($this->by, [SORT_NUMERIC]);
+
+				return $this;
+			}
+
+			public function desc(string $column){
+
+				$column = arr($this->val)->column($column);
+				$this->by = array_merge($this->by, [$column, SORT_DESC]);
+				if(arr($column)->isOfNum())
+					$this->by = array_merge($this->by, [SORT_NUMERIC]);
+
+				return $this;
+			}
+
+			public function yield(){
+
+				$this->by[] = &$this->val;
+
+				array_multisort(...$this->by);
+
+				return $this->val;
+			}
+		};
 	}
 }
