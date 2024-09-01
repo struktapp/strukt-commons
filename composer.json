@@ -14,7 +14,8 @@
         "strukt/math":"v1.1.0-alpha",
         "strukt/fs":"1.1.0",
         "symfony/var-dumper": "6.4.x-dev",
-        "ramphor/date-human-readable": "~1.0.0"
+        "ramphor/date-human-readable": "~1.0.0",
+        "laminas/laminas-json": "3.7.x-dev"
     },
     "autoload": {
 

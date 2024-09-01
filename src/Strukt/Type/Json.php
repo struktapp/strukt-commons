@@ -2,41 +2,34 @@
 
 namespace Strukt\Type;
 
+use Laminas\Json\Json as LJson;
+
 class Json{
 
-	public static function pp($json, $isAssoc = true, $replaceQuotes = true){
+	public static function pp($json){
 
 		if(is_string($json))
-			$json = self::decode($json, $isAssoc, $replaceQuotes);
+			$json = self::decode($json);
 			
-		return self::encode($json, true);
+		$result = LJson::prettyPrint($json);
+
+		return $result;
 	}
 
-	public static function decode(string $json, $isAssoc = true, $replaceQuotes = true){
+	public static function decode(string $json){
 
-		if($replaceQuotes)
-			$arrObj = json_decode(str_replace("'","\"", $json), $isAssoc);
+		$result = LJson::decode($json, true);
 
-		if(!$replaceQuotes)
-			$arrObj = json_decode($json, $isAssoc);
+		dd($result);
 
-		if(json_last_error() != JSON_ERROR_NONE)
-			throw new \Exception(sprintf("JSON Error: %s", json_last_error_msg()));
-			
-		return $arrObj;
+		return $result;
 	}
 
-	public static function encode(Array $arrObj, $prettyPrint = false){
+	public static function encode(array $object){
 
-		if($prettyPrint)
-			$json = json_encode($arrObj, JSON_PRETTY_PRINT);
-		else
-			$json = json_encode($arrObj);
+		$result = LJson::encode($object);
 
-		if(json_last_error() != JSON_ERROR_NONE)
-			throw new \Exception(sprintf("JSON Error: %s", json_last_error_msg()));
-
-		return $json;
+		return $result;
 	}
 
 	public static function isJson($args) {

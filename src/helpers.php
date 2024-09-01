@@ -227,14 +227,14 @@ if(helper_add("json")){
 				$this->obj = $obj;
 			}
 
-			public function pp(bool $is_assoc = true, bool $replace_quotes = true){
+			public function pp(){
 
-				return Json::pp($this->obj, $is_assoc, $replace_quotes);
+				return Json::pp($this->obj);
 			}
 
-			public function decode(bool $is_assoc = true, bool $replace_quotes = true){
+			public function decode(){
 
-				return Json::decode($this->obj, $is_assoc, $replace_quotes);
+				return Json::decode($this->obj);
 			}
 
 			public function encode(){
