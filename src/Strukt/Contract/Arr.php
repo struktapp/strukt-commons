@@ -152,6 +152,19 @@ abstract class Arr extends ValueObject{
 		return $this->length();
 	}
 
+	public function distinct(){
+
+		return arr(array_count_values($this->val));
+	}
+
+	public function slice(int $offset, int $length = null){
+
+		if(!is_null($length))
+			return arr(array_slice($this->val, $offset, $length));
+
+		return arr(array_slice($this->val, $offset));
+	}
+
 	public function only(array $haystack){
 
 		return array_filter($this->val, function($needle) use($haystack){
