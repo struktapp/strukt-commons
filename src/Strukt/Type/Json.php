@@ -20,8 +20,6 @@ class Json{
 
 		$result = LJson::decode($json, true);
 
-		dd($result);
-
 		return $result;
 	}
 
