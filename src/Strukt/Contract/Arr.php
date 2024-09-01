@@ -292,34 +292,28 @@ abstract class Arr extends ValueObject{
 		return array_sum(array_map("is_array", $this->val)) == count($this->val);
 	}
 
-	public function sort(bool $asc = true){
+	public function sort(bool $asc = true, bool $ksort = false){
 
-		if($asc)
-			asort($this->val);
+		if(!$ksort){
 
-		if(negate($asc))
-			arsort($this->val);
+			if($asc)
+				asort($this->val);
+
+			if(negate($asc))
+				arsort($this->val);
+		}
+
+		if($ksort){
+			
+			if($asc)
+				ksort($this->val);
+
+			if(negate($asc))
+				krsort($this->val);
+		}
 
 		return new $this($this->val);
 	}
-
-	// public function sort(string $column = null, bool $desc = false){
-
-	// 	$last = end($this->val);
-	// 	if(!is_null($column))
-	// 		if(!array_key_exists($column, $last))
-	// 			new Raise("Column does not exists in array!");	
-
-	// 	$is2d = $this->nested() || $this->empty();
-
-	// 	if($is2d)
-	// 		$sorted = array_multisort(array_column($this->val, $column), $desc?SORT_DESC:SORT_ASC, $this->val);
-
-	// 	if(!$is2d)
-	// 		$sorted = $desc?arsort($this->val):asort($this->val);
-
-	// 	return $this;
-	// }
 
 	public function product(){
 
