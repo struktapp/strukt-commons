@@ -6,10 +6,10 @@ use Laminas\Json\Json as LJson;
 
 class Json{
 
-	public static function pp($json){
+	public static function pp(string|array $json){
 
-		if(is_string($json))
-			$json = self::decode($json);
+		if(is_array($json))
+			$json = LJson::encode($json);
 			
 		$result = LJson::prettyPrint($json);
 
