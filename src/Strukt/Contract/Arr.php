@@ -19,8 +19,13 @@ abstract class Arr extends ValueObject{
 
 	/**
 	* Append element to array
+	* 
+	* @param mixed $item
+	* @param string $key = null
+	* 
+	* @return Strukt\Contract\Arr
 	*/
-	public function push($item, string $key = null){
+	public function push($item, string $key = null):\Strukt\Contract\Arr{
 
 		if(is_null($key))
 			array_push($this->val, $item);
@@ -35,40 +40,61 @@ abstract class Arr extends ValueObject{
 
 	/**
 	* Remove element at end of array
+	* 
+	* @return mixed
 	*/
-	public function pop(){
+	public function pop():mixed{
 
 		return array_pop($this->val);
 	}
 
 	/**
 	* Remove element at beginning of array
+	* 
+	* @return mixed
 	*/
-	public function dequeue(){
+	public function dequeue():mixed{
 
 		return array_shift($this->val);
 	}
 
 	/**
 	* Arr.push alias
+	* 
+	* @param $element
+	* @param $key = null
+	* 
+	* @return mixed
 	*/
-	public function enqueue($element, $key = null){
+	public function enqueue($element, $key = null):mixed{
 
 		return $this->push($element, $key);
 	}
 
 	/**
 	* Arr.push batch
+	* 
+	* @param array $element
+	* 
+	* @return mixed
 	*/
-	public function enqueueBatch($element){
+	public function enqueueBatch(array $element):mixed{
 
-		return array_push($this->val, ...$element);
+		if(!arr($element)->isMap())
+			return array_push($this->val, ...$element);
+
+		return array_merge($this->val, $element);
 	}
 
 	/**
 	* Add element at beginning of array. Allows adding by key
+	* 
+	* @param mixed $element
+	* @param mixed $key = null
+	* 
+	* @return Strukt\Contract\Arr
 	*/
-	public function prequeue($element, $key = null){
+	public function prequeue($element, $key = null):\Strukt\Contract\Arr{
 
 		if(!is_null($key))
 			$this->val = array_merge(array($key=>$element), $this->val);
@@ -81,14 +107,26 @@ abstract class Arr extends ValueObject{
 		return $this;
 	}
 
-	public function column(string $key){
+	/**
+	 * Get column of multidimensional array
+	 * 
+	 * @param string $key
+	 * 
+	 * @return array
+	 */
+	public function column(string $key):array{
 
 		$column = array_column($this->val, $key);
 
 		return $column;
 	}
 
-	public function concat($delimiter){
+	/**
+	 * Concatenate array of strings by delimiter
+	 * 
+	 * @return string
+	 */
+	public function concat(string $delimiter):string{
 
 		if(!empty(array_filter($this->val, "is_object")))
 			new Raise("Array items must be at least alphanumeric!");
@@ -99,13 +137,19 @@ abstract class Arr extends ValueObject{
 	/**
 	* Is array fully assosicative
 	* 
+	* @return bool
 	*/
-	public function isMap(){
+	public function isMap():bool{
 
 		return $this->_isMap($this->val);		
 	}
 
-	public function isOfStr(){
+	/**
+	 * Is array of strings
+	 * 
+	 * @return bool
+	 */
+	public function isOfStr():bool{
 
 		if(array_sum(array_map('is_string', $this->val)) != count($this->val) || $this->empty())
 			return false;
@@ -113,7 +157,12 @@ abstract class Arr extends ValueObject{
 		return true;
 	}
 
-	public function isOfNum(){
+	/**
+	 * Is array of numbers
+	 * 
+	 * @return bool
+	 */
+	public function isOfNum():bool{
 
 		if(array_sum(array_map('is_numeric', $this->val)) != count($this->val) || $this->empty())
 			return false;
@@ -121,7 +170,14 @@ abstract class Arr extends ValueObject{
 		return true;
 	}
 
-	public function tokenize(array $keys = null){
+	/**
+	* Tokenize array string items
+	* 
+	* @param array $keys = null
+	* 
+	* @return string
+	*/
+	public function tokenize(array $keys = null):string{
 
 		if(!$this->isMap() || !empty(array_filter($this->val, "is_object")))
 			new Raise("Array [Values & Keys] must be at least alphanumeric!");
@@ -137,27 +193,55 @@ abstract class Arr extends ValueObject{
 		return implode("|", $token);
 	}
 
-	public function empty(){
+	/**
+	* Is array empty
+	* 
+	* @return bool
+	*/
+	public function empty():bool{
 
 		return $this->length() == 0;
 	}
 
-	public function length(){
+	/**
+	* Count array items
+	* 
+	* @return int
+	*/
+	public function length():int{
 
 		return count($this->val);
 	}
 
-	public function count(){
+	/**
+	* Count array items
+	* 
+	* @return int
+	*/
+	public function count():int{
 
 		return $this->length();
 	}
 
+	/**
+	 * Get only distinct items in array
+	 * 
+	 * @return Strukt\Contract\Arr
+	 */
 	public function distinct(){
 
 		return arr(array_count_values($this->val));
 	}
 
-	public function slice(int $offset, int $length = null){
+	/**
+	 * Slice array by offset and length
+	 * 
+	 * @param int $offset
+	 * @param int $length
+	 * 
+	 * @return Strukt\Contract\Arr
+	 */
+	public function slice(int $offset, int $length = null):\Strukt\Contract\Arr{
 
 		if(!is_null($length))
 			return arr(array_slice($this->val, $offset, $length));
@@ -165,59 +249,106 @@ abstract class Arr extends ValueObject{
 		return arr(array_slice($this->val, $offset));
 	}
 
-	public function only(array $haystack){
+	/**
+	 * Get only values by keys
+	 * 
+	 * @param array $haystack
+	 * 
+	 * @return Strukt\Contract\Arr
+	 */
+	public function only(array $haystack):\Strukt\Contract\Arr{
 
-		return array_filter($this->val, function($needle) use($haystack){
+		return $this->filter(function($needle) use($haystack){
 
 			return in_array($needle, $haystack);
 
-		}, ARRAY_FILTER_USE_KEY);
+		}, use_keys:true);
 	}
 
+	/**
+	 * Reset cursor in array
+	 */
 	public function reset():void{
 
 		reset($this->val);
 	}
 
-	public function first(){
+	/**
+	 * Get first array element
+	 * 
+	 * @return mixed
+	 */
+	public function first():mixed{
 
 		$this->reset();
 
 		return $this->current();
 	}
 
-	public function key(){
+	/**
+	 * Get key at element on array cursor
+	 * 
+	 * @return mixed
+	 */
+	public function key():mixed{
 
 		return key($this->val);
 	}
 
-	public function current(){
+	/**
+	 * Get current array item at cursor - same as Arr.valid
+	 * 
+	 * @return Strukt\Contract\ValueObject
+	 */
+	public function current():\Strukt\Contract\ValueObject{
 
 		$curr_elem = current($this->val);
 
 		return new ValueObject($curr_elem);
 	}
 
-	public function valid(){
+	/**
+	 * Get current array item at cursor - as Arr.current
+	 * 
+	 * @return mixed
+	 */
+	public function valid():mixed{
 
 		return $this->current()->yield();
 	}
 
-	public function next(){
+	/**
+	 * Get next array item
+	 * 
+	 * @return mixed
+	 */
+	public function next():mixed{
 
 		$elem_exists = !!next($this->val);
 
 		return $elem_exists;
 	}
 
-	public function last(){
+	/**
+	 * Get last array item
+	 * 
+	 * @return Strukt\Contract\ValueObject
+	 */
+	public function last():\Strukt\Contract\ValueObject{
 
 		$last_elem = end($this->val);
 
 		return new ValueObject($last_elem);
 	}
 
-	public function remove($key){
+	/**
+	 * Remove array item by key
+	 * 
+	 * @param mixed $key 
+	 * 
+	 * @return \Strukt\Contract\Arr
+	 */
+	public function remove($key):\Strukt\Contract\Arr{
 
 		if(!is_callable($key))
 			unset($this->val[$key]);
@@ -235,7 +366,15 @@ abstract class Arr extends ValueObject{
 		return $this;
 	}
 
-	public function stop(string $which, string $key){
+	/**
+	 * Halt loop at specific key
+	 * 
+	 * @param string $which - stop at this key
+	 * @param string $key - maching key
+	 * 
+	 * @return bool
+	 */
+	public function stop(string $which, string $key):bool{
 
 		if(negate($this->ignore))
 			$this->ignore = ($which == $key);
@@ -243,23 +382,47 @@ abstract class Arr extends ValueObject{
 		return $this->ignore;
 	}
 
-	public function each(\Closure $func){
+	/**
+	 * Loop over array
+	 *
+	 * @param Closure $func
+	 * 
+	 * @return \Strukt\Contract\Arr
+	 */
+	public function each(\Closure $func):\Strukt\Contract\Arr{
 
 		foreach($this->val as $key=>$val)
-			$this->val[$key] = negate($this->ignore)?Event::create($func->bindTo($this))->apply($key, $val)->exec():$val;
+			$this->val[$key] = negate($this->ignore)?Event::create($func->bindTo($this))
+														->apply($key, $val)
+														->exec():$val;
 
 		return new $this($this->val);
 	}
 
-	public function filter(\Closure $func = null){
+	/**
+	 * Array filter
+	 * 
+	 * @param Closure $func = null
+	 * @param bool $use_keys = false
+	 * 
+	 * @return \Strukt\Contract\Arr
+	 */
+	public function filter(\Closure $func = null, bool $use_keys = false):\Strukt\Contract\Arr{
 
 		if(notnull($func))
-			return new $this(array_filter($this->val, $func, ARRAY_FILTER_USE_BOTH));
+			return new $this(array_filter($this->val, $func, $use_keys?ARRAY_FILTER_USE_KEY:ARRAY_FILTER_USE_BOTH));
 
 		return new $this(array_filter($this->val));
 	}
 
-	public function recur(\Closure $func){
+	/**
+	 * Iterate over a deep nested array recursively
+	 * 
+	 * @param Closure $func
+	 * 
+	 * @return \Strukt\Contract\Arr
+	 */
+	public function recur(\Closure $func):\Strukt\Contract\Arr{
 
 		$each = new Event($func->bindTo($this));
 
@@ -274,7 +437,14 @@ abstract class Arr extends ValueObject{
 		return $this;
 	}
 
-	public function map(array $maps){
+	/**
+	 * Map array values in collection to new keys
+	 * 
+	 * @param array $maps
+	 * 
+	 * @return array
+	 */
+	public function map(array $maps):array{
 
 		$collection = CollectionBuilder::create()->fromAssoc($this->val);
 
@@ -287,12 +457,25 @@ abstract class Arr extends ValueObject{
 		return $arr;
 	}
 
-	public function nested(){
+	/**
+	 * Check if array is nested
+	 * 
+	 * @return bool
+	 */
+	public function nested():bool{
 
 		return array_sum(array_map("is_array", $this->val)) == count($this->val);
 	}
 
-	public function sort(bool $asc = true, bool $ksort = false){
+	/**
+	 * Sort linear array 
+	 * 
+	 * @param bool $asc - sort ascending default:true
+	 * @param bool $ksort - sort by keys default:false
+	 * 
+	 * @return Strukt\Contract\Arr
+	 */
+	public function sort(bool $asc = true, bool $ksort = false):\Strukt\Contract\Arr{
 
 		if(!$ksort){
 
@@ -315,13 +498,22 @@ abstract class Arr extends ValueObject{
 		return new $this($this->val);
 	}
 
+	/**
+	 * Array multiply array values
+	 * 
+	 * @return number
+	 */
 	public function product(){
 
 		return array_product($this->val);
 	}
 
-
-	public function has(mixed $val){
+	/**
+	 * Array contains value
+	 * 
+	 * @return bool
+	 */
+	public function has(mixed $val):bool{
 
 		$vals = array_filter(array_map(function($piece){
 		    return serialize($piece);
@@ -332,31 +524,61 @@ abstract class Arr extends ValueObject{
 		return in_array($val, $vals);
 	}
 
-	public function contains(string $key){
+	/**
+	 * Array contains key
+	 * 
+	 * @return bool
+	 */
+	public function contains(string $key):bool{
 
 		return array_key_exists($key, $this->val);
 	}
 
-	public function values(){
+	/**
+	* Get array values only
+	*   
+	* @return Strukt\Contract\Arr
+	*/
+	public function values():\Strukt\Contract\Arr{
 
 		return new $this(array_values($this->val));
 	}
 
-	public function merge(array $arr){
+	/**
+	 * Merge to array
+	 * 
+	 * @param Array $arr
+	 * 
+	 * @return Strukt\Contract\Arr
+	 */
+	public function merge(array $arr):\Strukt\Contract\Arr{
 
 		return new $this(array_merge($this->val, $arr));
 	}
 
-	public function uniq(){
+	/**
+	 * Array unique values
+	 * 
+	 * @return Strukt\Contract\Arr
+	 */
+	public function uniq():\Strukt\Contract\Arr{
 
 		return new $this(array_unique($this->val));
 	}
 
-	public function reverse(){
+	/**
+	 * Array reverse
+	 * 
+	 * @return Strukt\Contract\Arr
+	 */
+	public function reverse():\Strukt\Contract\Arr{
 
 		return new $this(array_reverse($this->val));
 	}
 
+	/**
+	 * Order multidimesional array
+	 */
 	public function order(){
 
 		if(negate(arr($this->val)->nested()))

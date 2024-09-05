@@ -26,6 +26,10 @@ class Arr extends ContractArr{
 
 	/**
 	* Flatten array
+	* 
+	* @param array $arr
+	* 
+	* @return array
 	*/
 	public static function level(array $arr){
 

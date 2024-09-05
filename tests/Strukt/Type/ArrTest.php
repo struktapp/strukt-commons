@@ -102,7 +102,7 @@ class ArrTest extends PHPUnit\Framework\TestCase{
 
 		$keys = ["othernames", "surname"];
 
-		$arr = $this->arr->only($keys);
+		$arr = $this->arr->only($keys)->yield();
 
 		$this->assertTrue(array_keys($arr) == $keys);
 	}

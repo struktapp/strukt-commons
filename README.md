@@ -133,6 +133,7 @@ $arr = arr($rr);//Arr::create($rr)
 $arr->has("Banner")//false
 $arr->empty();//false
 $arr->length();//3
+$arr->count();//3
 $arr->next();//true
 $arr->current()->yield();//Wayne
 $arr->key();//lastname
@@ -162,6 +163,7 @@ $rawarr = $arr->map(array( //reformat array
 $arr->pop();// remove at end of array.
 $arr->push("brucebatman", "username");//add at end of queue. key is optional
 $arr->enqueue("active", "status");//same as Arr.push. key is optional
+$arr->enqueueBatch(["empty","empty"]);
 $arr->prequeue("admin", "type");//add at beginning of queue. key is optional
 $arr->dequeue();//remove at beginning of array. returns Bruce
 $flatarr = $arr->level();//flattens multidimentional array
@@ -184,6 +186,26 @@ $arr = arr(array(
     "status"=>"active"
 ));
 $arr->tokenize();//returns user:pitsolu|type:admin|status:active
+$arr->concat(",")//pitsolu,admin,active
+arr(["a","b","c"])->isOfStr();// true
+arr([1,2,3])->isOfNum();// true 
+arr(["a","a","b","b","b","c","c","d"])->distict()->yield();//["a" => 2,"b" => 3,"c" => 2,"d" => 1]
+arr(["a","b","b","c","c","c","d"])->uniq()->yield();//["a","b","c","d"]
+arr(["a","b","c","d"])->slice(2)//["c","d"]
+arr(["a","b","c","d"])->slice(1,3)//["b","c","d"]
+
+$x = ["name"=>"peter","email"=>"peter@gmail.com"];
+arr($x)->only(["email"])->yield()//["email"=>"peter@gmail.com"]
+
+$x = [["name"=>"peter","email"=>"peter@gmail.com"], ["name"=>"john","email"=>"john@gmail.com"]]
+arr($x)->order()->asc("email")->yield()//sorting 2d array by column
+arr($x)->nested();//is nested array - true
+arr([1,2,3])->product();//6
+arr(["ab","cd","ef"])->has("ab");//true
+arr(["a"=>1,"b"=>2,"c"=>3])->contains("a")//true
+arr(["a"=>1,"b"=>2,"c"=>3])->values()//[1,2,3]
+arr(["a","b"])->merge(["c","d"])->yield();//["a","b","c","d"]
+arr(["a","b","c","d"])->reverse()->yield();//["d","c","b","a"]
 ```
 # Others
 
