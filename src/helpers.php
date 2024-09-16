@@ -71,10 +71,10 @@ if(helper_add("config")){
 	function config(string $key, array|string $options = null){
 
 		if(!reg()->exists("config"))
-			if(fs()->isDir("cfg")){
+			if(fs()->isDir(phar("cfg")->adapt())){
 
-				foreach(fs("cfg")->ls() as $ini_file)
-					$configs[trim($ini_file, ".ini")] = fs("cfg")->ini($ini_file);
+				foreach(fs(phar("cfg")->adapt())->ls() as $ini_file)
+					$configs[trim($ini_file, ".ini")] = fs(phar("cfg")->adapt())->ini($ini_file);
 
 				reg("config", $configs);
 				

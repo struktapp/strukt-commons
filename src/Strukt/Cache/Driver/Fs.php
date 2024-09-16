@@ -16,10 +16,10 @@ class Fs implements CacheDriverInterface{
 
 		$filename = sprintf("%s.json", $file);
 
-		if(!fs()->isDir(".cache"))
-			fs()->mkdir(".cache");
+		if(!fs()->isDir(phar(".cache")->adapt()))
+			fs()->mkdir(phar(".cache")->adpt());
 
-		$this->fs = fs(".cache");
+		$this->fs = fs(phar(".cache")->adapt());
 		if(!$this->fs->isFile($filename))
 			$this->fs->touchWrite($filename, "[]");
 
