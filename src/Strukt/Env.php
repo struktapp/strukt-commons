@@ -10,11 +10,11 @@ class Env{
 
 	public static function withFile(string $path=".env"){
 
-		$phar_path = \Phar::running();
-		if(!empty($phar_path))
-			$path = sprintf("%s/%s", rtrim($phar_path, "/"), trim($path, "/"));
+		// $phar_path = \Phar::running();
+		// if(!empty($phar_path))
+			// $path = sprintf("%s/%s", rtrim($phar_path, "/"), trim($path, "/"));
 
-		$lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+		$lines = file(phar($path)->adapt(), FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
 
 		foreach($lines as $line){
 
