@@ -17,7 +17,7 @@ class Fs implements CacheDriverInterface{
 		$filename = sprintf("%s.json", $file);
 
 		if(!fs()->isDir(phar(".cache")->adapt()))
-			fs()->mkdir(phar(".cache")->adpt());
+			fs()->mkdir(phar(".cache")->adapt());
 
 		$this->fs = fs(phar(".cache")->adapt());
 		if(!$this->fs->isFile($filename))
