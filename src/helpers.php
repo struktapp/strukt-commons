@@ -209,6 +209,23 @@ if(helper_add("today")){
 	}
 }
 
+if(helper_add("format")){
+
+	function format(string $type, $mixed = null){
+
+		if(is_callable($mixed))
+			event(sprintf("format.%s", $type, $mixed));
+
+		if(!is_callable($mixed))
+			return cmd(sprintf("format.%s", $type), [$mixed]);
+	}
+
+	format("date", function(\DateTime $date){
+
+		return $date->format("Y-m-d H:i:s");
+	});	
+}
+
 if(helper_add("env")){
 
 	function env(string $key, string|int|bool $val = null){
