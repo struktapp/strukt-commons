@@ -214,10 +214,9 @@ if(helper_add("format")){
 	function format(string $type, $mixed = null){
 
 		if(is_callable($mixed))
-			event(sprintf("format.%s", $type, $mixed));
+			return event(sprintf("format.%s", $type, $mixed));
 
-		if(!is_callable($mixed))
-			return cmd(sprintf("format.%s", $type), [$mixed]);
+		return event(sprintf("format.%s", $type))->apply($mixed)->exec();
 	}
 
 	format("date", function(\DateTime $date){
