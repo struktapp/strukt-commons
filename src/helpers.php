@@ -171,11 +171,20 @@ if(helper_add("when")){
 
 if(helper_add("period")){
 
-	function period(){
+	function period(\DateTime $start = null, \DateTime $end = null){
 
-		return new class(){
+		return new class($start, $end){
 
-			function create(\DateTime $start, \DateTime $end){
+			public function __construct(\DateTime $start = null, \DateTime $end = null){
+
+				if(!is_null($start))
+					$this->create($start, $end);
+			}
+
+			function create(\DateTime $start, \DateTime $end = null){
+
+				if(is_null($end))
+					$end = new DateTime("99999/12/31 00:00:00");
 
 				Today::makePeriod($start, $end);
 

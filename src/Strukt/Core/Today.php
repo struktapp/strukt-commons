@@ -41,14 +41,24 @@ class Today extends DateRange{
 		return new \DateTime(sprintf("%s %s", static::$today->format("Y-m-d"), $time));
 	}
 
-	public static function getState(){
+	public static function getState(string $state = null){
 
-		return array(
+		switch ($state) {
+			case 'period.start':
+					return static::$start;
+				break;
+			case 'period.end':
+					return static::$end;
+				break;
+			default:
+					return array(
 			
-			"today"=>static::reMake(),
-			"start_date"=>static::$start,
-			"end_date"=>static::$end
-		);
+						"today"=>static::reMake(),
+						"start_date"=>static::$start,
+						"end_date"=>static::$end
+					);
+				break;
+		};
 	}
 
 	public static function reset(\DateTime $date = null){

@@ -67,6 +67,7 @@ echo $start; //return date as string
 ## Today (Date Influence)
 
 ```php
+// $p = period(when("1900-01-01"), when("1963-12-31")); 
 $p = period()
 
 //In order for date influence to work the first 2 line below must be 
@@ -82,6 +83,8 @@ $fakeToday->same(when());//true
 $fakeToday->hasPeriod()//true -- has period
 $fakeToday->withDate(when("1959-04-01"))->isValid(); //true -- is date valid with period
 
+// $fakeToday->getState("period.start");
+// $fakeToday->getState("period.end");
 $fakeToday->getState();//get state of date manipulation
 $fakeToday->reset();//reset back to original today
 ```
