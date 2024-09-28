@@ -188,7 +188,7 @@ if(helper_add("period")){
 
 				Today::makePeriod($start, $end);
 
-				return $this->reset($start);
+				return $this;
 			}
 
 			function reset(\DateTime $reset = null){
