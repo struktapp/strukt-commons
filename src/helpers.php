@@ -349,6 +349,150 @@ if(helper_add("notnull")){
 	}
 }
 
+if(helper_add("ini")){
+
+	function ini($file){
+
+		return new class($file){
+
+			private $file;
+			private $oFile; // original
+			private $nFile; // new
+			private $dFile; // diff
+			private $ini;
+
+			public function __construct(string $file){
+
+				$this->file = $file;
+				$this->oFile = fs()->ini($file);
+				$this->nFile = parse_ini_string(str(fs()->cat($file))->replace(["; ", ";"],""), true);
+				$this->dFile = @array_diff_assoc($this->nFile, $this->oFile);
+			}
+
+			private function section(string $name, bool $comment = false){
+
+					unset($this->dFile[$name]);
+					$block_ls = array_keys($this->dFile);
+
+					$this->ini = arr($this->nFile)->each(function($k, $sec) use($comment, $name, $block_ls){
+
+						if(negate(is_array($sec)))
+							return sprintf("%s = %s", $k, $sec);
+
+						if($k != $name)
+							$comment = false;
+
+						if(in_array($k, $block_ls))
+							$comment = true;
+
+						$ln = sprintf("[%s]", $k);
+						$ini[] = ($comment)?str("; ")->concat($ln)->yield():$ln;
+						return arr($ini)->merge(arr($sec)->each(function($k, $item) use($comment){
+
+							if(is_array($item))
+								return arr($item)->each(function($_, $item) use($k, $comment){
+
+									$ln = sprintf("%s[] = %s", $k, $item);
+									$ln = ($comment)?str("; ")->concat($ln)->yield():$ln;
+									return $ln;
+
+								})->yield();
+
+							if(is_string($item)){
+
+								$ln = sprintf("%s = %s", $k, $item);
+								$ln = ($comment)?str("; ")->concat($ln)->yield():$ln;
+								return $ln;
+							}
+
+						})->yield())->yield();
+
+					})->level();
+
+				return $this;
+			}
+
+			private function withKeyVal(string $name, string $key, bool $comment = false){
+
+				$lines = str(fs()->cat($this->file))->split("\n");
+				$this->ini = arr($lines)->each(function($k, $ln) use($name, $key, $comment){
+
+					if(negate($comment))
+						if(str($ln)->startsWith(";") && str($ln)->contains($name) && str($ln)->contains($key))
+							return str($ln)->replace(["; ", ";"],"")->yield();
+
+					if($comment)
+						if(str($ln)->contains($name) && str($ln)->contains($key))
+							return str($ln)->prepend("; ")->yield();
+
+					return $ln;
+
+				})->yield();
+
+				return $this;
+			}
+
+			private function withKey(string $key, bool $comment = false){
+
+				$lines = str(fs()->cat($this->file))->split("\n");
+				$this->ini = arr($lines)->each(function($k, $ln) use($key, $comment){
+
+					$oln = $ln;
+					$ln = str($ln)->replace(["; ", ";"],"");
+					if(negate($comment))
+						if($ln->startsWith($key))
+							return $ln->yield();
+
+					if($comment)
+						return $ln->prepend("; ")->yield();
+
+					return $oln;
+
+				})->yield();
+
+				return $this;
+			}
+
+			public function disable(string $name = null, string $key = null){
+
+				if(notnull($key) && notnull($name))
+					if(arr($this->nFile)->contains($name))
+						if(arr($this->nFile[$name])->has($key))
+							$this->withKeyVal($name, $key, comment:true);
+
+				if(notnull($key) && is_null($name))
+					$this->withKey($key, comment:true);
+
+				if(is_null($key) && notnull($name))
+					$this->section($name, comment:true);
+
+				return $this;
+			}
+
+			public function enable(string $name = null, string $key = null){
+
+				if(notnull($key) && notnull($name))
+					if(arr($this->nFile)->contains($name))
+						if(arr($this->nFile[$name])->has($key))
+							$this->withKeyVal($name, $key);
+
+				if(notnull($key) && is_null($name))
+					$this->withKey($key);
+
+				if(is_null($key) && notnull($name))
+					$this->section($name);
+
+				return $this;
+			}
+
+			public function yield(){
+
+				return arr($this->ini)->concat("\n");
+			}
+		};
+	}
+}
+
 use Symfony\Component\VarDumper\Cloner\VarCloner;
 use Symfony\Component\VarDumper\Dumper\CliDumper;
 use Symfony\Component\VarDumper\Dumper\HtmlDumper;
