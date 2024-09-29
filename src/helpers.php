@@ -74,7 +74,8 @@ if(helper_add("config")){
 			if(fs()->isDir(phar("cfg")->adapt())){
 
 				foreach(fs(phar("cfg")->adapt())->ls() as $ini_file)
-					$configs[trim($ini_file, ".ini")] = fs(phar("cfg")->adapt())->ini($ini_file);
+					if(negate(str($ini_file)->endsWith("~")))
+						$configs[trim($ini_file, ".ini")] = fs(phar("cfg")->adapt())->ini($ini_file);
 
 				reg("config", $configs);
 				
