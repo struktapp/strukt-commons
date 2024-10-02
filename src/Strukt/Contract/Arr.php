@@ -10,7 +10,8 @@ use Strukt\Raise;
 abstract class Arr extends ValueObject{
 
 	private $stop_at = null;
-	private $ignore = false;
+	private $skip = [];
+	private $jump = [];
 
 	use \Strukt\Helper\Arr{
 
@@ -262,7 +263,7 @@ abstract class Arr extends ValueObject{
 
 			return in_array($needle, $haystack);
 
-		}, use_keys:true);
+		});
 	}
 
 	/**
@@ -367,19 +368,45 @@ abstract class Arr extends ValueObject{
 	}
 
 	/**
+	 * Skip key
+	 * 
+	 * @param string $key
+	 * 
+	 * @return Strukt\Contract\Arr
+	 */
+	public function skip(string $key){
+
+		$this->skip[] = $key;
+
+		return $this;
+	}
+
+	/**
+	 * Jump value
+	 * 
+	 * @param string $val
+	 * 
+	 * @return Strukt\Contract\Arr
+	 */
+	public function jump(string $val){
+
+		$this->jump[] = $val;
+
+		return $this;
+	}
+
+	/**
 	 * Halt loop at specific key
 	 * 
-	 * @param string $which - stop at this key
-	 * @param string $key - maching key
+	 * @param string $key
 	 * 
-	 * @return bool
+	 * @return Strukt\Contract\Arr
 	 */
-	public function stop(string $which, string $key):bool{
+	public function stop(string $key){
 
-		if(negate($this->ignore))
-			$this->ignore = ($which == $key);
+		$this->stop_at = $key;
 
-		return $this->ignore;
+		return $this;
 	}
 
 	/**
@@ -391,28 +418,44 @@ abstract class Arr extends ValueObject{
 	 */
 	public function each(\Closure $func):\Strukt\Contract\Arr{
 
+		$vals = [];
 		foreach($this->val as $key=>$val)
-			$this->val[$key] = negate($this->ignore)?Event::create($func->bindTo($this))
+			if(negate(in_array($key, $this->skip)))
+				if(negate(in_array($val, $this->jump)))
+					$vals[$key] = negate(array_key_exists($this->stop_at, $vals))?Event::create($func->bindTo($this))
 														->apply($key, $val)
 														->exec():$val;
 
-		return new $this($this->val);
+		return new $this($vals);
 	}
 
 	/**
 	 * Array filter
 	 * 
 	 * @param Closure $func = null
-	 * @param bool $use_keys = false
 	 * 
 	 * @return \Strukt\Contract\Arr
 	 */
-	public function filter(\Closure $func = null, bool $use_keys = false):\Strukt\Contract\Arr{
+	public function filter(\Closure $func = null):\Strukt\Contract\Arr{
 
+		$vals = [];
 		if(notnull($func))
-			return new $this(array_filter($this->val, $func, $use_keys?ARRAY_FILTER_USE_KEY:ARRAY_FILTER_USE_BOTH));
+			foreach($this->val as $k=>$v)
+				if($func($k, $v) || 
+					(in_array($k, $this->skip) || 
+					 in_array($v, $this->jump) || 
+					 array_key_exists($this->stop_at, $vals)))
+						$vals[$k] = $v;
 
-		return new $this(array_filter($this->val));
+		if(is_null($func))
+			foreach($this->val as $k=>$v)
+				if(negate(empty($v)) || 
+					(in_array($k, $this->skip)  ||
+					 in_array($v, $this->jump)  ||
+					 array_key_exists($this->stop_at, $vals)))
+						$vals[$k] = $v;
+
+		return new $this($vals);
 	}
 
 	/**
@@ -448,11 +491,9 @@ abstract class Arr extends ValueObject{
 
 		$collection = CollectionBuilder::create()->fromAssoc($this->val);
 
-		foreach($maps as $key=>$name){
-
+		foreach($maps as $key=>$name)
 			if($collection->exists($name))
 				$arr[$key] = $collection->get($name);
-		}
 
 		return $arr;
 	}
@@ -516,7 +557,9 @@ abstract class Arr extends ValueObject{
 	public function has(mixed $val):bool{
 
 		$vals = array_filter(array_map(function($piece){
+
 		    return serialize($piece);
+
 		}, $this->val));
 
 		$val = serialize($val);
@@ -542,6 +585,16 @@ abstract class Arr extends ValueObject{
 	public function values():\Strukt\Contract\Arr{
 
 		return new $this(array_values($this->val));
+	}
+
+	/**
+	 * Get array keys
+	 * 
+	 * @return mixed
+	 */
+	public function keys():mixed{
+
+		return array_keys($this->val);
 	}
 
 	/**
@@ -574,6 +627,16 @@ abstract class Arr extends ValueObject{
 	public function reverse():\Strukt\Contract\Arr{
 
 		return new $this(array_reverse($this->val));
+	}
+
+	/**
+	 * Array flip
+	 * 
+	 * @return Strukt\Contract\Arr
+	 */
+	public function flip():\Strukt\Contract\Arr{
+
+		return new $this(@array_flip($this->val));
 	}
 
 	/**
