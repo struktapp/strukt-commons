@@ -422,10 +422,10 @@ abstract class Arr extends ValueObject{
 
 		$vals = [];
 		foreach($this->val as $key=>$val)
+		 if(negate(array_key_exists($this->stop_at, $vals)))
 			if(negate(in_array($key, $this->skip)))
 				if(negate(in_array($val, $this->jump)))
-					if(notnull($this->stop_at) && negate(array_key_exists($this->stop_at, $vals)))
-					 	$vals[$key] = $evt->apply($key, $val)->exec();
+					$vals[$key] = $evt->apply($key, $val)->exec();
 
 		return new $this($vals);
 	}
