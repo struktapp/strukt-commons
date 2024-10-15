@@ -418,13 +418,14 @@ abstract class Arr extends ValueObject{
 	 */
 	public function each(\Closure $func):\Strukt\Contract\Arr{
 
+		$evt = Event::create($func->bindTo($this));
+
 		$vals = [];
 		foreach($this->val as $key=>$val)
 			if(negate(in_array($key, $this->skip)))
 				if(negate(in_array($val, $this->jump)))
-					$vals[$key] = negate(array_key_exists($this->stop_at, $vals))?Event::create($func->bindTo($this))
-														->apply($key, $val)
-														->exec():$val;
+					if(notnull($this->stop_at) && negate(array_key_exists($this->stop_at, $vals)))
+					 	$vals[$key] = $evt->apply($key, $val)->exec();
 
 		return new $this($vals);
 	}
@@ -438,22 +439,14 @@ abstract class Arr extends ValueObject{
 	 */
 	public function filter(\Closure $func = null):\Strukt\Contract\Arr{
 
-		$vals = [];
-		if(notnull($func))
-			foreach($this->val as $k=>$v)
-				if($func($k, $v) || 
-					(in_array($k, $this->skip) || 
-					 in_array($v, $this->jump) || 
-					 array_key_exists($this->stop_at, $vals)))
-						$vals[$k] = $v;
-
 		if(is_null($func))
-			foreach($this->val as $k=>$v)
-				if(negate(empty($v)) || 
-					(in_array($k, $this->skip)  ||
-					 in_array($v, $this->jump)  ||
-					 array_key_exists($this->stop_at, $vals)))
-						$vals[$k] = $v;
+			$func = fn($k, $v)=>negate(empty($v)) || negate(empty($v));
+
+		$vals = [];
+		foreach($this->val as $k=>$v)
+			if(negate(array_key_exists($this->stop_at, $vals)))
+				if($func($k, $v) || (in_array($k, $this->skip) || in_array($v, $this->jump)))
+					$vals[$k] = $v;
 
 		return new $this($vals);
 	}
