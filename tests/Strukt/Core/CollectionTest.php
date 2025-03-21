@@ -6,6 +6,8 @@ use Strukt\Exception\KeyNotFoundException;
 
 class CollectionTest extends PHPUnit\Framework\TestCase{
 
+	protected $collection;
+
 	public function setUp():void{
 
 		$this->collection = new Collection("user");

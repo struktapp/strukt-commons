@@ -7,13 +7,16 @@ use Strukt\Builder\Collection as CollectionBuilder;
 use Strukt\Event;
 use Strukt\Raise;
 
+/**
+ * @author Moderator <pitsolu@gmail.com>
+ */
 abstract class Arr extends ValueObject{
 
 	private $stop_at = null;
 	private $skip = [];
 	private $jump = [];
 
-	use \Strukt\Helper\Arr{
+	use \Strukt\Traits\Arr{
 
 		isMap as protected _isMap;
 	}
@@ -24,9 +27,9 @@ abstract class Arr extends ValueObject{
 	* @param mixed $item
 	* @param string $key = null
 	* 
-	* @return Strukt\Contract\Arr
+	* @return static
 	*/
-	public function push($item, string $key = null):\Strukt\Contract\Arr{
+	public function push(mixed $item, ?string $key = null):static{
 
 		if(is_null($key))
 			array_push($this->val, $item);
@@ -62,12 +65,12 @@ abstract class Arr extends ValueObject{
 	/**
 	* Arr.push alias
 	* 
-	* @param $element
-	* @param $key = null
+	* @param mixed $element
+	* @param mixed $key = null
 	* 
 	* @return mixed
 	*/
-	public function enqueue($element, $key = null):mixed{
+	public function enqueue(mixed $element, mixed $key = null):mixed{
 
 		return $this->push($element, $key);
 	}
@@ -93,9 +96,9 @@ abstract class Arr extends ValueObject{
 	* @param mixed $element
 	* @param mixed $key = null
 	* 
-	* @return Strukt\Contract\Arr
+	* @return static
 	*/
-	public function prequeue($element, $key = null):\Strukt\Contract\Arr{
+	public function prequeue(mixed $element, mixed $key = null):static{
 
 		if(!is_null($key))
 			$this->val = array_merge(array($key=>$element), $this->val);
@@ -124,6 +127,8 @@ abstract class Arr extends ValueObject{
 
 	/**
 	 * Concatenate array of strings by delimiter
+	 * 
+	 * @param string $delimiter
 	 * 
 	 * @return string
 	 */
@@ -178,7 +183,7 @@ abstract class Arr extends ValueObject{
 	* 
 	* @return string
 	*/
-	public function tokenize(array $keys = null):string{
+	public function tokenize(?array $keys = null):string{
 
 		if(!$this->isMap() || !empty(array_filter($this->val, "is_object")))
 			new Raise("Array [Values & Keys] must be at least alphanumeric!");
@@ -227,9 +232,9 @@ abstract class Arr extends ValueObject{
 	/**
 	 * Get only distinct items in array
 	 * 
-	 * @return Strukt\Contract\Arr
+	 * @return static
 	 */
-	public function distinct(){
+	public function distinct():static{
 
 		return arr(array_count_values($this->val));
 	}
@@ -240,9 +245,9 @@ abstract class Arr extends ValueObject{
 	 * @param int $offset
 	 * @param int $length
 	 * 
-	 * @return Strukt\Contract\Arr
+	 * @return static
 	 */
-	public function slice(int $offset, int $length = null):\Strukt\Contract\Arr{
+	public function slice(int $offset, ?int $length = null):static{
 
 		if(!is_null($length))
 			return arr(array_slice($this->val, $offset, $length));
@@ -255,9 +260,9 @@ abstract class Arr extends ValueObject{
 	 * 
 	 * @param array $haystack
 	 * 
-	 * @return Strukt\Contract\Arr
+	 * @return static
 	 */
-	public function only(array $haystack):\Strukt\Contract\Arr{
+	public function only(array $haystack):static{
 
 		return $this->filter(function($needle) use($haystack){
 
@@ -301,7 +306,7 @@ abstract class Arr extends ValueObject{
 	 * 
 	 * @return Strukt\Contract\ValueObject
 	 */
-	public function current():\Strukt\Contract\ValueObject{
+	public function current():ValueObject{
 
 		$curr_elem = current($this->val);
 
@@ -335,7 +340,7 @@ abstract class Arr extends ValueObject{
 	 * 
 	 * @return Strukt\Contract\ValueObject
 	 */
-	public function last():\Strukt\Contract\ValueObject{
+	public function last():ValueObject{
 
 		$last_elem = end($this->val);
 
@@ -347,9 +352,9 @@ abstract class Arr extends ValueObject{
 	 * 
 	 * @param mixed $key 
 	 * 
-	 * @return \Strukt\Contract\Arr
+	 * @return static
 	 */
-	public function remove($key):\Strukt\Contract\Arr{
+	public function remove($key):static{
 
 		if(!is_callable($key))
 			unset($this->val[$key]);
@@ -372,9 +377,9 @@ abstract class Arr extends ValueObject{
 	 * 
 	 * @param string $key
 	 * 
-	 * @return Strukt\Contract\Arr
+	 * @return static 
 	 */
-	public function skip(string $key){
+	public function skip(string $key):static{
 
 		$this->skip[] = $key;
 
@@ -386,9 +391,9 @@ abstract class Arr extends ValueObject{
 	 * 
 	 * @param string $val
 	 * 
-	 * @return Strukt\Contract\Arr
+	 * @return static
 	 */
-	public function jump(string $val){
+	public function jump(string $val):static{
 
 		$this->jump[] = $val;
 
@@ -400,9 +405,9 @@ abstract class Arr extends ValueObject{
 	 * 
 	 * @param string $key
 	 * 
-	 * @return Strukt\Contract\Arr
+	 * @return static
 	 */
-	public function stop(string $key){
+	public function stop(string $key):static{
 
 		$this->stop_at = $key;
 
@@ -414,9 +419,9 @@ abstract class Arr extends ValueObject{
 	 *
 	 * @param Closure $func
 	 * 
-	 * @return \Strukt\Contract\Arr
+	 * @return static
 	 */
-	public function each(\Closure $func):\Strukt\Contract\Arr{
+	public function each(\Closure $func):static{
 
 		$evt = Event::create($func->bindTo($this));
 
@@ -435,9 +440,9 @@ abstract class Arr extends ValueObject{
 	 * 
 	 * @param Closure $func = null
 	 * 
-	 * @return \Strukt\Contract\Arr
+	 * @return static
 	 */
-	public function filter(\Closure $func = null):\Strukt\Contract\Arr{
+	public function filter(?\Closure $func = null):static{
 
 		if(is_null($func))
 			$func = fn($k, $v)=>negate(empty($v)) || negate(empty($v));
@@ -456,9 +461,9 @@ abstract class Arr extends ValueObject{
 	 * 
 	 * @param Closure $func
 	 * 
-	 * @return \Strukt\Contract\Arr
+	 * @return static
 	 */
-	public function recur(\Closure $func):\Strukt\Contract\Arr{
+	public function recur(\Closure $func):static{
 
 		$each = new Event($func->bindTo($this));
 
@@ -507,9 +512,9 @@ abstract class Arr extends ValueObject{
 	 * @param bool $asc - sort ascending default:true
 	 * @param bool $ksort - sort by keys default:false
 	 * 
-	 * @return Strukt\Contract\Arr
+	 * @return static
 	 */
-	public function sort(bool $asc = true, bool $ksort = false):\Strukt\Contract\Arr{
+	public function sort(bool $asc = true, bool $ksort = false):static{
 
 		if(!$ksort){
 
@@ -573,9 +578,9 @@ abstract class Arr extends ValueObject{
 	/**
 	* Get array values only
 	*   
-	* @return Strukt\Contract\Arr
+	* @return static
 	*/
-	public function values():\Strukt\Contract\Arr{
+	public function values():static{
 
 		return new $this(array_values($this->val));
 	}
@@ -595,9 +600,9 @@ abstract class Arr extends ValueObject{
 	 * 
 	 * @param Array $arr
 	 * 
-	 * @return Strukt\Contract\Arr
+	 * @return static
 	 */
-	public function merge(array $arr):\Strukt\Contract\Arr{
+	public function merge(array $arr):static{
 
 		return new $this(array_merge($this->val, $arr));
 	}
@@ -605,9 +610,9 @@ abstract class Arr extends ValueObject{
 	/**
 	 * Array unique values
 	 * 
-	 * @return Strukt\Contract\Arr
+	 * @return static
 	 */
-	public function uniq():\Strukt\Contract\Arr{
+	public function uniq():static{
 
 		return new $this(array_unique($this->val));
 	}
@@ -615,9 +620,9 @@ abstract class Arr extends ValueObject{
 	/**
 	 * Array reverse
 	 * 
-	 * @return Strukt\Contract\Arr
+	 * @return static
 	 */
-	public function reverse():\Strukt\Contract\Arr{
+	public function reverse():static{
 
 		return new $this(array_reverse($this->val));
 	}
@@ -625,17 +630,19 @@ abstract class Arr extends ValueObject{
 	/**
 	 * Array flip
 	 * 
-	 * @return Strukt\Contract\Arr
+	 * @return static
 	 */
-	public function flip():\Strukt\Contract\Arr{
+	public function flip():static{
 
 		return new $this(@array_flip($this->val));
 	}
 
 	/**
 	 * Order multidimesional array
+	 * 
+	 * @return object
 	 */
-	public function order(){
+	public function order():object{
 
 		if(negate(arr($this->val)->nested()))
 			raise("Array must be of nested values!");
@@ -645,13 +652,21 @@ abstract class Arr extends ValueObject{
 			private $by;
 			private $val;
 
+			/**
+			 * @param array $val
+			 */
 			public function __construct(array $val){
 
 				$this->val = $val;
 				$this->by = [];
 			}
 
-			public function asc(string $column){
+			/**
+			 * @param string $column
+			 * 
+			 * @return static
+			 */
+			public function asc(string $column):static{
 
 				$column = arr($this->val)->column($column);
 				$this->by = array_merge($this->by, [$column, SORT_ASC]);
@@ -661,6 +676,11 @@ abstract class Arr extends ValueObject{
 				return $this;
 			}
 
+			/**
+			 * @param string $column
+			 * 
+			 * @return static
+			 */
 			public function desc(string $column){
 
 				$column = arr($this->val)->column($column);

@@ -5,6 +5,9 @@ namespace Strukt\Core;
 use Strukt\Contract\DateRange;
 use Strukt\Raise;
 
+/**
+ * @author Moderator <pitsolu@gmail.com>
+*/
 class Today extends DateRange{
 
 	private static $start;
@@ -30,7 +33,10 @@ class Today extends DateRange{
 		}
 	}
 
-	private static function reMake(){
+	/**
+	 * @return \DateTime
+	 */
+	private static function reMake():\DateTime{
 
 		$now = new \DateTime;
 		$time = $now->format("H:i:s.u");
@@ -41,7 +47,12 @@ class Today extends DateRange{
 		return new \DateTime(sprintf("%s %s", static::$today->format("Y-m-d"), $time));
 	}
 
-	public static function getState(string $state = null){
+	/**
+	 * @param string $state
+	 * 
+	 * @return \DateTime|array
+	 */
+	public static function getState(?string $state = null):\DateTime|array{
 
 		switch ($state) {
 			case 'period.start':
@@ -61,7 +72,12 @@ class Today extends DateRange{
 		};
 	}
 
-	public static function reset(\DateTime $date = null){
+	/**
+	 * @param \DateTime $date
+	 * 
+	 * @return void
+	 */
+	public static function reset(?\DateTime $date = null):void{
 
 		if(is_null($date)){
 
@@ -72,7 +88,13 @@ class Today extends DateRange{
 		static::$today = $date;
 	}
 
-	public static function makePeriod(\DateTime $start, \DateTime $end){
+	/**
+	 * @param \DateTime $start
+	 * @param \DateTime $end
+	 * 
+	 * @return void
+	 */
+	public static function makePeriod(\DateTime $start, \DateTime $end):void{
 
 		static::$start = new class($start) extends DateRange{
 
@@ -90,12 +112,20 @@ class Today extends DateRange{
 		static::$end = $end;
 	}
 
-	public static function hasPeriod(){
+	/**
+	 * @return bool
+	 */
+	public static function hasPeriod():bool{
 
 		return !empty(static::$start) && !empty(static::$end);
 	}
 
-	public static function withDate(\DateTime $date){
+	/**
+	 * @param \DateTime $date
+	 * 
+	 * @return \Strukt\Contract\DateRange
+	 */
+	public static function withDate(\DateTime $date):DateRange{
 
 		if(!static::hasPeriod())
 			new Raise("Period not set!");
@@ -107,6 +137,11 @@ class Today extends DateRange{
 			private $end;
 			private $valid;
 
+			/**
+			 * @param \DateTime $date
+			 * @param \DateTime $start
+			 * @param \DateTime $end
+			 */
 			public function __construct(\DateTime $date, \DateTime $start, \DateTime $end){
 
 				$this->date = $date;
@@ -119,6 +154,9 @@ class Today extends DateRange{
 				$this->valid = $this->btwn($this->start, $this->end);
 			}
 
+			/**
+			 * @return bool
+			 */
 			public function isValid(){
 
 				if(is_null($this->valid))

@@ -4,9 +4,17 @@ namespace Strukt\Type;
 
 use Laminas\Json\Json as LJson;
 
+/**
+ * @author Moderator <pitsolu@gmail.com>
+ */
 class Json{
 
-	public static function pp(string|array $json){
+	/**
+	 * @param string|array $json
+	 * 
+	 * @return string
+	 */
+	public static function pp(string|array $json):string{
 
 		if(is_array($json))
 			$json = LJson::encode($json);
@@ -16,21 +24,36 @@ class Json{
 		return $result;
 	}
 
-	public static function decode(string $json){
+	/**
+	 * @param sting $json
+	 * 
+	 * @return array
+	 */
+	public static function decode(string $json):array{
 
 		$result = LJson::decode($json, true);
 
 		return $result;
 	}
 
-	public static function encode(array $object){
+	/**
+	 * @param array $object
+	 * 
+	 * @return string
+	 */
+	public static function encode(array $object):string{
 
 		$result = LJson::encode($object);
 
 		return $result;
 	}
 
-	public static function isJson($args) {
+	/**
+	 * @param $args
+	 * 
+	 * @return boolean
+	 */
+	public static function isJson($args):bool{
 
 	    json_decode($args, true);
 

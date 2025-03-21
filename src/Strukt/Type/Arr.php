@@ -2,24 +2,31 @@
 
 namespace Strukt\Type;
 
-use Strukt\Contract\ValueObject as ValueObject; 
+use Strukt\Contract\ValueObject; 
 use Strukt\Builder\Collection as CollectionBuilder;
-use Strukt\Contract\AbstractArrOps;
-use Strukt\Contract\Arr as ContractArr;
+use Strukt\Contract\Arr as ArrConrtract;
 use Strukt\Raise;
 use Strukt\Event;
 
-class Arr extends ContractArr{
+/**
+ * @author Moderator <pitsolu@gmail.com>
+*/
+class Arr extends ArrConrtract{
 
+	/**
+	 * @param array $arr
+	 */
 	public function __construct(array $arr){
 
 		$this->val = $arr;
 	}
 
-	public static function create($arr){
-
-		if(!is_array($arr))
-			new Raise(sprintf("%s::create requires an array!", static::class));
+	/**
+	 * @param array $arr
+	 * 
+	 * @return static
+	 */
+	public static function create($arr):static{
 
 		return new self($arr);
 	}
@@ -31,7 +38,7 @@ class Arr extends ContractArr{
 	* 
 	* @return array
 	*/
-	public static function level(array $arr){
+	public static function level(array $arr):array{
 
 		$result = array();
 

@@ -4,6 +4,11 @@ use Strukt\Type\Str;
 
 class StrTest extends PHPUnit\Framework\TestCase{
 
+	protected $str;
+	protected $blah;
+	protected $markup;
+	protected $camel;
+
 	public function setUp():void{
 
 		$this->str = new Str("Strukt Framework");

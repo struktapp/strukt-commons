@@ -2,7 +2,7 @@
 
 namespace Strukt\Builder;
 
-use Strukt\Core\Collection as NativeCollection;
+use Strukt\Core\Collection as BaseCollection;
 
 /**
 * CollectionBuilder class
@@ -23,12 +23,12 @@ class Collection{
 	/**
 	* Constructor
 	*
-	* @param Strukt\Core\Collection $collection
+	* @param \Strukt\Core\Collection $collection
 	*/
-	public function __construct(NativeCollection $collection = null){
+	public function __construct(?BaseCollection $collection = null){
 
 		if(is_null($collection))
-			$collection = new NativeCollection();
+			$collection = new BaseCollection();
 		
 		$this->collection = $collection;
 	}
@@ -36,9 +36,9 @@ class Collection{
 	/**
 	* Static constructor
 	*
-	* @return Strukt\Builder\Collection
+	* @return \Strukt\Builder\Collection
 	*/
-	public static function create(NativeCollection $collection = null){
+	public static function create(?BaseCollection $collection = null):static{
 
 		return new self($collection);
 	}
@@ -50,13 +50,13 @@ class Collection{
 	*
 	* @return Strukt\Core\Collection
 	*/
-	public function fromAssoc(Array $array){
+	public function fromAssoc(array $array):BaseCollection{
 
 		foreach($array as $key=>$val){
 
 			if(is_array($val))
 				if(!empty(array_filter(array_keys($val), "is_string")))
-					$val = Collection::create(new NativeCollection($key))->fromAssoc($val);
+					$val = Collection::create(new BaseCollection($key))->fromAssoc($val);
 
 			$this->collection->set($key, $val);
 		}

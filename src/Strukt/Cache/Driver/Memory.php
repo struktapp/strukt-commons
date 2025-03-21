@@ -4,6 +4,9 @@ namespace Strukt\Cache\Driver;
 
 use Strukt\Contract\CacheDriverInterface;
 
+/**
+ * @author Moderator <pitsolu@gmail.com>
+ */
 class Memory implements CacheDriverInterface{
 
 	use \Strukt\Traits\Collection;
@@ -11,6 +14,9 @@ class Memory implements CacheDriverInterface{
 	private static $cache = [];
 	private $buffer;
 
+	/**
+	 * @param string $file
+	 */
 	public function __construct(string $file){
 
 		if(!array_key_exists($file, self::$cache))
@@ -19,17 +25,29 @@ class Memory implements CacheDriverInterface{
 		$this->buffer = self::$cache[$file];
 	}
 
+	/**
+	 * @param string $key
+	 */
 	public function exists(string $key):bool{
 
 		return $this->buffer->exists($key);		
 	}
 
+	/**
+	 * @return bool
+	 */
 	public function empty():bool{
 
 		return empty($this->buffer->keys());
 	}
 
-	public function put(string $key, string|array $val):self{
+	/**
+	 * @param string $key
+	 * @param string|array $val
+	 * 
+	 * @return static
+	 */
+	public function put(string $key, string|array $val):static{
 
 		if(is_array($val))
 			if(arr($val)->isMap())
@@ -43,6 +61,11 @@ class Memory implements CacheDriverInterface{
 		return $this;
 	}
 
+	/**
+	 * @param string $key
+	 * 
+	 * @return mixed
+	 */
 	public function get(string $key):mixed{
 
 		$val = $this->buffer->get($key);
@@ -54,7 +77,12 @@ class Memory implements CacheDriverInterface{
 		return $val;
 	}
 
-	public function remove(string $key):self{
+	/**
+	 * @param string $key
+	 * 
+	 * @return static
+	 */
+	public function remove(string $key):static{
 
 		$this->buffer->remove($key);
 		

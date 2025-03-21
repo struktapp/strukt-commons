@@ -4,6 +4,9 @@ use Strukt\Type\Json;
 
 class JsonTest extends PHPUnit\Framework\TestCase{
 
+	protected $encCred;
+	protected $decCred;
+
 	public function setUp():void{
 
 		$this->encCred = sprintf('{"username":"adm","password":"%s"}', sha1("p@55w0rd"));

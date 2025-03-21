@@ -5,11 +5,17 @@ namespace Strukt\Core;
 use Strukt\Type\Str;
 use Strukt\Raise;
 
+/**
+ * @author Moderator <pitsolu@gmail.com>
+*/
 class TokenQuery{
 
 	protected $token;
 	protected $parts;
 
+	/**
+	 * @param string $token
+	 */
 	public function __construct(string $token){
 
 		$this->token = $token; 
@@ -26,12 +32,20 @@ class TokenQuery{
 		}
 	}
 
+	/**
+	 * @param string $key
+	 */
 	public function has(string $key){
 
 		return array_key_exists($key, $this->parts);
 	}
 
-	public function get($key){
+	/**
+	 * @param string $key
+	 * 
+	 * @return array|string|null
+	 */
+	public function get(string $key):array|string|null{
 
 		if($this->has($key))
 			return $this->parts[$key];
@@ -39,14 +53,25 @@ class TokenQuery{
 		return null;
 	}
 
-	public function remove($key){
+	/**
+	 * @param string $key
+	 * 
+	 * @return static
+	 */
+	public function remove(string $key):static{
 
 		unset($this->parts[$key]);
 
 		return $this;
 	}
 
-	public function set(string $key, string|array|int|float $val){
+	/**
+	 * @param string $key
+	 * @param string|array|int|float $val
+	 * 
+	 * @return static
+	 */
+	public function set(string $key, string|array|int|float $val):static{
 
 		if(is_array($val))
 			if(!arr($val)->isOfStr())
@@ -57,12 +82,18 @@ class TokenQuery{
 		return $this;
 	}	
 
+	/**
+	 * @return array
+	 */
 	public function keys(){
 
 		return array_keys($this->parts);
 	}
 
-	public function token(){
+	/**
+	 * @return string
+	 */
+	public function token():string{
 
 		return $this->token;
 	}

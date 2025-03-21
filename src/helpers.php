@@ -15,7 +15,12 @@ helper("commons");
 
 if(helper_add("collect")){
 
-	function collect(array $assoc){
+	/**
+	 * @param array $assoc
+	 * 
+	 * @return \Strukt\Core\Collection
+	 */
+	function collect(array $assoc):Collection{
 
 		return CollectionBuilder::create()->fromAssoc($assoc);
 	}
@@ -24,7 +29,12 @@ if(helper_add("collect")){
 
 if(helper_add("map")){
 
-	function map(array $assoc){
+	/**
+	 * @param array $assoc
+	 * 
+	 * @return \Strukt\Core\Map
+	 */
+	function map(array $assoc):Map{
 
 		return new Map(collect($assoc));
 	}
@@ -32,18 +42,29 @@ if(helper_add("map")){
 
 if(helper_add("arr")){
 
-	function arr(array $bundle){
+	/**
+	 * @param array $bundle
+	 * 
+	 * @return \Strukt\Contract\Arr
+	 */
+	function arr(array $bundle):\Strukt\Contract\Arr{
 
 		return new class($bundle) extends \Strukt\Contract\Arr{
 
 			protected $val;
 
+			/**
+			 * @param array $bundle
+			 */
 			public function __construct(array $bundle){
 
 				$this->val = $bundle;
 			}
 
-			public function level(){
+			/**
+			 * @return array
+			 */
+			public function level():array{
 
 				return Arr::level($this->val);
 			}
@@ -53,7 +74,13 @@ if(helper_add("arr")){
 
 if(helper_add("reg")){
 
-	function reg(string $key = null, mixed $val = null){
+	/**
+	 * @param string $key
+	 * @param mixed $val
+	 * 
+	 * @return mixed
+	 */
+	function reg(?string $key = null, mixed $val = null):mixed{
 
 		$reg = Strukt\Core\Registry::getSingleton();
 		if(!is_null($key) && !is_null($val))
@@ -68,7 +95,18 @@ if(helper_add("reg")){
 
 if(helper_add("config")){
 
-	function config(string $key, array|string $options = null){
+	/**
+	 * @param string $key
+	 * @param mixed $options - can only be array|string
+	 * 
+	 * @return mixed
+	 */
+	function config(string $key, mixed $options = null):mixed{
+
+		if(!is_array($options) && 
+			!is_string($options) &&
+			!notnull($options))
+				raise("config(...\$options) can only be array|string!");
 
 		if(!reg()->exists("config"))
 			if(fs()->isDir(phar("cfg")->adapt())){
@@ -107,7 +145,18 @@ if(helper_add("config")){
 
 if(helper_add("cache")){
 
-	function cache(string $filename, string|array $val = null){
+	/**
+	 * @param string $filename
+	 * @param mixed $val - can only be string|array
+	 * 
+	 * @return mixed
+	 */
+	function cache(string $filename, mixed $val = null):mixed{
+
+		if(!is_array($val) && 
+			!is_string($val) &&
+			!notnull($val))
+				raise("config(...\$val) can only be array|string|null!");
 		
 		if(preg_match("/\./", $filename)){
 
@@ -128,7 +177,13 @@ if(helper_add("cache")){
 
 if(helper_add("raise")){
 
-	function raise($error, $code = 500){
+	/**
+	 * @param string $error
+	 * @param integer $code
+	 * 
+	 * @return \Strukt\Raise
+	 */
+	function raise(string $error, int $code = 500):Raise{
 
 		return new Raise($error, $code);
 	}
@@ -136,7 +191,12 @@ if(helper_add("raise")){
 
 if(helper_add("token")){
 
-	function token(string $token){
+	/**
+	 * @param string $token
+	 * 
+	 * @return \Strukt\Core\TokenQuery
+	 */
+	function token(string $token):\Strukt\Core\TokenQuery{
 
 		return new \Strukt\Core\TokenQuery($token);
 	}
@@ -144,7 +204,12 @@ if(helper_add("token")){
 
 if(helper_add("tokenize")){
 
-	function tokenize(array $parts){
+	/**
+	 * @param array $parts
+	 * 
+	 * @return string
+	 */
+	function tokenize(array $parts):string{
 
 		return arr($parts)->tokenize();
 	}
@@ -152,7 +217,12 @@ if(helper_add("tokenize")){
 
 if(helper_add("str")){
 
-	function str(string $str){
+	/**
+	 * @param string $str
+	 * 
+	 * return \Strukt\Type\Str
+	 */
+	function str(string $str):\Strukt\Type\Str{
 
 		return new \Strukt\Type\Str($str);
 	}
@@ -160,6 +230,11 @@ if(helper_add("str")){
 
 if(helper_add("when")){
 
+	/**
+	 * @param string|integer $date
+	 * 
+	 * @return \Strukt\Type\DateTime
+	 */
 	function when(string|int $date = "now"){
 
 		if(is_numeric($date))
@@ -172,17 +247,33 @@ if(helper_add("when")){
 
 if(helper_add("period")){
 
-	function period(\DateTime $start = null, \DateTime $end = null){
+	/**
+	 * @param \DateTime $start
+	 * @param \DateTime $end
+	 * 
+	 * @return object
+	 */
+	function period(?\DateTime $start = null, ?\DateTime $end = null):object{
 
 		return new class($start, $end){
 
-			public function __construct(\DateTime $start = null, \DateTime $end = null){
+			/**
+			 * @param \DateTime $start
+	 	     * @param \DateTime $end
+			 */
+			public function __construct(?\DateTime $start = null, ?\DateTime $end = null){
 
 				if(!is_null($start))
 					$this->create($start, $end);
 			}
 
-			function create(\DateTime $start, \DateTime $end = null){
+			/**
+			 * @param \DateTime $start
+	 	     * @param \DateTime $end
+	 	     * 
+	 	     * @return static
+			 */
+			function create(\DateTime $start, ?\DateTime $end = null):static{
 
 				if(is_null($end))
 					$end = new DateTime("99999/12/31 00:00:00");
@@ -192,7 +283,12 @@ if(helper_add("period")){
 				return $this;
 			}
 
-			function reset(\DateTime $reset = null){
+			/**
+			 * @param \DateTime $reset
+			 * 
+			 * @return static
+			 */
+			function reset(?\DateTime $reset = null):static{
 
 				Today::reset($reset);
 
@@ -204,6 +300,9 @@ if(helper_add("period")){
 
 if(helper_add("today")){
 
+	/**
+	 * @return \Strukt\Core\Today
+	 */
 	function today(){
 
 		return new Today();
@@ -212,15 +311,29 @@ if(helper_add("today")){
 
 if(helper_add("format")){
 
-	function format(string $type, $mixed = null){
+	/**
+	 * @param string $type
+	 * @param mixed $val
+	 * 
+	 * @return @mixed
+	 */
+	function format(string $type, mixed $val = null):mixed{
 
-		if(is_callable($mixed))
-			return event(sprintf("format.%s", $type), $mixed);
+		if(is_callable($val))
+			return event(sprintf("format.%s", $type), $val);
 
-		return event(sprintf("format.%s", $type))->apply($mixed)->exec();
+		return event(sprintf("format.%s", $type))->apply($val)->exec();
 	}
 
-	format("date", function(\DateTime $date){
+	/**
+	 * Date formatting
+	 *  Example: format("date", when("today"))
+	 * 
+	 * @param \DateTime $date
+	 * 
+	 * @return string
+	 */
+	format("date", function(\DateTime $date):string{
 
 		return $date->format("Y-m-d H:i:s");
 	});	
@@ -228,7 +341,19 @@ if(helper_add("format")){
 
 if(helper_add("env")){
 
-	function env(string $key, string|int|bool $val = null){
+	/**
+	 * @param string $key
+	 * @param mixed $val - can only be string|int|bool
+	 * 
+	 * @return string
+	 */
+	function env(string $key, mixed $val = null):string{
+
+		if(!is_int($val) && 
+			!is_string($val) && 
+			!is_bool($val) &&
+			!notnull($val))
+				raise("env(...\$val) can only be string|int|bool!");
 
 		if(!is_null($val))
 			Env::set($key, $val);
@@ -239,13 +364,21 @@ if(helper_add("env")){
 
 if(helper_add("json")){
 
+	/**
+	 * @param string|array $obj
+	 * 
+	 * @return object
+	 */
 	function json(string|array $obj){
 
 		return new class($obj){
 
 			private $obj;
 
-			public function __construct($obj){
+			/**
+			 * @param string|array $obj
+			 */
+			public function __construct(string|array $obj){
 
 				if(is_array($obj))
 					$obj = Json::encode($obj);
@@ -253,27 +386,42 @@ if(helper_add("json")){
 				$this->obj = $obj;
 			}
 
-			public function pp(){
+			/**
+			 * @return string
+			 */
+			public function pp():string{
 
 				return Json::pp($this->obj);
 			}
 
-			public function decode(){
+			/**
+			 * @return array
+			 */
+			public function decode():array{
 
 				return Json::decode($this->obj);
 			}
 
-			public function encode(){
+			/**
+			 * @return string
+			 */
+			public function encode():string{
 
 				return $this->obj;
 			}
 
-			public function valid(){
+			/**
+			 * @return boolean
+			 */
+			public function valid():bool{
 
 				return Json::isJson($this->obj);
 			}
 
-			public function first(){
+			/**
+			 * @return mixed
+			 */
+			public function first():mixed{
 
 				$arr = arr($this->decode());
 				if(negate($arr->isMap()))
@@ -282,7 +430,12 @@ if(helper_add("json")){
 				return null;
 			}
 
-			public function has(mixed $val){
+			/**
+			 * @param mixed $val
+			 * 
+			 * @return bool
+			 */
+			public function has(mixed $val):bool{
 
 				if(!$this->valid())
 					raise("Invalid JSON!");
@@ -292,7 +445,13 @@ if(helper_add("json")){
 				return arr($obj)->has($val);
 			}
 
-			public function assert(string $key, callable $fn = null){
+			/**
+			 * @param string $key
+			 * @param callable $fn
+			 * 
+			 * @return boolean
+			 */
+			public function assert(string $key, ?callable $fn = null){
 
 				if(!$this->valid())
 					raise("Invalid JSON!");
@@ -321,7 +480,18 @@ if(helper_add("json")){
 
 if(helper_add("msg")){
 
-	function msg(string|array|int $message = null){
+	/**
+	 * @param mixed $message - can only be string|array|int
+	 * 
+	 * @return object
+	 */
+	function msg(mixed $message = null):\Strukt\NoteList{
+
+		if(!is_string($message) && 
+			!is_array($message) && 
+			!is_int($message) &&
+			!notnull($message))
+				raise("msg(\$message) can only be string|array|int|null");
 
 		return new class($message) extends \Strukt\NoteList{
 
@@ -336,6 +506,11 @@ if(helper_add("msg")){
 
 if(helper_add("negate")){
 
+	/**
+	 * @param boolean $any
+	 * 
+	 * @return boolean
+	 */
 	function negate(bool $any){
 
 		return !$any;
@@ -344,6 +519,11 @@ if(helper_add("negate")){
 
 if(helper_add("notnull")){
 
+	/**
+	 * @param mixed $var
+	 * 
+	 * @return boolean
+	 */
 	function notnull(mixed $var){
 
 		return negate(is_null($var));
@@ -352,7 +532,12 @@ if(helper_add("notnull")){
 
 if(helper_add("ini")){
 
-	function ini($file){
+	/**
+	 * @param mixed $file
+	 * 
+	 * @return object
+	 */
+	function ini(mixed $file):object{
 
 		return new class($file){
 
@@ -362,6 +547,9 @@ if(helper_add("ini")){
 			private $dFile; // diff
 			private $ini;
 
+			/**
+			 * @param string $file
+			 */
 			public function __construct(string $file){
 
 				$this->file = $file;
@@ -370,7 +558,13 @@ if(helper_add("ini")){
 				$this->dFile = @array_diff_assoc($this->nFile, $this->oFile);
 			}
 
-			private function section(string $name, bool $comment = false){
+			/**
+			 * @param string $name
+			 * @param boolean $comment
+			 * 
+			 * @return static
+			 */
+			private function section(string $name, bool $comment = false):static{
 
 					unset($this->dFile[$name]);
 					$block_ls = array_keys($this->dFile);
@@ -413,7 +607,14 @@ if(helper_add("ini")){
 				return $this;
 			}
 
-			private function withKeyVal(string $name, string $key, bool $comment = false){
+			/**
+			 * @param string $name
+			 * @param string $key
+			 * @param boolean $comment
+			 * 
+			 * @return static
+			 */
+			private function withKeyVal(string $name, string $key, bool $comment = false):static{
 
 				$lines = str(fs()->cat($this->file))->split("\n");
 				$this->ini = arr($lines)->each(function($k, $ln) use($name, $key, $comment){
@@ -433,7 +634,13 @@ if(helper_add("ini")){
 				return $this;
 			}
 
-			private function withKey(string $key, bool $comment = false){
+			/**
+			 * @param string $key
+			 * @param boolean $comment
+			 * 
+			 * @return static
+			 */
+			private function withKey(string $key, bool $comment = false):static{
 
 				$lines = str(fs()->cat($this->file))->split("\n");
 				$this->ini = arr($lines)->each(function($k, $ln) use($key, $comment){
@@ -454,7 +661,13 @@ if(helper_add("ini")){
 				return $this;
 			}
 
-			public function disable(string $name = null, string $key = null){
+			/**
+			 * @param string $name
+			 * @param string $key
+			 * 
+			 * @return static
+			 */
+			public function disable(?string $name = null, ?string $key = null):static{
 
 				if(notnull($key) && notnull($name))
 					if(arr($this->nFile)->contains($name))
@@ -470,7 +683,13 @@ if(helper_add("ini")){
 				return $this;
 			}
 
-			public function enable(string $name = null, string $key = null){
+			/**
+			 * @param string $name
+			 * @param string $key
+			 * 
+			 * @return static
+			 */
+			public function enable(?string $name = null, ?string $key = null):static{
 
 				if(notnull($key) && notnull($name))
 					if(arr($this->nFile)->contains($name))
@@ -486,6 +705,9 @@ if(helper_add("ini")){
 				return $this;
 			}
 
+			/**
+			* @return string
+			*/
 			public function yield(){
 
 				return arr($this->ini)->concat("\n");

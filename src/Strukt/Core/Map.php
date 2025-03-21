@@ -27,7 +27,7 @@ class Map implements \Strukt\Contract\CollectionInterface{
 	*
 	* @param Strukt\Core\Collection $collection
 	*/
-	public function __construct(Collection $collection = null){
+	public function __construct(?Collection $collection = null){
 
 		if(!is_null($collection))
 			$this->collection = $collection;
@@ -75,11 +75,11 @@ class Map implements \Strukt\Contract\CollectionInterface{
 	* Set map item
 	*
 	* @param string $key
-	* @param string $val
+	* @param mixed $val
 	*
 	* @return void
 	*/
-	public function set(string $key, $val):void{
+	public function set(string $key, mixed $val):void{
 
 		$this->assemble($key, $val, $this->collection);
 	}
@@ -89,7 +89,7 @@ class Map implements \Strukt\Contract\CollectionInterface{
 	*
 	* @return mixed
 	*/
-	public function get(string $key){
+	public function get(string $key):mixed{
 
 		return $this->collection->get($key);
 	}

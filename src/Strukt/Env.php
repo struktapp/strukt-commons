@@ -6,13 +6,17 @@ use Strukt\Core\Registry;
 use Strukt\Raise;
 use Strukt\Type\Str;
 
+/**
+ * @author Moderator <pitsolu@gmail.com>
+ */
 class Env{
 
-	public static function withFile(string $path=".env"){
-
-		// $phar_path = \Phar::running();
-		// if(!empty($phar_path))
-			// $path = sprintf("%s/%s", rtrim($phar_path, "/"), trim($path, "/"));
+	/**
+	 * @param string $path
+	 * 
+	 * @return void
+	 */
+	public static function withFile(string $path=".env"):void{
 
 		$lines = file(phar($path)->adapt(), FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
 
@@ -33,7 +37,12 @@ class Env{
 		}
 	}
 
-	public static function has(string $key){
+	/**
+	 * @param string $key
+	 * 
+	 * @return boolean
+	 */
+	public static function has(string $key):bool{
 
 		$key = sprintf("env.%s", $key);
 
@@ -42,7 +51,12 @@ class Env{
 		return $registry->exists($key);
 	}
 
-	public static function get(string $key){
+	/**
+	 * @param string $key
+	 * 
+	 * @return mixed
+	 */
+	public static function get(string $key):mixed{
 
 		$key = sprintf("env.%s", $key);
 
@@ -54,7 +68,13 @@ class Env{
 		return $registry->get($key);
 	}
 
-	public static function set(string $key, string|int|bool $val){
+	/**
+	 * @param string $key
+	 * @param string|int|bool $val
+	 * 
+	 * @return void
+	 */
+	public static function set(string $key, string|int|bool $val):void{
 			
 		Registry::getSingleton()->set(sprintf("env.%s", $key), $val);
 	}

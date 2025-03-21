@@ -3,39 +3,70 @@
 namespace Strukt\Type;
 
 use Strukt\Raise;
+use Strukt\Contract\ValueObject;
 
-class Str extends \Strukt\Contract\ValueObject{
+/**
+ * @author Moderator <pitsolu@gmail.com>
+ */
+class Str extends ValueObject{
 
+	protected $val;
+
+	/**
+	 * @param string $str
+	 */
 	public function __construct($str){
 
 		if(!is_string($str))
-			new Raise(sprintf("%s requires string!", static::class));
+			raise(sprintf("\Strukt\Type\Str object accepts strings only![%s] given.", (string)$str));
 
 		parent::__construct($str);
 	}
 
-	public static function create($str){
+	/**
+	 * @param string $str
+	 * 
+	 * @return static
+	 */
+	public static function create($str):static{
 
 		return new self($str);
 	}
 
-	public function prepend(string $str){
+	/**
+	 * @param string str
+	 * 
+	 * @return static
+	 */
+	public function prepend(string $str):static{
 
 		return new Str(sprintf("%s%s", $str, $this->val));
 	}
 
-	public function concat(string $str){
+	/**
+	 * @param string $str
+	 * 
+	 * @return static
+	 */
+	public function concat(string $str):static{
 
 		return new Str(sprintf("%s%s", $this->val, $str));
 	}
 
-	public function len(){
+	/**
+	 * @return integer
+	 */
+	public function len():int{
 
 		return strlen($this->val);
 	}
 
 	/**
 	* Count the number of substring occurrences
+	* 
+	* @param string $needle
+	* 
+	* @return integer
 	*/
 	public function count(string $needle){
 
@@ -44,6 +75,8 @@ class Str extends \Strukt\Contract\ValueObject{
 
 	/**
 	* Explode string
+	* 
+	* @param string $delimiter
 	*/
 	public function split(string $delimiter){
 
@@ -52,8 +85,13 @@ class Str extends \Strukt\Contract\ValueObject{
 
 	/**
 	* Extracts parts of a string and returns the extracted parts in a new string
+	* 
+	* @param integer $start
+	* @param integer $length
+	* 
+	* @return static
 	*/
-	public function slice(int $start, int $length = null){
+	public function slice(int $start, ?int $length = null):static{
 
 		if(is_null($length))
 			$length = $this->len();
@@ -61,20 +99,28 @@ class Str extends \Strukt\Contract\ValueObject{
 		return $this->part($start, $length);
 	}
 
-	public function toUpper(){
+	/**
+	 * @return static
+	 */
+	public function toUpper():static{
 
 		return new Str(strtoupper($this->val));
 	}
 
-	public function toLower(){
+	/**
+	 * @return static
+	 */
+	public function toLower():static{
 
 		return new Str(strtolower($this->val));
 	}
 
 	/**
 	* @link https://goo.gl/N4NsF5
+	* 
+	* @return static
 	*/
-	public function toSnake(){
+	public function toSnake():static{
 
 		$pattern = "/(?<=\d)(?=[A-Za-z])|(?<=[A-Za-z])(?=\d)|(?<=[a-z])(?=[A-Z])/";
 
@@ -83,7 +129,10 @@ class Str extends \Strukt\Contract\ValueObject{
     	return $str->toLower();
 	}
 
-	public function toCamel(){
+	/**
+	 * @return static|string
+	 */
+	public function toCamel():static|string{
 
 		$str = implode("", array_map(function($part){
 
@@ -96,8 +145,12 @@ class Str extends \Strukt\Contract\ValueObject{
 
 	/**
 	* @link https://goo.gl/fj7W89
+	* 
+	* @param string $needle
+	* 
+	* @return boolean
 	*/
-	public function startsWith(string $needle){
+	public function startsWith(string $needle):bool{
 
 		$oNeedle = Str::create($needle);
 
@@ -106,7 +159,12 @@ class Str extends \Strukt\Contract\ValueObject{
 	    return $this->slice(0, $length)->equals($needle);
 	}
 
-	public function endsWith(string $needle){
+	/**
+	 * @param string $needle
+	 * 
+	 * @return boolean
+	 */
+	public function endsWith(string $needle):bool{
 
 		$oNeedle = Str::create($needle);
 
@@ -118,27 +176,47 @@ class Str extends \Strukt\Contract\ValueObject{
 	    return $this->slice(-$length)->equals($needle);
 	}
 
-	public function contains(string $needle){
+	/**
+	 * @param string $needle
+	 * 
+	 * @return boolean
+	 */
+	public function contains(string $needle):bool{
 
 		return strpos($this->val, $needle) !== false;
 	}
 
-	public function equals($str){
+	/**
+	 * @param static|string $str
+	 * 
+	 * @return boolean
+	 */
+	public function equals($str):bool{
 
 		$str = (string)$str;
 
 		return $this->val === $str;
 	}
 
-	public function notEquals($str){
+	/**
+	 * @param string str
+	 * 
+	 * @return boolean
+	 */
+	public function notEquals(self|string $str):bool{
 
 		return !$this->equals($str);
 	}
 
 	/**
 	* Find the position of the first occurrence of a substring in a string
+	* 
+	* @param string $needle
+	* @param $offset
+	* 
+	* @return integer|bool
 	*/
-	public function at(string $needle, $offset = null){
+	public function at(string $needle, ?int $offset = null):int|bool{
 
 		if(is_null($offset))
 			return strpos($this->val, $needle);
@@ -148,8 +226,13 @@ class Str extends \Strukt\Contract\ValueObject{
 
 	/**
 	* Opposite of (Strukt\Util\Str::at) method
+	* 
+	* @param string $needle
+	* @param integer $offset
+	* 
+	* @return integer|bool
 	*/
-	public function startBackwardFindAt(string $needle, $offset = null){
+	public function startBackwardFindAt(string $needle, ?int $offset = null):int|bool{
 
 		if(is_null($offset))
 			return strrpos($this->val, $needle);
@@ -161,15 +244,26 @@ class Str extends \Strukt\Contract\ValueObject{
 	* Extract a substring between two characters in a string
 	*
 	* @link https://goo.gl/2rBv3y
+	* 
+	* @param string $from
+	* @param string $to
+	* 
+	* @return static
 	*/
-	public function btwn(string $from, string $to){
+	public function btwn(string $from, string $to):static{
 
 		$sub = $this->slice($this->at($from) + Str::create($from)->len(), $this->len());
 
 		return $sub->slice(0, $sub->at($to));
 	}
 
-	public function replace($search, $replace){
+	/**
+	 * @param array|string $search
+	 * @param array|string $replace
+	 * 
+	 * @return static
+	 */
+	public function replace(array|string $search, array|string $replace):static{
 
 		return new Str(str_replace($search, $replace, $this->val));
 	}
@@ -177,8 +271,14 @@ class Str extends \Strukt\Contract\ValueObject{
 	/**
 	* Replaces a copy of string delimited by the start and (optionally) 
 	* length parameters with the string given in replacement
+	* 
+	* @param array|string $replace
+	* @param array|string $start
+	* @param integer $length
+	*  
+	* @return static
 	*/
-	public function replaceAt($replace, $start, $length = null){
+	public function replaceAt(array|string $replace, array|string $start, ?int $length = null):static{
 
 		if(is_null($length))
 			return new Str(substr_replace($this->val, $replace, $start));
@@ -188,8 +288,13 @@ class Str extends \Strukt\Contract\ValueObject{
 
 	/**
 	* Replace first occurence
+	* 
+	* @param array|string $search
+	* @param array|string $replace
+	* 
+	* @return static
 	*/
-	public function replaceFirst($search, $replace){
+	public function replaceFirst(array|string $search, array|string $replace):static{
 
     	return new Str(preg_replace("/".$search."/", $replace, $this->val, 1));
 	}
@@ -198,8 +303,13 @@ class Str extends \Strukt\Contract\ValueObject{
 	* Replace last occurence
 	*
 	* @link https://goo.gl/68KiQt
+	* 
+	* @param array|string $search
+	* @param array|string $replace
+	* 
+	* @return static
 	*/
-	public function replaceLast($search, $replace){
+	public function replaceLast(array|string $search, array|string $replace):static{
 
 		/**
 		* Opposite of (at) method
@@ -214,34 +324,55 @@ class Str extends \Strukt\Contract\ValueObject{
 
 	/**
 	* Return part of string from beginning
+	* 
+	* @param integer $length
+	* 
+	* @return static
 	*/
-	public function first(int $length){
+	public function first(int $length):static{
 
 		return $this->slice(0, $length);
 	}
 
 	/**
 	* Return part of string from end
+	* 
+	* @param integer $length
+	* 
+	* @return static
 	*/
-	public function last(int $length){
+	public function last(int $length):static{
 
 		return $this->slice($this->len()-$length, $this->len());
 	}
 
 	/**
 	* Return part of a string
+	* 
+	* @param integer $start
+	* @param integer $end
+	* 
+	* @return static
 	*/
-	public function part(int $start, int $end){
+	public function part(int $start, int $end):static{
 
 		return new Str(substr($this->val, $start, $end));
 	}
 
-	public function empty(){
+	/**
+	 * @return boolean
+	 */
+	public function empty():bool{
 
 		return strlen($this->val) === substr_count($this->val, ' ') ? true : false;
 	}
 
-	public function isRegEx(string $string) {
+	/**
+	 * @param string $string
+	 * 
+	 * @return boolean
+	 */
+	public function isRegEx(string $string):bool{
 
 		return @preg_match($string, '') !== FALSE;
 	}

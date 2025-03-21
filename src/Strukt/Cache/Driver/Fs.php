@@ -4,6 +4,9 @@ namespace Strukt\Cache\Driver;
 
 use Strukt\Contract\CacheDriverInterface;
 
+/**
+ * @author Moderator <pitsolu@gmail.com>
+ */
 class Fs implements CacheDriverInterface{
 
 	use \Strukt\Traits\Collection;
@@ -12,6 +15,9 @@ class Fs implements CacheDriverInterface{
 	private $filename;
 	private $buffer;
 
+	/**
+	 * @param string $file
+	 */
 	public function __construct(string $file){
 
 		$filename = sprintf("%s.json", $file);
@@ -29,11 +35,19 @@ class Fs implements CacheDriverInterface{
 		$this->filename = $filename;
 	}
 
+	/**
+	 * @param string $key
+	 * 
+	 * @return boolean
+	 */ 
 	public function exists(string $key):bool{
 
 		return $this->buffer->exists($key);		
 	}
 
+	/**
+	 * @return boolean
+	 */
 	public function empty():bool{
 
 		$data = json($this->fs->cat($this->filename))->decode();
@@ -41,25 +55,44 @@ class Fs implements CacheDriverInterface{
 		return empty($data);
 	}
 
-	public function put(string $key, string|array $val):self{
+	/**
+	 * @param string $key
+	 * @param string|array $val
+	 * 
+	 * @return static
+	 */ 
+	public function put(string $key, string|array $val):static{
 
 		$this->buffer->set($key, $val);
 		
 		return $this;
 	}
 
+	/**
+	 * @param string $key
+	 * 
+	 * @return mixed
+	 */ 
 	public function get(string $key):mixed{
 
 		return $this->buffer->get($key);
 	}
 
-	public function remove(string $key):self{
+	/**
+	 * @param string $key
+	 * 
+	 * @return static
+	 */
+	public function remove(string $key):static{
 
 		$this->buffer->remove($key);
 		
 		return $this;
 	}
 
+	/**
+	 * @return void
+	 */
 	public function save():void{
 
 		$arr = $this->disassemble($this->buffer);

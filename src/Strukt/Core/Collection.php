@@ -35,7 +35,7 @@ class Collection implements \Strukt\Contract\CollectionInterface{
 	*
 	* @param string $name
 	*/
-	public function __construct(string $name = null){
+	public function __construct(?string $name = null){
 
 		if(!is_null($name))
 			$this->name = $name;
@@ -70,11 +70,11 @@ class Collection implements \Strukt\Contract\CollectionInterface{
 	* Setter for collection items
 	*
 	* @param string $key
-	* @param string $val
+	* @param mixed $val
 	*
 	* @return void
 	*/
-	public function set(string $key, $val):void{
+	public function set(string $key, mixed $val):void{
 
 		if (strpos($key, '.') !== false)
 			throw new InvalidKeyException($key);
@@ -90,7 +90,6 @@ class Collection implements \Strukt\Contract\CollectionInterface{
 	* Remove collection item
 	*
 	* @param string $key
-	* @param string $val
 	*
 	* @return void
 	*/
@@ -100,17 +99,13 @@ class Collection implements \Strukt\Contract\CollectionInterface{
 	}
 
 	/**
-	* Getter for collection item
-	*
-	* Uses dot notation e.g $collection->get("user.role.decr")
+	* Getter for collection item - Uses dot notation e.g $collection->get("user.role.decr")
 	*
 	* @param string $key
 	*
-	* @throws \Exception
-	*
 	* @return mixed
 	*/
-	public function get(string $key){
+	public function get(string $key):mixed{
 
 		$keyList = explode(".", $key);
 
@@ -133,11 +128,9 @@ class Collection implements \Strukt\Contract\CollectionInterface{
 	*
 	* @param string $key
 	*
-	* @throws \Exception
-	*
 	* @return mixed
 	*/
-	private function getCollection($key){
+	private function getCollection(string $key):mixed{
 
 		if(key_exists($key, $this->collection))
 			return $this->collection[$key];
@@ -146,9 +139,7 @@ class Collection implements \Strukt\Contract\CollectionInterface{
 	}
 
 	/**
-	* Key exists
-	*
-	* Uses dot notation e.g $collection->exists("user.role.decr")
+	* Key exists - Uses dot notation e.g $collection->exists("user.role.decr")
 	*
 	* @param string $key
 	*

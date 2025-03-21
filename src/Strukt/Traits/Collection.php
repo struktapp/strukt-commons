@@ -5,16 +5,21 @@ namespace Strukt\Traits;
 use Strukt\Contract\CollectionInterface;
 use Strukt\Exception\KeyOverlapException;
 
+/**
+ * @author Moderator <pitsolu@gmail.com>
+*/
 trait Collection{
 
 	/**
-	* Marshal dot-notationed key into a Strukt\Contract\CollectionInterface
+	* Marshal dot-notationed key into a \Strukt\Contract\CollectionInterface
 	*
 	* @param string $key
 	* @param mixed $val
-	* @param Strukt\Contract\CollectionInterface $collection
+	* @param \Strukt\Contract\CollectionInterface $collection
+	* 
+	* @return void
 	*/
-	protected static function assemble($key, $val, CollectionInterface $collection){
+	protected static function assemble(string $key, mixed $val, CollectionInterface $collection):void{
 
 		if($collection->exists($key))
 			if(!empty($collection->get($key)))
@@ -62,10 +67,12 @@ trait Collection{
 
 	/**
 	* Disassemble \Strukt\Core\Collection into an array
+	* 
+	* @param \Strukt\Contract\CollectionInterface $collection
 	*
-	* @return []
+	* @return array
 	*/
-	protected function disassemble(CollectionInterface $collection){
+	protected function disassemble(CollectionInterface $collection):array{
 
 		$buffer = [];
 		$keys = $collection->keys();

@@ -2,6 +2,9 @@
 
 class DateTimeTest extends PHPUnit\Framework\TestCase{
 
+	protected $start;
+	protected $end;
+
 	public function setUp():void{
 
 		$this->start = new \Strukt\Type\DateTime();

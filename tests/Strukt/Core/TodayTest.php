@@ -5,6 +5,8 @@ use Strukt\Type\DateTime as XDateTime;
 
 class TodayTest extends PHPUnit\Framework\TestCase{
 
+	protected $today;
+
 	public function setUp():void{
 
 		Today::makePeriod(new DateTime("1900-01-01"), new DateTime("1963-12-31"));

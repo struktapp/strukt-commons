@@ -2,13 +2,19 @@
 
 namespace Strukt;
 
+/**
+ * @author Moderator <pitsolu@gmail.com>
+ */
 class NoteList extends \Strukt\Contract\NoteList{
 
 	protected $message;
 	protected static $messages = [];
 	protected static $limit = 100;
 
-	public function __construct(string $message){
+	/**
+	 * @param $message
+	 */
+	public function __construct($message){
 
 		$this->message = $message;
 

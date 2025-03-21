@@ -2,9 +2,16 @@
 
 namespace Strukt;
 
+/**
+ * @author Moderator <pitsolu@gmail.com>
+ */
 class Raise extends \Strukt\NoteList{
 
-	public function __construct($error, $code = 500){
+	/**
+	 * @param string $error
+	 * @param integer $code
+	 */
+	public function __construct(string $error, int $code = 500){
 
 		parent::__construct($error);
 

@@ -6,6 +6,8 @@ use Strukt\Exception\KeyOverlapException;
 
 class MapTest extends PHPUnit\Framework\TestCase{
 
+	protected $map;
+
 	function setUp():void{
 
 		$this->map = new Map(new Collection());

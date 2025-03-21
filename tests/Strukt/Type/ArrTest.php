@@ -4,7 +4,10 @@ use Strukt\Type\Arr;
 
 class ArrTest extends PHPUnit\Framework\TestCase{
 
-	use \Strukt\Helper\Arr;
+	use \Strukt\Traits\Arr;
+
+	protected $arr;
+	protected $rawarr;
 
 	public function setUp():void{
 

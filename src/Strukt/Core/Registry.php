@@ -40,9 +40,9 @@ class Registry implements \Strukt\Contract\CollectionInterface{
 	/**
 	* Getter for Singleton registry instance
 	*
-	* @return \Strukt\Framework\Registry
+	* @return static
 	*/
-	public static function getSingleton(){
+	public static function getSingleton():static{
 
 		if(is_null(static::$registry))
 			static::$registry = new self;
@@ -57,7 +57,7 @@ class Registry implements \Strukt\Contract\CollectionInterface{
 	*
 	* @return mixed
 	*/
-	public function get(string $key){
+	public function get(string $key):mixed{
 
 		return $this->register->get($key);
 	}
@@ -66,11 +66,11 @@ class Registry implements \Strukt\Contract\CollectionInterface{
 	* Setter for registry value
 	*
 	* @param string $key
-	* @param string $val
+	* @param mixed $val
 	*
 	* @return void
 	*/
-	public function set(string $key, $val):void{
+	public function set(string $key, mixed $val):void{
 
 		$this->register->set($key, $val);
 	}

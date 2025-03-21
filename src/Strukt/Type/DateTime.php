@@ -6,11 +6,18 @@ use Strukt\Core\Today;
 use Strukt\Contract\DateRange;
 use Strukt\Raise;
 
+/**
+ * @author Moderator <pitsolu@gmail.com>
+ */
 class DateTime extends DateRange{
 
 	private $format;
 
-	public function __construct($datetime="", string $format=""){
+	/**
+	 * @param $datetime
+	 * @param string $format
+	 */
+	public function __construct(\DateTime|string $datetime="", string $format=""){
 
 		$now = new Today();
 		if(empty($datetime))
@@ -45,17 +52,31 @@ class DateTime extends DateRange{
 		parent::__construct($datetime);
 	}
 
+	/**
+	 * @param string $datetime
+	 * @param string $format 
+	 */
 	public static function create(string $datetime, string $format="Y-m-d"){
 
 		return new self(\DateTime::createFromFormat($format, $datetime));
 	}
 
-	public static function fromTimestamp($timestamp){
+	/**
+	 * @param integer $timestamp
+	 * 
+	 * @return static
+	 */
+	public static function fromTimestamp(int $timestamp):static{
 
 		return (new self)->setTimestamp($timestamp);
 	}
 
-	public static function isTimestamp(int $timestamp){
+	/**
+	 * @param int $timestamp
+	 * 
+	 * @return boolean
+	 */
+	public static function isTimestamp(int $timestamp):bool{
 
 	    try {
 
@@ -70,29 +91,31 @@ class DateTime extends DateRange{
 	}
 
 	/**
-	* https://github.com/ramphor/date-human-readable
-	*  
-	* use Ramphor\Date\HumanReadable;
+	 * @param $full
+	 * 
+	 * @link https://github.com/ramphor/date-human-readable
+	 *  
+	 * use Ramphor\Date\HumanReadable;
 
-	* HumanReadable::parse(new DateTime('now'));         // Moments ago
-	* HumanReadable::parse(new DateTime('+ 59 second')); // Seconds from now
-	* HumanReadable::parse(new DateTime('+ 1 minute'));  // In 1 minute
-	* HumanReadable::parse(new DateTime('- 59 minute')); // 59 minutes ago
+	 * HumanReadable::parse(new DateTime('now'));         // Moments ago
+	 * HumanReadable::parse(new DateTime('+ 59 second')); // Seconds from now
+	 * HumanReadable::parse(new DateTime('+ 1 minute'));  // In 1 minute
+	 * HumanReadable::parse(new DateTime('- 59 minute')); // 59 minutes ago
 
-	* // You can supply a secondary argument to provide an alternate reference
-	* // DateTime. The default is the current DateTime, ie: DateTime('now'). In
-	* // addition, it takes into account the day of each DateTime. So in the next
-	* // two examples, even though they're only a second apart, 'Yesterday' and
-	* // 'Tomorrow' will be displayed
+	 * // You can supply a secondary argument to provide an alternate reference
+	 * // DateTime. The default is the current DateTime, ie: DateTime('now'). In
+	 * // addition, it takes into account the day of each DateTime. So in the next
+	 * // two examples, even though they're only a second apart, 'Yesterday' and
+	 * // 'Tomorrow' will be displayed
 
-	* $now = new DateTime('1991-05-18 00:00:00 UTC');
-	* $dateTime = new DateTime('1991-05-17 23:59:59 UTC');
-	* HumanReadable::parse($dateTime, $now); // Yesterday
+	 * $now = new DateTime('1991-05-18 00:00:00 UTC');
+	 * $dateTime = new DateTime('1991-05-17 23:59:59 UTC');
+	 * HumanReadable::parse($dateTime, $now); // Yesterday
 
-	* $now = new DateTime('1991-05-17 23:59:59 UTC');
-	* $dateTime = new DateTime('1991-05-18 00:00:00 UTC');
-	* HumanReadable::parse($dateTime, $now) // Tomorrow
-	*/
+	 * $now = new DateTime('1991-05-17 23:59:59 UTC');
+	 * $dateTime = new DateTime('1991-05-18 00:00:00 UTC');
+	 * HumanReadable::parse($dateTime, $now) // Tomorrow
+	 */
 	public function when($full = null){
 
 		$now = new \DateTime();
@@ -102,17 +125,26 @@ class DateTime extends DateRange{
 		return \Ramphor\Date\HumanReadable::parse($this, $now);
 	}
 
-	public function reset(){
+	/**
+	 * @return void
+	 */
+	public function reset():void{
 
 		$this->setTime(00,00,00,000000);
 	}
 
-	public function last(){
+	/**
+	 * @return void
+	 */
+	public function last():void{
 
 		$this->setTime(23,59,59,000000);
 	}
 
-	public function clone($how = null) {
+	/**
+	 * @param $how
+	 */
+	public function clone($how = null):static{
 
 		$modified = clone $this;
 
