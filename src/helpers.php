@@ -101,13 +101,7 @@ if(helper_add("config")){
 	 * 
 	 * @return mixed
 	 */
-	function config(string $key, mixed $options = null):mixed{
-
-		if(!is_array($options) 	  && 
-			!is_string($options)  &&
-			!is_integer($options) &&
-			!notnull($options))
-				raise("config(...\$options) can only be array|string!");
+	function config(string $key, array|string|int|null $options = null):mixed{
 
 		if(!reg()->exists("config"))
 			if(fs()->isDir(phar("cfg")->adapt())){
@@ -152,12 +146,7 @@ if(helper_add("cache")){
 	 * 
 	 * @return mixed
 	 */
-	function cache(string $filename, mixed $val = null):mixed{
-
-		if(!is_array($val) && 
-			!is_string($val) &&
-			!notnull($val))
-				raise("config(...\$val) can only be array|string|null!");
+	function cache(string $filename, array|string|null $val = null):mixed{
 		
 		if(preg_match("/\./", $filename)){
 
@@ -348,14 +337,7 @@ if(helper_add("env")){
 	 * 
 	 * @return string
 	 */
-	function env(string $key, mixed $val = null):string{
-
-		if(!is_int($val)      && 
-			!is_string($val)  && 
-			!is_bool($val)    &&
-			!is_integer($val) &&
-			!notnull($val))
-				raise("env(...\$val) can only be string|int|bool!");
+	function env(string $key, int|string|bool|null $val = null):string{
 
 		if(!is_null($val))
 			Env::set($key, $val);
