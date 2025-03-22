@@ -103,8 +103,9 @@ if(helper_add("config")){
 	 */
 	function config(string $key, mixed $options = null):mixed{
 
-		if(!is_array($options) && 
-			!is_string($options) &&
+		if(!is_array($options) 	  && 
+			!is_string($options)  &&
+			!is_integer($options) &&
 			!notnull($options))
 				raise("config(...\$options) can only be array|string!");
 
@@ -349,9 +350,10 @@ if(helper_add("env")){
 	 */
 	function env(string $key, mixed $val = null):string{
 
-		if(!is_int($val) && 
-			!is_string($val) && 
-			!is_bool($val) &&
+		if(!is_int($val)      && 
+			!is_string($val)  && 
+			!is_bool($val)    &&
+			!is_integer($val) &&
 			!notnull($val))
 				raise("env(...\$val) can only be string|int|bool!");
 
