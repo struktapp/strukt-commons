@@ -299,6 +299,18 @@ if(helper_add("today")){
 	}
 }
 
+if(helper_add("timezone")){
+
+	function timezone(?string $locale = null){
+
+		$timezone = ini_get("date.timezone");
+		if($timezone == "UTC" && notnull($locale))
+			ini_set("date.timezone", $locale);
+
+		return $locale ?? $timezone;
+	}
+}
+
 if(helper_add("format")){
 
 	/**
@@ -465,17 +477,11 @@ if(helper_add("json")){
 if(helper_add("msg")){
 
 	/**
-	 * @param mixed $message - can only be string|array|int
+	 * @param string|int|null $message
 	 * 
 	 * @return object
 	 */
-	function msg(mixed $message = null):\Strukt\NoteList{
-
-		if(!is_string($message) && 
-			!is_array($message) && 
-			!is_int($message) &&
-			!notnull($message))
-				raise("msg(\$message) can only be string|array|int|null");
+	function msg(string|int|null $message = null):\Strukt\NoteList{
 
 		return new class($message) extends \Strukt\NoteList{
 
