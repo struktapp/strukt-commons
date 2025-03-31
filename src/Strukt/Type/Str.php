@@ -91,7 +91,7 @@ class Str extends ValueObject{
 	* 
 	* @return static
 	*/
-	public function slice(int $start, ?int $length = null):static{
+	public function slice(int $start, int|null $length = null):static{
 
 		if(is_null($length))
 			$length = $this->len();

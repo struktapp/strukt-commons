@@ -7,9 +7,9 @@ Strukt Commons
 [![Latest Unstable Version](https://poser.pugx.org/strukt/commons/v/unstable)](https://packagist.org/packages/strukt/commons)
 [![License](https://poser.pugx.org/strukt/commons/license)](https://packagist.org/packages/strukt/commons)
 
-# Usage
+## Usage
 
-## Collection
+### Collection
 
 ```php
 $contact = collect([]);
@@ -41,11 +41,11 @@ $b = collect($s);
 $x = $b->get("user.db.config.username"); //returns root
 ```
 
-# Value Objects
+## Value Objects
 
 You may also find `Number` object via package `strukt/math` that is a dependency of this package.
 
-## DateTime
+### DateTime
 
 ```php
 $start = when()
@@ -64,7 +64,7 @@ $start->last();//reset time to 23:59:59 1000000
 echo $start; //return date as string
 ```
 
-## Today (Date Influence)
+### Today (Date Influence)
 
 ```php
 // $p = period(when("1900-01-01"), when("1963-12-31")); 
@@ -89,7 +89,7 @@ $fakeToday->getState();//get state of date manipulation
 $fakeToday->reset();//reset back to original today
 ```
 
-## String
+### String
 
 ```php
 $str = str("Strukt Framework");
@@ -115,7 +115,7 @@ $str->split(" ");//['Strukt', "Framework"]
 str("blah blah blah")->count("blah");//3
 ```
 
-## Array
+### Array
 
 ```php
 $rr = array(
@@ -210,9 +210,9 @@ arr(["a"=>1,"b"=>2,"c"=>3])->values()//[1,2,3]
 arr(["a","b"])->merge(["c","d"])->yield();//["a","b","c","d"]
 arr(["a","b","c","d"])->reverse()->yield();//["d","c","b","a"]
 ```
-# Others
+## Others
 
-## Token Query
+### Token Query
 
 ```php
 /**
@@ -245,7 +245,7 @@ $query->set("status", ["active","published"]);
 $query->yield();//contact:1|is:tenant,landlord,prospect|status:active,published
 ```
 
-## Messages
+### Messages
 
 ```php
 msg("error 401!");
@@ -261,7 +261,7 @@ $errors->next();
 $errors->current()->yield(); //error 402!
 ```
 
-## Json
+### Json
 
 ```php
 $l = json(array("fname"=>"Peter", "lname"=>"Pan"));//json string

@@ -10,6 +10,11 @@ use Strukt\Type\Json;
 use Strukt\Env;
 use Strukt\Raise;
 use Strukt\Cache\Cache;
+use Strukt\Contract\Arr as ArrContract;
+use Strukt\Core\Registry;
+use Strukt\Core\TokenQuery;
+use Strukt\Type\Str;
+use Strukt\Type\DateTime as StruktDateTime;
 
 helper("commons");
 
@@ -47,9 +52,9 @@ if(helper_add("arr")){
 	 * 
 	 * @return \Strukt\Contract\Arr
 	 */
-	function arr(array $bundle):\Strukt\Contract\Arr{
+	function arr(array $bundle):ArrContract{
 
-		return new class($bundle) extends \Strukt\Contract\Arr{
+		return new class($bundle) extends ArrContract{
 
 			protected $val;
 
@@ -82,7 +87,7 @@ if(helper_add("reg")){
 	 */
 	function reg(?string $key = null, mixed $val = null):mixed{
 
-		$reg = Strukt\Core\Registry::getSingleton();
+		$reg = Registry::getSingleton();
 		if(!is_null($key) && !is_null($val))
 			$reg->set($key, $val);
 
@@ -186,9 +191,9 @@ if(helper_add("token")){
 	 * 
 	 * @return \Strukt\Core\TokenQuery
 	 */
-	function token(string $token):\Strukt\Core\TokenQuery{
+	function token(string $token):TokenQuery{
 
-		return new \Strukt\Core\TokenQuery($token);
+		return new TokenQuery($token);
 	}
 }
 
@@ -212,9 +217,9 @@ if(helper_add("str")){
 	 * 
 	 * return \Strukt\Type\Str
 	 */
-	function str(string $str):\Strukt\Type\Str{
+	function str(string $str):Str{
 
-		return new \Strukt\Type\Str($str);
+		return new Str($str);
 	}
 }
 
@@ -228,10 +233,10 @@ if(helper_add("when")){
 	function when(string|int $date = "now"){
 
 		if(is_numeric($date))
-			if(\Strukt\Type\DateTime::isTimestamp($date))
-				return \Strukt\Type\DateTime::fromTimestamp($date);
+			if(StruktDateTime::isTimestamp($date))
+				return StruktDateTime::fromTimestamp($date);
 
-		return new \Strukt\Type\DateTime($date);
+		return new StruktDateTime($date);
 	}
 }
 

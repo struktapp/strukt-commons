@@ -18,7 +18,7 @@ abstract class Arr extends ValueObject{
 
 	use \Strukt\Traits\Arr{
 
-		isMap as protected _isMap;
+		isMap as protected is_map;
 	}
 
 	/**
@@ -76,13 +76,21 @@ abstract class Arr extends ValueObject{
 	}
 
 	/**
+	 * @deprecated enqueueAll
+	 */
+	public function enqueueBatch(array $element):mixed{
+
+		return $this->enqueueAll($element);
+	}
+
+	/**
 	* Arr.push batch
 	* 
 	* @param array $element
 	* 
 	* @return mixed
 	*/
-	public function enqueueBatch(array $element):mixed{
+	public function enqueueAll(array $element):mixed{
 
 		if(!arr($element)->isMap())
 			return array_push($this->val, ...$element);
@@ -143,15 +151,19 @@ abstract class Arr extends ValueObject{
 	/**
 	* Is array fully assosicative
 	* 
+	* @deprecated is("map")
+	* 
 	* @return bool
 	*/
 	public function isMap():bool{
 
-		return $this->_isMap($this->val);		
+		return $this->is_map($this->val);		
 	}
 
 	/**
 	 * Is array of strings
+	 * 
+	 * @deprecated isof("strings")
 	 * 
 	 * @return bool
 	 */
@@ -166,6 +178,8 @@ abstract class Arr extends ValueObject{
 	/**
 	 * Is array of numbers
 	 * 
+	 * @deprecated isof("numbers")
+	 * 
 	 * @return bool
 	 */
 	public function isOfNum():bool{
@@ -174,6 +188,37 @@ abstract class Arr extends ValueObject{
 			return false;
 
 		return true;
+	}
+
+	/**
+	 * @param string $type
+	 * 
+	 * @return bool|null
+	 */
+	public function is(string $type):bool|null{
+
+		if(in_array($type, ["map", "assoc"]))
+			return $this->is_map($this->val);
+
+		return $this->isof($type);
+	}
+
+	/**
+	 * @param string $type
+	 * 
+	 * @return bool|null
+	 */
+	public function isof(string $type):bool|null{
+
+		$count = count($this->val) || $this->empty();
+
+		if(in_array($type, ["strings","string"]))
+			return negate(array_sum(array_map('is_string', $this->val)) != $count);
+
+		if(in_array($type, ["numbers", "number"]))
+			return negate(array_sum(array_map('is_numeric', $this->val)) != $count);
+
+		return null;
 	}
 
 	/**
@@ -421,7 +466,7 @@ abstract class Arr extends ValueObject{
 	 * 
 	 * @return static
 	 */
-	public function each(\Closure $func):static{
+	public function each(callable $func):static{
 
 		$evt = Event::create($func->bindTo($this));
 
@@ -438,11 +483,11 @@ abstract class Arr extends ValueObject{
 	/**
 	 * Array filter
 	 * 
-	 * @param Closure $func = null
+	 * @param callable $func = null
 	 * 
 	 * @return static
 	 */
-	public function filter(?\Closure $func = null):static{
+	public function filter(?callable $func = null):static{
 
 		if(is_null($func))
 			$func = fn($k, $v)=>negate(empty($v)) || negate(empty($v));
@@ -459,11 +504,11 @@ abstract class Arr extends ValueObject{
 	/**
 	 * Iterate over a deep nested array recursively
 	 * 
-	 * @param Closure $func
+	 * @param callable $func
 	 * 
 	 * @return static
 	 */
-	public function recur(\Closure $func):static{
+	public function recur(callable $func):static{
 
 		$each = new Event($func->bindTo($this));
 
