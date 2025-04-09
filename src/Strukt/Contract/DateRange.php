@@ -10,7 +10,7 @@ abstract class DateRange extends DateCompare{
 	/**
 	 * @param \DateTime $end
 	 */
-	public function rand(\DateTime $end){
+	public function rand(\DateTime $end):static{
 
 		return $this->fromTimestamp(rand($this->getTimestamp(), $end->getTimestamp()));
 	}
@@ -21,7 +21,7 @@ abstract class DateRange extends DateCompare{
 	 * 
 	 * @return boolean
 	 */
-	public function btwn(\DateTime $start, \DateTime $end){
+	public function btwn(\DateTime $start, \DateTime $end):bool{
 
 		return $this->gte($start) && $this->lte($end);
 	}

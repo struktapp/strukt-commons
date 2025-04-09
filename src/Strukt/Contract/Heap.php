@@ -2,10 +2,12 @@
 
 namespace Strukt\Contract;
 
+use Strukt\Type\Arr;
+
 /**
  * @author Moderator <pitsolu@gmail.com>
  */
-abstract class NoteList{
+abstract class Heap{
 
 	/**
 	 * @param string $message
@@ -18,7 +20,7 @@ abstract class NoteList{
 	/**
 	 * @return void
 	 */
-	public function add($message){
+	public function add($message):void{
 
 		if(count(static::$messages) > static::$limit)
 			array_shift(static::$messages);
@@ -29,17 +31,23 @@ abstract class NoteList{
 	/**
 	 * @param integer $limit
 	 */
-	public static function withLimit(int $limit){
+	public static function withLimit(int $limit):void{
 
 		static::$limit = $limit;
 	}
 
 	/**
+	 * @param ?string $pattern
+	 * 
 	 * @return \Strukt\Type\Arr
 	 */
-	public static function get(){
+	public static function get(?string $pattern = null):Arr{
 
-		return new class(static::$messages) extends \Strukt\Type\Arr{
+		$messages = static::$messages;
+		if(negate(is_null($pattern)))
+			$messages = preg_grep("/$pattern/", static::$messages);
+
+		return new class($messages) extends Arr{
 
 			public function __construct(&$messages){
 
@@ -51,7 +59,7 @@ abstract class NoteList{
 	/**
 	 * @return void
 	 */
-	public static function clear(){
+	public static function clear():void{
 
 		static::$messages = [];
 	}

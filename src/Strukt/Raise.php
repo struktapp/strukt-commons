@@ -5,7 +5,7 @@ namespace Strukt;
 /**
  * @author Moderator <pitsolu@gmail.com>
  */
-class Raise extends \Strukt\NoteList{
+class Raise extends \Strukt\Heap{
 
 	/**
 	 * @param string $error

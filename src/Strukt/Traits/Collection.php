@@ -19,7 +19,7 @@ trait Collection{
 	* 
 	* @return void
 	*/
-	protected static function assemble(string $key, mixed $val, CollectionInterface $collection):void{
+	protected static function attach(string $key, mixed $val, CollectionInterface $collection):void{
 
 		if($collection->exists($key))
 			if(!empty($collection->get($key)))
@@ -72,7 +72,7 @@ trait Collection{
 	*
 	* @return array
 	*/
-	protected function disassemble(CollectionInterface $collection):array{
+	protected function detach(CollectionInterface $collection):array{
 
 		$buffer = [];
 		$keys = $collection->keys();
@@ -80,7 +80,7 @@ trait Collection{
 
 			$val = $collection->get($key);
 			if($val instanceof CollectionInterface)
-				$buffer[$key] = $this->disassemble($val);
+				$buffer[$key] = $this->detach($val);
 
 			if(!$val instanceof CollectionInterface)
 				$buffer[$key] = $val;

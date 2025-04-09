@@ -85,7 +85,7 @@ class TokenQuery{
 	/**
 	 * @return array
 	 */
-	public function keys(){
+	public function keys():array{
 
 		return array_keys($this->parts);
 	}
@@ -98,7 +98,10 @@ class TokenQuery{
 		return $this->token;
 	}
 
-	public function yield(){
+	/**
+	 * @return string
+	 */
+	public function yield():string{
 
 		foreach($this->parts as $key=>$val){
 

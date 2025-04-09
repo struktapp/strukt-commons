@@ -68,7 +68,7 @@ class Str extends ValueObject{
 	* 
 	* @return integer
 	*/
-	public function count(string $needle){
+	public function count(string $needle):int{
 
 		return substr_count($this->val, $needle);
 	}
@@ -77,8 +77,10 @@ class Str extends ValueObject{
 	* Explode string
 	* 
 	* @param string $delimiter
+	* 
+	* @return array
 	*/
-	public function split(string $delimiter){
+	public function split(string $delimiter):array{
 
 		return explode($delimiter, $this->val);
 	}

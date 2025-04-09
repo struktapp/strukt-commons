@@ -2,6 +2,8 @@
 
 namespace Strukt\Core;
 
+use Strukt\Contract\CollectionInterface;
+
 /**
 * Map class
 *
@@ -11,9 +13,12 @@ namespace Strukt\Core;
 * 
 * @author Moderator <pitsolu@gmail.com>
 */
-class Map implements \Strukt\Contract\CollectionInterface{
+class Map implements CollectionInterface{
 
-	use \Strukt\Traits\Collection;
+	use \Strukt\Traits\Collection{
+
+		detach as protected unhook;
+	}
 
 	/**
 	* List of items
@@ -81,7 +86,7 @@ class Map implements \Strukt\Contract\CollectionInterface{
 	*/
 	public function set(string $key, mixed $val):void{
 
-		$this->assemble($key, $val, $this->collection);
+		$this->attach($key, $val, $this->collection);
 	}
 
 	/**
@@ -102,5 +107,21 @@ class Map implements \Strukt\Contract\CollectionInterface{
 	public function exists(string $key):bool{
 
 		return $this->collection->exists($key);
+	}
+
+	/**
+	 * Detach collection as array
+	 * 
+	 * @param string $key
+	 * 
+	 * @return mixed
+	 */
+	public function detach(string $key):mixed{
+
+		$val = $this->get($key);
+		if($val instanceof CollectionInterface)
+			return $this->unhook($val);
+
+		return $val;
 	}
 }

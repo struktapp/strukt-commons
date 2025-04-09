@@ -12,7 +12,7 @@ abstract class DateCompare extends \DateTime{
 	 * 
 	 * @return bool
 	 */
-	public function gte(\DateTime $to){
+	public function gte(\DateTime $to):bool{
 
 		return $this->getTimestamp() >= $to->getTimestamp();
 	}
@@ -22,7 +22,7 @@ abstract class DateCompare extends \DateTime{
 	 * 
 	 * @return bool
 	 */
-	public function gt(\DateTime $to){
+	public function gt(\DateTime $to):bool{
 
 		return $this->getTimestamp() > $to->getTimestamp();
 	}
@@ -32,7 +32,7 @@ abstract class DateCompare extends \DateTime{
 	 * 
 	 * @return bool
 	 */
-	public function lte(\DateTime $to){
+	public function lte(\DateTime $to):bool{
 
 		return $this->getTimestamp() <= $to->getTimestamp();
 	}
@@ -42,7 +42,7 @@ abstract class DateCompare extends \DateTime{
 	 * 
 	 * @return bool
 	 */
-	public function lt(\DateTime $to){
+	public function lt(\DateTime $to):bool{
 
 		return $this->getTimestamp() < $to->getTimestamp();
 	}
@@ -52,7 +52,7 @@ abstract class DateCompare extends \DateTime{
 	 * 
 	 * @return bool
 	 */
-	public function equals(\DateTime $to){
+	public function equals(\DateTime $to):bool{
 
 		return $this->getTimestamp() == $to->getTimestamp();
 	}
@@ -62,7 +62,7 @@ abstract class DateCompare extends \DateTime{
 	 * 
 	 * @return bool
 	 */
-	public function same(\DateTime $to){
+	public function same(\DateTime $to):bool{
 
 		$date = $this->format("Y-m-d");
 		$toDate = $to->format("Y-m-d");

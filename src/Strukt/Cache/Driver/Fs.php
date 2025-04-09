@@ -95,7 +95,7 @@ class Fs implements CacheDriverInterface{
 	 */
 	public function save():void{
 
-		$arr = $this->disassemble($this->buffer);
+		$arr = $this->detach($this->buffer);
 
 		$this->fs->overwrite($this->filename, json($arr)->pp());
 	}

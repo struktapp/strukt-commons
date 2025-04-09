@@ -2,6 +2,9 @@
 
 namespace Strukt\Contract;
 
+/**
+ * @author Moderator <pitsolu@gmail.com>
+ */
 interface CollectionInterface{
 
 	public function keys():array;

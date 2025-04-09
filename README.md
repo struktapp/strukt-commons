@@ -164,10 +164,10 @@ $rawarr = $arr->map(array( //reformat array
     "address_building"=>"contacts.address.building"
 ));
 $arr->pop();// remove at end of array.
-$arr->push("brucebatman", "username");//add at end of queue. key is optional
-$arr->enqueue("active", "status");//same as Arr.push. key is optional
+$arr->push("brucebatman", "username");//add at end of queue. (key is optional)
+$arr->enqueue("active", "status");//same as Arr.push (key is optional)
 $arr->enqueueBatch(["empty","empty"]);
-$arr->prequeue("admin", "type");//add at beginning of queue. key is optional
+$arr->prequeue("admin", "type");//add at beginning of queue. (key is optional)
 $arr->dequeue();//remove at beginning of array. returns Bruce
 $flatarr = $arr->level();//flattens multidimentional array
 $is_assoc = arr(["username"=>"pitsolu", "password"="redacted"])->isMap();//is fully associative arr
@@ -245,14 +245,15 @@ $query->set("status", ["active","published"]);
 $query->yield();//contact:1|is:tenant,landlord,prospect|status:active,published
 ```
 
-### Messages
+### Heap/Messages
 
 ```php
-msg("error 401!");
-msg("error 402!");
-msg("error 404!");
+heap("error 401!");
+heap("error 402!");
+heap("error 404!");
 
-$errors = msg()->get();
+# $errors = heap()->get(pattern:"error");
+$errors = heap()->get();
 
 $errors->last()->yield(); //error 404!
 $errors->reset();

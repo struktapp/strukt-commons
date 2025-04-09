@@ -5,7 +5,7 @@ namespace Strukt\Core;
 use Strukt\Exception\KeyOverlapException;
 use Strukt\Exception\KeyNotFoundException;
 use Strukt\Exception\InvalidKeyException;
-use Strukt\Builder\Collection as CollectionBuilder;
+use Strukt\Contract\CollectionInterface;
 
 /**
 * Collection class
@@ -14,7 +14,7 @@ use Strukt\Builder\Collection as CollectionBuilder;
 * 
 * @author Moderator <pitsolu@gmail.com>
 */
-class Collection implements \Strukt\Contract\CollectionInterface{
+class Collection implements CollectionInterface{
 
 	/**
 	* Raw collection

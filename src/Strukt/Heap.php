@@ -5,11 +5,11 @@ namespace Strukt;
 /**
  * @author Moderator <pitsolu@gmail.com>
  */
-class NoteList extends \Strukt\Contract\NoteList{
+class Heap extends \Strukt\Contract\Heap{
 
 	protected $message;
 	protected static $messages = [];
-	protected static $limit = 100;
+	protected static $limit = 3;
 
 	/**
 	 * @param $message

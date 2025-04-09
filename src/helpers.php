@@ -15,6 +15,9 @@ use Strukt\Core\Registry;
 use Strukt\Core\TokenQuery;
 use Strukt\Type\Str;
 use Strukt\Type\DateTime as StruktDateTime;
+use Strukt\Contract\JsonAssert;
+use Strukt\Contract\Json as JsonInterface;
+use Strukt\Event;
 
 helper("commons");
 
@@ -372,7 +375,7 @@ if(helper_add("json")){
 	 */
 	function json(string|array $obj){
 
-		return new class($obj){
+		return new class($obj) implements JsonInterface{
 
 			private $obj;
 
@@ -388,6 +391,8 @@ if(helper_add("json")){
 			}
 
 			/**
+			 * Pretty Print
+			 * 
 			 * @return string
 			 */
 			public function pp():string{
@@ -412,83 +417,112 @@ if(helper_add("json")){
 			}
 
 			/**
+			 * Is Json valid
+			 * 
 			 * @return boolean
 			 */
 			public function valid():bool{
 
 				return Json::isJson($this->obj);
 			}
+		};
+	}
+}
+
+if(helper_add("attest")){
+
+	function attest(string|array $obj){
+
+		return new class(json($obj)) implements JsonAssert{
+
+			private $obj;
+
+			public function __construct($obj){
+
+				$this->obj = $obj;
+				if(!$this->obj->valid())
+					raise("Invalid JSON!");
+			}
 
 			/**
+			 * Return first value in JSON/Array
+			 * 
 			 * @return mixed
 			 */
 			public function first():mixed{
 
-				$arr = arr($this->decode());
-				if(negate($arr->isMap()))
+				$arr = arr($this->obj->decode());
+				if(negate($arr->is("map")))
 					return $arr->current()->yield();
 
 				return null;
 			}
 
 			/**
-			 * @param mixed $val
+			 * @param string $key
+			 * @param ?callable $fn
 			 * 
-			 * @return bool
+			 * @return boolean
 			 */
-			public function has(mixed $val):bool{
-
-				if(!$this->valid())
-					raise("Invalid JSON!");
+			public function assert(string $key, ?callable $fn = null):mixed{
 				
-				$obj = $this->decode($this->obj);
+				$obj = arr($this->obj->decode());
+				if(negate($obj->contains($key)))
+					return false; 
 
-				return arr($obj)->has($val);
+				$val = $obj->yield()[$key];
+				if(is_callable($fn) && is_array($val))
+					return $fn(attest($val));
+				
+				if(is_callable($fn))
+					return $fn(attest($obj->yield()));
+
+				return true;
 			}
 
 			/**
 			 * @param string $key
-			 * @param callable $fn
+			 * @param ?callable $fn
 			 * 
 			 * @return boolean
 			 */
-			public function assert(string $key, ?callable $fn = null){
+			public function assertAll(array $all, ?callable $fn = null):bool{
 
-				if(!$this->valid())
-					raise("Invalid JSON!");
-				
-				$obj = $this->decode($this->obj);
+				$self = $this->clone();
+				return (bool)arr($all)->each(fn($k, $v)=>$self->assert($v, $fn))->product();
+			}
 
-				if(array_key_exists($key, $obj)){
+			/**
+			 * @param mixed $val
+			 * 
+			 * @return boolean
+			 */
+			public function has(mixed $val):bool{
 
-					$val = $obj[$key];
-					if(is_callable($fn)){
+				return arr($this->obj->decode())->has($val);
+			}
 
-						if(is_array($val))
-							return $fn(json($val));
-						
-						return $fn(json($obj));
-					}
+			/**
+			 * @return static
+			 */
+			public function clone():static{
 
-					return true;
-				}
-
-				return false;
+				return clone $this;
 			}
 		};
 	}
 }
 
-if(helper_add("msg")){
+if(helper_add("heap")){
 
 	/**
 	 * @param string|int|null $message
 	 * 
 	 * @return object
 	 */
-	function msg(string|int|null $message = null):\Strukt\NoteList{
+	function heap(string|int|null $message = null):\Strukt\Heap{
 
-		return new class($message) extends \Strukt\NoteList{
+		return new class($message) extends \Strukt\Heap{
 
 			public function __construct($message){
 
@@ -554,12 +588,14 @@ if(helper_add("ini")){
 			}
 
 			/**
+			 * For section block comment/uncomment
+			 * 
 			 * @param string $name
 			 * @param boolean $comment
 			 * 
 			 * @return static
 			 */
-			private function section(string $name, bool $comment = false):static{
+			private function forBlock(string $name, bool $comment = false):static{
 
 					unset($this->dFile[$name]);
 					$block_ls = array_keys($this->dFile);
@@ -603,20 +639,24 @@ if(helper_add("ini")){
 			}
 
 			/**
+			 * Use key/value pair to comment/uncomment
+			 * 
 			 * @param string $name
 			 * @param string $key
 			 * @param boolean $comment
 			 * 
 			 * @return static
 			 */
-			private function withKeyVal(string $name, string $key, bool $comment = false):static{
+			private function useBoth(string $name, string $key, bool $comment = false):static{
 
 				$lines = str(fs()->cat($this->file))->split("\n");
 				$this->ini = arr($lines)->each(function($k, $ln) use($name, $key, $comment){
 
 					if(negate($comment))
-						if(str($ln)->startsWith(";") && str($ln)->contains($name) && str($ln)->contains($key))
-							return str($ln)->replace(["; ", ";"],"")->yield();
+						if(str($ln)->startsWith(";") && 
+							str($ln)->contains($name) && 
+							str($ln)->contains($key))
+								return str($ln)->replace(["; ", ";"],"")->yield();
 
 					if($comment)
 						if(str($ln)->contains($name) && str($ln)->contains($key))
@@ -630,12 +670,14 @@ if(helper_add("ini")){
 			}
 
 			/**
+			 * Use key only to comment/uncomment
+			 * 
 			 * @param string $key
 			 * @param boolean $comment
 			 * 
 			 * @return static
 			 */
-			private function withKey(string $key, bool $comment = false):static{
+			private function useKey(string $key, bool $comment = false):static{
 
 				$lines = str(fs()->cat($this->file))->split("\n");
 				$this->ini = arr($lines)->each(function($k, $ln) use($key, $comment){
@@ -667,13 +709,13 @@ if(helper_add("ini")){
 				if(notnull($key) && notnull($name))
 					if(arr($this->nFile)->contains($name))
 						if(arr($this->nFile[$name])->has($key))
-							$this->withKeyVal($name, $key, comment:true);
+							$this->useBoth($name, $key, comment:true);
 
 				if(notnull($key) && is_null($name))
-					$this->withKey($key, comment:true);
+					$this->useKey($key, comment:true);
 
 				if(is_null($key) && notnull($name))
-					$this->section($name, comment:true);
+					$this->forBlock($name, comment:true);
 
 				return $this;
 			}
@@ -689,13 +731,13 @@ if(helper_add("ini")){
 				if(notnull($key) && notnull($name))
 					if(arr($this->nFile)->contains($name))
 						if(arr($this->nFile[$name])->has($key))
-							$this->withKeyVal($name, $key);
+							$this->useBoth($name, $key);
 
 				if(notnull($key) && is_null($name))
-					$this->withKey($key);
+					$this->useKey($key);
 
 				if(is_null($key) && notnull($name))
-					$this->section($name);
+					$this->forBlock($name);
 
 				return $this;
 			}

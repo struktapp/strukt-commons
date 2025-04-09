@@ -2,6 +2,7 @@
 
 namespace Strukt\Core;
 
+use Strukt\Contract\CollectionInterface;
 use Strukt\Core\Collection;
 use Strukt\Core\Map;
 
@@ -10,7 +11,7 @@ use Strukt\Core\Map;
 *
 * @author Moderator <pitsolu@gmail.com>
 */
-class Registry implements \Strukt\Contract\CollectionInterface{
+class Registry implements CollectionInterface{
 
 	/**
 	* Singleton Registry Instance
