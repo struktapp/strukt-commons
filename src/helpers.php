@@ -16,6 +16,7 @@ use Strukt\Core\TokenQuery;
 use Strukt\Type\Str;
 use Strukt\Type\DateTime as StruktDateTime;
 use Strukt\Contract\JsonAssert;
+use Strukt\Contract\PeriodInterface;
 use Strukt\Contract\Json as JsonInterface;
 use Strukt\Event;
 
@@ -38,6 +39,9 @@ if(helper_add("collect")){
 if(helper_add("map")){
 
 	/**
+	 * Similar to fn[collect] but can detach a collection to an array
+	 * 		Example: map($arr)->detach()
+	 * 
 	 * @param array $assoc
 	 * 
 	 * @return \Strukt\Core\Map
@@ -83,6 +87,8 @@ if(helper_add("arr")){
 if(helper_add("reg")){
 
 	/**
+	 * Global registry
+	 * 
 	 * @param string $key
 	 * @param mixed $val
 	 * 
@@ -104,6 +110,8 @@ if(helper_add("reg")){
 if(helper_add("config")){
 
 	/**
+	 * Global configuration
+	 * 
 	 * @param string $key
 	 * @param mixed $options - can only be array|string
 	 * 
@@ -149,6 +157,8 @@ if(helper_add("config")){
 if(helper_add("cache")){
 
 	/**
+	 * Cache
+	 * 
 	 * @param string $filename
 	 * @param mixed $val - can only be string|array
 	 * 
@@ -176,6 +186,8 @@ if(helper_add("cache")){
 if(helper_add("raise")){
 
 	/**
+	 * Raise exception
+	 * 
 	 * @param string $error
 	 * @param integer $code
 	 * 
@@ -190,6 +202,11 @@ if(helper_add("raise")){
 if(helper_add("token")){
 
 	/**
+	 * Example: $t = token("username:pitsolu|role:admin")->get("role");
+	 * 			$t->get("role")
+	 * 
+	 * See also fn[tokenize]
+	 * 
 	 * @param string $token
 	 * 
 	 * @return \Strukt\Core\TokenQuery
@@ -203,6 +220,8 @@ if(helper_add("token")){
 if(helper_add("tokenize")){
 
 	/**
+	 * Example: tokenize(["username"=>"pitsolu", "role"=>"admin"]);
+	 * 
 	 * @param array $parts
 	 * 
 	 * @return string
@@ -231,9 +250,9 @@ if(helper_add("when")){
 	/**
 	 * @param string|integer $date
 	 * 
-	 * @return \Strukt\Type\DateTime
+	 * @return \DateTime
 	 */
-	function when(string|int $date = "now"){
+	function when(string|int $date = "now"):\DateTime{
 
 		if(is_numeric($date))
 			if(StruktDateTime::isTimestamp($date))
@@ -249,11 +268,11 @@ if(helper_add("period")){
 	 * @param \DateTime $start
 	 * @param \DateTime $end
 	 * 
-	 * @return object
+	 * @return \Strukt\Contract\PeriodInterface
 	 */
-	function period(?\DateTime $start = null, ?\DateTime $end = null):object{
+	function period(?\DateTime $start = null, ?\DateTime $end = null):PeriodInterface{
 
-		return new class($start, $end){
+		return new class($start, $end) implements PeriodInterface{
 
 			/**
 			 * @param \DateTime $start
@@ -299,9 +318,9 @@ if(helper_add("period")){
 if(helper_add("today")){
 
 	/**
-	 * @return \Strukt\Core\Today
+	 * @return \DateTime
 	 */
-	function today(){
+	function today():\DateTime{
 
 		return new Today();
 	}
@@ -309,7 +328,14 @@ if(helper_add("today")){
 
 if(helper_add("timezone")){
 
-	function timezone(?string $locale = null){
+	/**
+	 * Timezone
+	 * 
+	 * @param ?string $local
+	 * 
+	 * @return string|false
+	 */
+	function timezone(?string $locale = null):string|false{
 
 		$timezone = ini_get("date.timezone");
 		if($timezone == "UTC" && notnull($locale))
@@ -371,9 +397,9 @@ if(helper_add("json")){
 	/**
 	 * @param string|array $obj
 	 * 
-	 * @return object
+	 * @return \Strukt\Contract\Json
 	 */
-	function json(string|array $obj){
+	function json(string|array $obj):JsonInterface{
 
 		return new class($obj) implements JsonInterface{
 
@@ -431,7 +457,12 @@ if(helper_add("json")){
 
 if(helper_add("attest")){
 
-	function attest(string|array $obj){
+	/**
+	 * @param string|array $obj
+	 * 
+	 * @return \Strukt\Contract\JsonAssert
+	 */
+	function attest(string|array $obj):JsonAssert{
 
 		return new class(json($obj)) implements JsonAssert{
 
@@ -464,7 +495,7 @@ if(helper_add("attest")){
 			 * 
 			 * @return boolean
 			 */
-			public function assert(string $key, ?callable $fn = null):mixed{
+			public function assert(string $key, ?callable $fn = null):bool{
 				
 				$obj = arr($this->obj->decode());
 				if(negate($obj->contains($key)))
@@ -518,7 +549,7 @@ if(helper_add("heap")){
 	/**
 	 * @param string|int|null $message
 	 * 
-	 * @return object
+	 * @return \Strukt\Heap
 	 */
 	function heap(string|int|null $message = null):\Strukt\Heap{
 
@@ -540,7 +571,7 @@ if(helper_add("negate")){
 	 * 
 	 * @return boolean
 	 */
-	function negate(bool $any){
+	function negate(bool $any):bool{
 
 		return !$any;
 	}
@@ -553,7 +584,7 @@ if(helper_add("notnull")){
 	 * 
 	 * @return boolean
 	 */
-	function notnull(mixed $var){
+	function notnull(mixed $var):bool{
 
 		return negate(is_null($var));
 	}
@@ -745,7 +776,7 @@ if(helper_add("ini")){
 			/**
 			* @return string
 			*/
-			public function yield(){
+			public function yield():string{
 
 				return arr($this->ini)->concat("\n");
 			}
