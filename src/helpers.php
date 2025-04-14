@@ -39,16 +39,21 @@ if(helper_add("collect")){
 if(helper_add("map")){
 
 	/**
+	 * Map allows deep removal of a value
+	 * 		Example: map($arr)->remove("user.role.group");
 	 * Similar to fn[collect] but can detach a collection to an array
-	 * 		Example: map($arr)->detach()
+	 * 		Example: map($arr)->detach($key);
 	 * 
-	 * @param array $assoc
+	 * @param array|\Strukt\Core\Collection $assoc
 	 * 
 	 * @return \Strukt\Core\Map
 	 */
-	function map(array $assoc):Map{
+	function map(array|\Strukt\Core\Collection $val):Map{
 
-		return new Map(collect($assoc));
+		if(is_array($val))
+			$val = collect($val);
+
+		return new Map($val);
 	}
 }
 
