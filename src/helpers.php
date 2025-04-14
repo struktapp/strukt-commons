@@ -44,7 +44,7 @@ if(helper_add("map")){
 	 * Similar to fn[collect] but can detach a collection to an array
 	 * 		Example: map($arr)->detach($key);
 	 * 
-	 * @param array|\Strukt\Core\Collection $assoc
+	 * @param array|\Strukt\Core\Collection $val
 	 * 
 	 * @return \Strukt\Core\Map
 	 */
