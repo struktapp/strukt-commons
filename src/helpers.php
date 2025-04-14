@@ -778,6 +778,9 @@ if(helper_add("ini")){
 			*/
 			public function yield():string{
 
+				if(is_null($this->ini))
+					raise("Must have called fn[enable|disable] to yield result!");
+
 				return arr($this->ini)->concat("\n");
 			}
 		};
