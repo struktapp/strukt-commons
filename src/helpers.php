@@ -41,6 +41,7 @@ if(helper_add("map")){
 	/**
 	 * Map allows deep removal of a value
 	 * 		Example: map($arr)->remove("user.role.group");
+	 * 
 	 * Similar to fn[collect] but can detach a collection to an array
 	 * 		Example: map($arr)->detach($key);
 	 * 
@@ -598,6 +599,11 @@ if(helper_add("notnull")){
 if(helper_add("ini")){
 
 	/**
+	 * Uses fn[enable|disable] for ini file sections and variables
+	 * Example:
+	 *   $new_contents = ini("cfg/app.ini")->enable("middlewares", "asset")->yield();
+	 *   $new_contents = ini("cfg/cmd.ini")->enable("pub-mak")->yield();
+	 * 
 	 * @param mixed $file
 	 * 
 	 * @return object
