@@ -683,6 +683,16 @@ abstract class Arr extends ValueObject{
 	}
 
 	/**
+	 * Rehash keys
+	 * 
+	 * @return static
+	 */
+	public function rehash():static{
+
+		return $this->reverse()->reverse();
+	}
+
+	/**
 	 * Order multidimesional array
 	 * 
 	 * @return object
