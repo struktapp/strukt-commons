@@ -34,8 +34,9 @@ class Registry implements CollectionInterface{
 
 		$this->register = new Map(new Collection("strukt-registry"));
 
+		$today = new Today;
 		if(!$this->register->exists("today"))
-			$this->register->set("today", new Today);
+			$this->register->set("today", $today->format("Y-m-d"));
 	}
 
 	/**

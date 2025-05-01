@@ -14,7 +14,7 @@ use Strukt\Contract\Arr as ArrContract;
 use Strukt\Core\Registry;
 use Strukt\Core\TokenQuery;
 use Strukt\Type\Str;
-use Strukt\Type\DateTime as StruktDateTime;
+use Strukt\Type\DateTime as DateTimeX;
 use Strukt\Contract\JsonAssert;
 use Strukt\Contract\PeriodInterface;
 use Strukt\Contract\Json as JsonInterface;
@@ -261,10 +261,10 @@ if(helper_add("when")){
 	function when(string|int $date = "now"):\DateTime{
 
 		if(is_numeric($date))
-			if(StruktDateTime::isTimestamp($date))
-				return StruktDateTime::fromTimestamp($date);
+			if(DateTimeX::isTimestamp($date))
+				return DateTimeX::fromTimestamp($date);
 
-		return new StruktDateTime($date);
+		return new DateTimeX($date);
 	}
 }
 
@@ -359,25 +359,51 @@ if(helper_add("format")){
 	 * 
 	 * @return @mixed
 	 */
-	function format(string $type, mixed $val = null):mixed{
+	function format(string $type, mixed $val):mixed{
 
-		if(is_callable($val))
-			return event(sprintf("format.%s", $type), $val);
+		if(!is_string($val))
+			if(is_callable($val))
+				event(sprintf("format.%s", $type), $val);
 
-		return event(sprintf("format.%s", $type))->apply($val)->exec();
+		if(!is_callable($val))
+			return cmd(sprintf("format.%s", $type), [$val]);
+
+		return null;
 	}
 
 	/**
-	 * Date formatting
-	 *  Example: format("date", when("today"))
+	 * Date humanize
+	 * Example: format("humanize", when("today"))
 	 * 
-	 * @param \DateTime $date
+	 * @param \DateTime|string $date
 	 * 
 	 * @return string
 	 */
-	format("date", function(\DateTime $date):string{
+	format("humanize", function(\DateTime|string $date):string{
 
-		return $date->format("Y-m-d H:i:s");
+		$format = "Y-m-d H:i:s";
+		if($date instanceof \DateTime)
+			$date = $date->format($format);
+
+		return @when($date)->when();
+	});
+
+	/**
+	 * Date formatting
+	 * Example: format("date", when("today"))
+	 * 
+	 * @param \DateTime|string $date
+	 * 
+	 * @return string
+	 */
+	format("date", function(\DateTime|string $date):string{
+
+		$format = "Y-m-d H:i:s";
+		if(is_string($date))
+			if(strtotime($date))
+				$date = new \DateTime($date);
+
+		return $date->format($format);
 	});	
 }
 

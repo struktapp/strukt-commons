@@ -209,6 +209,7 @@ arr(["a"=>1,"b"=>2,"c"=>3])->contains("a")//true
 arr(["a"=>1,"b"=>2,"c"=>3])->values()//[1,2,3]
 arr(["a","b"])->merge(["c","d"])->yield();//["a","b","c","d"]
 arr(["a","b","c","d"])->reverse()->yield();//["d","c","b","a"]
+arr([3="c", 1=>"b", 2="a"])->rehash()->yield();//Order array int keys
 ```
 ## Others
 
