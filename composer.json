@@ -24,8 +24,8 @@
     "require": {
         "ramphor/date-human-readable": "~1.0.0",
         "laminas/laminas-json": "3.7.x-dev",
-        "strukt/base":"dev-main",
-        "strukt/event":"dev-main"
+        "strukt/base":"dev-changes",
+        "strukt/event":"dev-changes"
     },
     "require-dev": {
         "pestphp/pest": "4.x-dev",

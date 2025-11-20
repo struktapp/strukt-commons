@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6023311824a00613dd6cdb936628bd2d",
+    "content-hash": "5d652fefe09bef679f2d126873046511",
     "packages": [
         {
             "name": "laminas/laminas-json",
@@ -125,11 +125,11 @@
         },
         {
             "name": "strukt/base",
-            "version": "dev-main",
+            "version": "dev-changes",
             "dist": {
                 "type": "path",
                 "url": "../base",
-                "reference": "a294f323fd574c581345fb71041fb3c9172533da"
+                "reference": "6f828a64a1ff8d846be7c45831f803389a4fc2e9"
             },
             "require-dev": {
                 "pestphp/pest": "4.x-dev",
@@ -166,11 +166,11 @@
         },
         {
             "name": "strukt/event",
-            "version": "dev-main",
+            "version": "dev-changes",
             "dist": {
                 "type": "path",
                 "url": "../event",
-                "reference": "e268423f7c3d750379d29799385559f9cade79d7"
+                "reference": "323d00b24fe03ffabf7d83a24ae975d3cec72fe9"
             },
             "type": "library",
             "autoload": {
