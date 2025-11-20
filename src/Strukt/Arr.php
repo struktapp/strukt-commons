@@ -401,6 +401,35 @@ abstract class Arr extends ValueObject{
 		};
 	}
 
+	public function are(){
+
+		return new class($this->value){
+
+			protected $value;
+			public function __construct($value){
+
+				$this->value = $value;
+			}
+
+			public function all(){
+
+				return new class($this->value){
+
+					protected $value;
+					public function __construct($value){
+
+						$this->value = $value;
+					}
+
+					public function null(){
+
+						return negate((bool)arr($this->value)->map(fn($k,$v)=>!is_null($v))->sum());
+					}
+				};
+			}
+		};
+	}
+
 	public function is(){
 
 		return new class($this->value){
@@ -419,23 +448,6 @@ abstract class Arr extends ValueObject{
 			public function nested():bool{
 
 				return (bool)array_sum(array_map(fn($x)=>(int)is_array($x), $this->value));
-			}
-
-			public function all(){
-
-				return new class($this->value){
-
-					protected $value;
-					public function __construct($value){
-
-						$this->value = $value;
-					}
-
-					public function null(){
-
-						return (bool)arr($this->value)->map(fn($k,$v)=>is_null($v))->sum();
-					}
-				};
 			}
 		};
 	}
