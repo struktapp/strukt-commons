@@ -300,7 +300,7 @@ abstract class Arr extends ValueObject{
 
 		$values = $this->value;
 		return new $this(array_map(function($key) use ($func, $values){
-	        return $func($values[$key], $key);
+	        return $func($key, $values[$key]);
 	    }, array_keys($this->value)));
 	}
 
@@ -433,7 +433,7 @@ abstract class Arr extends ValueObject{
 
 					public function null(){
 
-						return (bool)arr($this->value)->map(fn($k,$v)=>!is_null($v))->sum();
+						return (bool)arr($this->value)->map(fn($k,$v)=>is_null($v))->sum();
 					}
 				};
 			}
