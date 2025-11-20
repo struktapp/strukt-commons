@@ -161,10 +161,19 @@ abstract class Arr extends ValueObject{
 	public function product(){
 
 		if(in_array(false, array_map("is_numeric", array_values($this->value))) ||
-			$this->nested())
+			$this->is()->nested())
 				raise("Incompatible array!");
 
 		return array_product($this->value);
+	}
+
+	public function sum(){
+
+		if(in_array(false, array_map("is_numeric", array_values($this->value))) ||
+			$this->is()->nested())
+				raise("Incompatible array!");
+
+		return array_sum($this->value);
 	}
 
 	public function has(mixed $key):bool{
@@ -211,11 +220,6 @@ abstract class Arr extends ValueObject{
 		$this->stop_at = $key;
 
 		return $this;
-	}
-
-	public function nested():bool{
-
-		return (bool)array_sum(array_map(fn($x)=>(int)is_array($x), $this->value));
 	}
 
 	public function add(string $key, mixed $item):static{
@@ -266,7 +270,7 @@ abstract class Arr extends ValueObject{
 
 	public function column(string $key):static{
 
-		if(negate($this->nested()))
+		if(negate($this->is()->nested()))
 			raise("Incompatible array!");
 
 		$column = array_column($this->value, $key);
@@ -276,7 +280,7 @@ abstract class Arr extends ValueObject{
 
 	public function distinct():static{
 
-		if($this->nested())
+		if($this->is()->nested())
 			raise("Incompatible array!");
 
 		return arr(array_count_values($this->value));
@@ -387,6 +391,11 @@ abstract class Arr extends ValueObject{
 
 				return array_sum(array_map('is_numeric', $this->value)) == $this->count();
 			}
+
+			public function booleans():bool{
+
+				return array_sum(array_map('is_bool', $this->value)) == $this->count();
+			}
 		};
 	}
 
@@ -403,6 +412,11 @@ abstract class Arr extends ValueObject{
 			public function map():bool{
 
 				return is_map($this->value);
+			}
+
+			public function nested():bool{
+
+				return (bool)array_sum(array_map(fn($x)=>(int)is_array($x), $this->value));
 			}
 		};
 	}
@@ -463,7 +477,7 @@ abstract class Arr extends ValueObject{
 	 */
 	public function order():object{
 
-		if($this->nested())
+		if($this->is()->nested())
 			raise("Incompatible array!");
 
 		return new class($this->value){
