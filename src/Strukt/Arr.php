@@ -158,24 +158,6 @@ abstract class Arr extends ValueObject{
 		return $this->reverse()->reverse();
 	}
 
-	public function product(){
-
-		if(in_array(false, array_map("is_numeric", array_values($this->value))) ||
-			$this->is()->nested())
-				raise("Incompatible array!");
-
-		return array_product($this->value);
-	}
-
-	public function sum(){
-
-		if(in_array(false, array_map("is_numeric", array_values($this->value))) ||
-			$this->is()->nested())
-				raise("Incompatible array!");
-
-		return array_sum($this->value);
-	}
-
 	public function has(mixed $key):bool{
 
 		return array_key_exists($key, $this->value);
@@ -222,6 +204,26 @@ abstract class Arr extends ValueObject{
 		return $this;
 	}
 
+	public function product(){
+
+		if((negate($this->isof()->numbers()) 
+			&& negate($this->isof()->booleans())) || 
+				$this->is()->nested())
+					raise("Incompatible array!");
+
+		return array_product($this->value);
+	}
+
+	public function sum(){
+
+		if((negate($this->isof()->numbers()) 
+			&& negate($this->isof()->booleans())) || 
+				$this->is()->nested())
+					raise("Incompatible array!");
+
+		return array_sum($this->value);
+	}
+
 	public function add(string $key, mixed $item):static{
 
 		$this->value[$key] = $item;
@@ -254,7 +256,7 @@ abstract class Arr extends ValueObject{
 
 	public function join(string $delimiter):string{
 
-		if(negate(array_product(array_map(fn($x)=>(int)is_string($x), $this->value))))
+		if(negate($this->isof()->strings()) || $this->is()->nested())
 			raise("Incompatible array!");
 
 		return implode($delimiter, $this->value);
@@ -417,6 +419,23 @@ abstract class Arr extends ValueObject{
 			public function nested():bool{
 
 				return (bool)array_sum(array_map(fn($x)=>(int)is_array($x), $this->value));
+			}
+
+			public function all(){
+
+				return new class($this->value){
+
+					protected $value;
+					public function __construct($value){
+
+						$this->value = $value;
+					}
+
+					public function null(){
+
+						return (bool)arr($this->value)->map(fn($k,$v)=>!is_null($v))->sum();
+					}
+				};
 			}
 		};
 	}
