@@ -1,0 +1,55 @@
+{
+    "name": "strukt/commons",
+    "description": "Common Utilies",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Strukt\\": "src/Strukt"
+        },
+        "files": ["src/helpers.php"]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "authors": [
+        {
+            "name": "pitsolu",
+            "email": "pitsolu@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "ramphor/date-human-readable": "~1.0.0",
+        "laminas/laminas-json": "3.7.x-dev",
+        "strukt/base":"dev-main",
+        "strukt/event":"dev-main"
+    },
+    "require-dev": {
+        "pestphp/pest": "4.x-dev",
+        "symfony/var-dumper": "6.4.x-dev"
+    },
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    },
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../base",
+            "options": {
+                "symlink": false
+            }
+        },
+        {
+            "type": "path",
+            "url": "../event",
+            "options": {
+                "symlink": false
+            }
+        }
+    ]
+}
