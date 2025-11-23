@@ -134,6 +134,26 @@ if(helper_add("arr")){
 	}
 }
 
+if(helper_add("level")){
+
+	function level(array $array, 
+					int $target = 999999999, 
+					int $current = 1, 
+					string $prefix = ''):array|null{
+
+	    $result = [];
+	    foreach ($array as $key => $value){
+
+	        $newKey = $prefix ? $prefix . '.' . $key : $key;
+	        if (is_array($value) && $current < $target)
+	            $result = array_merge($result, level($value, $target, $current+1, $newKey));
+	        else $result[$newKey] = $value;
+	    }
+
+	    return $result;
+	}
+}
+
 if(helper_add("token")){
 
 	/**

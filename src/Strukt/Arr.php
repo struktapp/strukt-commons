@@ -165,9 +165,9 @@ abstract class Arr extends ValueObject{
 
 	public function contains(mixed $value):bool{
 
-		$values = $this->map(function($piece){
+		$values = $this->map(function($k, $v){
 
-		    return serialize($piece);
+		    return serialize($v);
 
 		})->filter()->yield();
 
@@ -350,19 +350,9 @@ abstract class Arr extends ValueObject{
 	* 
 	* @return array
 	*/
-	public function level():array{
+	public function level(int $target = 999999999, int $current = 1, string $prefix = ''):array{
 
-		$result = array();
-		$it = new \RecursiveIteratorIterator(new \RecursiveArrayIterator($this->value));
-
-		$i=0;
-		foreach ($it as $key => $value){
-
-			if(empty($key) || array_key_exists($key, $result)) $key = rand();
-			$result[$key??$i++] = $value;
-		}
-
-		return $result;
+	    return level($this->value, $target, $current, $prefix);
 	}
 
 	public function isof(){

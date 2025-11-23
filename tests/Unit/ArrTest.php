@@ -13,7 +13,7 @@ $arr = arr([
 ]);
 
 test('arr.contains', function () use($arr){
-    
+
     expect($arr->contains("Johnliver"))->toBeTrue();
 });
 
@@ -55,21 +55,17 @@ test("arr.each", function(){
     expect($arr->last())->toBe("Dennis...+++");
 });
 
-test("arr[flat]", function(){
+test("arr.level", function() use($arr){
 
-    $nested = [
-        ["name" => "pitsolu"],
-        [["phone" => "0800-PITSOLU"]],
-        [[["email" => "pitsolu@gmail.com"]]]
+    $leveled = [
+      "othernames" => "Sander Wellington",
+      "surname" => "Johnliver",
+      "contact.mobile" => "+254 712 788 999",
+      "contact.address.home" => "Westminiser, Long Street, 453, Middlearth",
+      "contact.address.office" => "Dayriyon, Quadtratic Solusis"
     ];
 
-    $flat = [
-        "name" => "pitsolu",
-        "phone" => "0800-PITSOLU",
-        "email" => "pitsolu@gmail.com"
-    ];
-
-    expect($flat)->toBe(arr($nested)->level());
+    expect($arr->level())->toBe($leveled);
 });
 
 test("arr.column", function(){
