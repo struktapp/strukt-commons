@@ -396,6 +396,27 @@ class Str extends ValueObject{
 				$this->padstr = $padstr;
 			}
 
+			public function block(){
+
+				return new class($this->value, $this->padstr){
+
+					protected $value;
+					protected $padstr;
+					public function __construct($value, $padstr){
+
+						$this->value = $value;
+						$this->padstr = $padstr;
+					}
+
+					public function left(int $len = 1){
+
+						return arr(str($this->value)->split("\n"))
+								->map(fn($k,$v)=>str($v)->pad($this->padstr)->left($len))
+								->join("\n");
+					}
+				};
+			}
+
 			public function left(int $len = 1){
 
 				return str_pad($this->value, 
