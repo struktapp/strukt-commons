@@ -274,7 +274,7 @@ if(helper_add("format")){
 	 * 
 	 * @return @mixed
 	 */
-	function format(string $type, mixed $val):mixed{
+	function format(string $type, \Closure|string $val):mixed{
 
 		if(!is_string($val))
 			if(is_callable($val))

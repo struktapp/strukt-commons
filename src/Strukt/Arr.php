@@ -350,9 +350,39 @@ abstract class Arr extends ValueObject{
 	* 
 	* @return array
 	*/
-	public function level(int $target = 999999999, int $current = 1, string $prefix = ''):array{
+	public function level(int $target = 999999999, string $prefix = ""){ 
 
-	    return level($this->value, $target, $current, $prefix);
+	   	$level = new class($this->value, $target){
+
+	    	protected $value;
+	    	protected $current = 1;
+	    	protected $target = 999999999;
+	    	protected $prefix = "";
+	    	public function __construct(array $value, int $target){
+
+	    		$this->value = $value;
+	    		$this->target = $target;
+	    	}
+
+	    	public function prefix(string $prefix){
+
+	    		$this->prefix = $prefix;
+
+	    		return $this;
+	    	}
+
+	    	public function yield(){
+
+	    		return level($this->value, $this->target, $this->current, $this->prefix);
+	    	}
+	    };
+
+		$prefix = str($prefix);
+		if(negate($prefix->empty()))
+			return $level->prefix($prefix->yield())->yield();
+
+		if($prefix->empty())
+			return $level->yield();
 	}
 
 	public function isof(){

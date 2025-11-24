@@ -18,7 +18,7 @@ class Str extends ValueObject{
 	public function __construct($str){
 
 		if(!is_string($str))
-			raise("\Strukt\Str object accepts strings only!");
+			raise("Incompatible string!");
 
 		parent::__construct($str);
 	}
@@ -379,6 +379,69 @@ class Str extends ValueObject{
 		return @preg_match($string, '') !== FALSE;
 	}
 
+	/**
+	 * @param string $padstr
+	 * 
+	 * @return object
+	 */
+	public function pad(string $padstr = "\t"){
+
+		return new class($this->value, $padstr){
+
+			protected $value;
+			protected $padstr;
+			public function __construct(string $value, string $padstr){
+
+				$this->value = $value;
+				$this->padstr = $padstr;
+			}
+
+			public function left(int $len = 1){
+
+				return str_pad($this->value, 
+								strlen($this->value)+$len, 
+								$this->padstr,
+								pad_type:STR_PAD_LEFT);
+			}
+
+			public function right(int $len = 1){
+
+				return str_pad($this->value, 
+								strlen($this->value)+$len,
+								$this->padstr,
+								pad_type:STR_PAD_RIGHT);
+			}
+
+			public function both(int $len = 1){
+			
+				return str_pad($this->value, 
+								strlen($this->value)+$len,
+								$this->padstr,
+								pad_type:STR_PAD_BOTH);	
+			}
+		};
+	}
+
+	public function is(){
+
+		return new class($this->value){
+
+			protected $value;
+			public function __construct(string $value){
+
+				$this->value = $value;
+			}
+
+			public function email(){
+
+				return (bool)filter_var($this->value, FILTER_VALIDATE_EMAIL);
+			}
+		};
+	}
+
+	/**
+	 * @return string
+	 */
 	public function __toString(){
 
 		return $this->value;
