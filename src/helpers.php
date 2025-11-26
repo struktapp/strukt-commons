@@ -423,7 +423,6 @@ if(helper_add("json")){
 
 if(helper_add("app")){
 
-
 	/**
 	 * App Dependency Injection 
 	 * 
@@ -446,15 +445,21 @@ if(helper_add("app")){
 
 		if(notnull($classes)){
 
-			$classls = arr($classes);
-			$success = $classls->each(fn($k, $class)=>in_array(alias($name),class_implements($class)));
-			if(negate($success->product())){
+			$classes = arr($classes)
+						->each(fn($k, $cls)=>class_exists($cls)?$cls:null)
+						->filter();
 
-				$failures = arr($success->filter(fn($k,$v)=>$v==false)->keys())->join(",");
-				raise(sprintf("Incompatible class(es) app({%s[%s]})!", $name, $failures));
-			}
+			$success = $classes->each(fn($k, $cls)=>in_array(alias($name), class_implements($cls)));
+			if(negate($success->product()))
+				raise(str("Incompatible class(es) ")
+						->concat(sprintf("app({%s[%s]})!", 
+											arr($success->filter(fn($k,$v)=>$v==false)
+												->keys())
+												->join(","), 
+											$name))
+						->yield());
 
-			reg(sprintf("app.%s", $name), $classes);
+			reg(sprintf("app.%s", $name), $classes->yield());
 		}
 
 		if(is_null($classes)){

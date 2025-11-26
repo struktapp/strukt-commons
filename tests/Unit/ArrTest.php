@@ -17,6 +17,34 @@ test('arr.contains', function () use($arr){
     expect($arr->contains("Johnliver"))->toBeTrue();
 });
 
+test("arr.filter", function(){
+
+    expect(arr(["A","B", null])->filter()->yield())->toBe(["A","B"]);
+    expect(arr([
+
+        "username"=>"pitsolu",
+        "password"=>"p@55w0rd",
+        "role"=>null
+
+    ])->filter()->yield())->toBe([
+
+        "username"=>"pitsolu",
+        "password"=>"p@55w0rd",
+    ]);
+
+    expect(arr([
+
+        "username"=>"pitsolu",
+        "password"=>"p@55w0rd",
+        "role"=>null
+
+    ])->filter(fn($k,$v)=>$k=="password")->yield())->toBe([
+
+        "username"=>"pitsolu",
+        "role"=>null
+    ]);
+});
+
 test("arr[iterator]", function() use($arr){
 
     expect($arr->current())->toBe("Sander Wellington");

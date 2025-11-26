@@ -206,20 +206,18 @@ abstract class Arr extends ValueObject{
 
 	public function product(){
 
-		if((negate($this->isof()->numbers()) 
-			&& negate($this->isof()->booleans())) || 
-				$this->is()->nested())
-					raise("Incompatible array!");
+		if($this->is()->nested() || 
+			(negate($this->isof()->numbers()) && negate($this->isof()->booleans())))
+				raise("Incompatible array!");
 
 		return array_product($this->value);
 	}
 
 	public function sum(){
 
-		if((negate($this->isof()->numbers()) 
-			&& negate($this->isof()->booleans())) || 
-				$this->is()->nested())
-					raise("Incompatible array!");
+		if($this->is()->nested() ||
+			(negate($this->isof()->numbers()) && negate($this->isof()->booleans())))
+				raise("Incompatible array!");
 
 		return array_sum($this->value);
 	}
@@ -307,13 +305,19 @@ abstract class Arr extends ValueObject{
 	public function filter(?callable $func = null):static{
 
 		if(is_null($func))
-			$func = fn($k, $v)=>negate(empty($k)) || negate(empty($v));
+			if(is_map($this->value)) $func = fn($k, $v)=>empty($k) || empty($v);
+			else $func = fn($k, $v)=>empty($v);
 
 		$values = [];
-		foreach($this->value as $k=>$v)
-			if(negate(array_key_exists($this->stop_at, $values)))
-				if($func($k, $v) || (in_array($k, $this->skip) || in_array($v, $this->jump)))
-					$values[$k] = $v;
+		foreach($this->value as $k=>$v){
+
+			if(notnull($this->stop_at))
+				if($k == $this->stop_at) 
+					break;
+
+			if(negate($func($k, $v)))
+				$values[$k] = $v;				
+		}
 
 		return new $this($values);
 	}
@@ -328,19 +332,22 @@ abstract class Arr extends ValueObject{
 		foreach($this->value as $key=>$value){
 
 			$raw[$key] = $value;
-			
-			if($key == $this->stop_at) break;
+
+			if(notnull($this->stop_at))
+				if($key == $this->stop_at) 
+					break;
+
 			if(negate($jump->contains($value)))
 				if(negate($skip->contains($key)))
 					$raw[$key] = $ref->invoke($key, $value);
 		}
 
 		/**reset jump, skip & stop_at**/
-		$this->jump = [];
-		$this->skip = [];
-		$this->stop_at = null;
+		// $this->jump = [];
+		// $this->skip = [];
+		// $this->stop_at = null;
 
-		return arr($raw);
+		return new $this($raw);
 	}
 
 	/**
@@ -594,5 +601,13 @@ abstract class Arr extends ValueObject{
 				return $this->value;
 			}
 		};
+	}
+
+	public function __destruct(){
+
+		/**reset jump, skip & stop_at**/
+		$this->jump = [];
+		$this->skip = [];
+		$this->stop_at = null;
 	}
 }
