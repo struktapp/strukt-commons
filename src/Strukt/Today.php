@@ -159,8 +159,8 @@ class Today extends DateRange{
 			 */
 			public function isValid():bool{
 
-				if(is_null($this->valid))
-					new Raise("Must priorly call @anonymous::useRange in chain!");
+				//if(is_null($this->valid))
+				//	new Raise("Must priorly call @anonymous::useRange in chain!");
 
 				return $this->valid;
 			}

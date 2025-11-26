@@ -11,7 +11,7 @@ use Strukt\Raise;
  */
 class DateTime extends DateRange{
 
-	private $format;
+	private $format = "Y-m-d H:i:s";
 
 	/**
 	 * @param $datetime

@@ -17,8 +17,8 @@ test("today[is_fake]", function(){
 	$ftoday = $this->ftoday->format("Y-m-d");
 
 	//fake now
-	$fnow = format("date", new Strukt\DateTime());
-	$now = format("date", new DateTime());
+	$fnow = (new Strukt\DateTime())->format("Y-m-d");
+	$now = (new DateTime())->format("Y-m-d");
 
 	expect($ftoday)->toBe($fnow);
 	expect($ftoday)->not->toBe($now);

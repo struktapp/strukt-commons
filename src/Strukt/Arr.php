@@ -350,9 +350,9 @@ abstract class Arr extends ValueObject{
 	* 
 	* @return array
 	*/
-	public function level(int $target = 999999999, string $prefix = ""){ 
+	public function level(int $target = 999999999, string $prefix = "", bool $noPrefix = false){ 
 
-	   	$level = new class($this->value, $target){
+	   	$level = new class($this->value, $target, $prefix){
 
 	    	protected $value;
 	    	protected $current = 1;
@@ -379,10 +379,20 @@ abstract class Arr extends ValueObject{
 
 		$prefix = str($prefix);
 		if(negate($prefix->empty()))
-			return $level->prefix($prefix->yield())->yield();
+			$leveled = $level->prefix($prefix->yield())->yield();
 
 		if($prefix->empty())
-			return $level->yield();
+			$leveled = $level->yield();
+
+		if(negate($noPrefix))
+			return $leveled;
+
+		$leveledNoPrefix = [];
+		if($noPrefix)
+			foreach($leveled as $k=>$v)
+				$leveledNoPrefix[preg_replace("/^\d+\./", "", $k)] = $v;
+
+		return $leveledNoPrefix;
 	}
 
 	public function isof(){

@@ -24,8 +24,9 @@ test("period[state]", function(){
 
 	expect($this->ftoday->getState("period.start") == $this->start)->toBeTrue();
 	expect($this->ftoday->getState("period.end") == $this->end)->toBeTrue();
-	expect(format("date", $this->ftoday) == format("date", $this->fake))->toBeTrue();
 	$stoday = $this->ftoday->format("Y-m-d");
+	$sfake = $this->fake->format("Y-m-d");
+	expect($stoday == $sfake)->toBeTrue();
 	$this->ftoday->reset();	
 	expect($stoday)->not->toBe(today()->format("Y-m-d"));
 });//->skip();

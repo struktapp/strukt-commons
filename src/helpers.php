@@ -325,11 +325,11 @@ if(helper_add("format")){
 	 * Date formatting
 	 * Example: format("date", when("today"))
 	 * 
-	 * @param \DateTime|string $date
+	 * @param \DateTimeInterface|string $date
 	 * 
 	 * @return string
 	 */
-	format("date", function(\DateTime|string $date):string{
+	format("date", function(string|\DateTimeInterface $date):string{
 
 		$format = "Y-m-d";
 		if(is_string($date))
@@ -418,5 +418,88 @@ if(helper_add("json")){
 				return Json::isJson($this->obj);
 			}
 		};
+	}
+}
+
+if(helper_add("app")){
+
+
+	/**
+	 * App Dependency Injection 
+	 * 
+	 * @param string $name
+	 * @param ?array $classes - can only be array|string
+	 * 
+	 * @return mixed
+	 */
+	function app(string $name, ?array $classes = null){
+
+		$abbrv = null;
+		if(preg_match("/^\w+\.\w+$/", $name))
+			list($name, $abbrv) = str($name)->split(".");
+
+		if(is_null(alias($name)))
+			raise(sprintf("Alias[%s] not found!", $name));
+
+		if(negate(interface_exists(alias($name))))
+			raise(sprintf("Interface for[alias.%s] does not exists!", $name));
+
+		if(notnull($classes)){
+
+			$classls = arr($classes);
+			$success = $classls->each(fn($k, $class)=>in_array(alias($name),class_implements($class)));
+			if(negate($success->product())){
+
+				$failures = arr($success->filter(fn($k,$v)=>$v==false)->keys())->join(",");
+				raise(sprintf("Incompatible class(es) app({%s[%s]})!", $name, $failures));
+			}
+
+			reg(sprintf("app.%s", $name), $classes);
+		}
+
+		if(is_null($classes)){
+
+			if(notnull($abbrv)){
+
+				$name = sprintf("%s.%s", $name, $abbrv);
+				return reg(sprintf("app.%s", $name));
+			}
+
+			$classes = reg(sprintf("app.%s", $name));
+			return array_shift($classes);
+		}
+	}
+}
+
+if(helper_add("config")){
+
+	/**
+	 * Global configuration
+	 * 
+	 * @param string $key
+	 * @param array|string|int|null $options
+	 * 
+	 * @return mixed
+	 */
+	function config(string $key, array|string|int|null $options = null):mixed{
+
+		if(!reg()->exists("config"))
+			if(fs()->isDir(phar("cfg")->adapt())){
+
+				foreach(fs(phar("cfg")->adapt())->ls() as $ini_file)
+					if(negate(str($ini_file)->endsWith("~")))
+						$configs[trim($ini_file, ".ini")] = fs(phar("cfg")->adapt())->ini($ini_file);
+
+				reg("config", $configs);
+			}
+
+		if(!is_null($options))
+			reg(sprintf("config.%s", $key), $options);
+
+		$config = collect(reg("config"));
+		if($config->exists($key))
+			return $config->get($key);
+
+		return null;
 	}
 }

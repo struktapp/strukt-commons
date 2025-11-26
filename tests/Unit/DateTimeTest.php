@@ -41,4 +41,4 @@ test("when.btwn", function(){
 	$date = when("1998-12-25");
 	expect($date->btwn(new \DateTime("1998-01-01"), new \DateTime("1999-01-01")))->toBeTrue();
 	expect($date->btwn(new \DateTime("1998-12-31"), new \DateTime("1999-01-01")))->toBeFalse();
-})->skip();
+});//->skip();
