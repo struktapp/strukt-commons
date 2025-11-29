@@ -434,7 +434,7 @@ if(helper_add("app")){
 	function app(string $name, ?array $classes = null){
 
 		$abbrv = null;
-		if(preg_match("/^\w+\.\w+$/", $name))
+		if(preg_match("/^\w+\.(\w+|\*)$/", $name))
 			list($name, $abbrv) = str($name)->split(".");
 
 		if(is_null(alias($name)))
@@ -466,7 +466,9 @@ if(helper_add("app")){
 
 			if(notnull($abbrv)){
 
-				$name = sprintf("%s.%s", $name, $abbrv);
+				if(str($abbrv)->notEquals("*"))
+					$name = sprintf("%s.%s", $name, $abbrv);
+
 				return reg(sprintf("app.%s", $name));
 			}
 
@@ -489,14 +491,15 @@ if(helper_add("config")){
 	function config(string $key, array|string|int|null $options = null):mixed{
 
 		if(!reg()->exists("config"))
-			if(fs()->isDir(phar("cfg")->adapt())){
+			if(function_exists("fs"))
+				if(fs()->isDir(phar("cfg")->adapt())){
 
-				foreach(fs(phar("cfg")->adapt())->ls() as $ini_file)
-					if(negate(str($ini_file)->endsWith("~")))
-						$configs[trim($ini_file, ".ini")] = fs(phar("cfg")->adapt())->ini($ini_file);
+					foreach(fs(phar("cfg")->adapt())->ls() as $ini_file)
+						if(negate(str($ini_file)->endsWith("~")))
+							$configs[trim($ini_file, ".ini")]=fs(phar("cfg")->adapt())->ini($ini_file);
 
-				reg("config", $configs);
-			}
+					reg("config", $configs);
+				}
 
 		if(!is_null($options))
 			reg(sprintf("config.%s", $key), $options);
@@ -506,5 +509,20 @@ if(helper_add("config")){
 			return $config->get($key);
 
 		return null;
+	}
+}
+
+if(helper_add("provider")){
+
+	/**
+	 * Register a provider
+	 * 
+	 * @param string $class - provider class
+	 * 
+	 * return void
+	 */
+	function provider(string $class):void{
+
+		ref($class)->make()->getInstance()->register();
 	}
 }

@@ -448,13 +448,15 @@ abstract class Arr extends ValueObject{
 				$this->value = $value;
 			}
 
-			public function all(){
+			public function all(mixed $what = null){
 
-				return new class($this->value){
+				$all = new class($this->value, $what){
 
 					protected $value;
-					public function __construct($value){
+					protected $what;
+					public function __construct($value, $what){
 
+						$this->what = $what;
 						$this->value = $value;
 					}
 
@@ -462,7 +464,19 @@ abstract class Arr extends ValueObject{
 
 						return negate((bool)arr($this->value)->map(fn($k,$v)=>!is_null($v))->sum());
 					}
+
+					public function assert(){
+
+						$what = $this->what;
+						return (bool)arr($this->value)->map(fn($k,$v)=>$what == $v)->product();
+					}
 				};
+
+				dd($what);
+				if(notnull($what))
+					return $all->assert();
+
+				return $all;
 			}
 		};
 	}
