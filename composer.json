@@ -23,9 +23,9 @@
     "minimum-stability": "dev",
     "require": {
         "ramphor/date-human-readable": "~1.0.0",
-        "laminas/laminas-json": "3.7.x-dev",
         "strukt/base":"dev-changes",
-        "strukt/event":"dev-changes"
+        "strukt/event":"dev-changes",
+        "symfony/serializer-pack": "dev-main"
     },
     "require-dev": {
         "pestphp/pest": "4.x-dev",

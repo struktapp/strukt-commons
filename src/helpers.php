@@ -7,7 +7,12 @@ use Strukt\Arr;
 use Strukt\Today;
 use Strukt\TokenQuery;
 use Strukt\Stack;
-use Strukt\Json;
+// use Strukt\Json;
+
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Normalizer\ArrayDenormalizer;
+use Symfony\Component\Serializer\Serializer;
 
 helper("commons");
 
@@ -370,14 +375,16 @@ if(helper_add("json")){
 		return new class($obj){
 
 			private $obj;
+			private $serializer;
 
 			/**
 			 * @param string|array $obj
 			 */
 			public function __construct(string|array $obj){
 
-				if(is_array($obj))
-					$obj = Json::encode($obj);
+				$encoders = [new JsonEncoder];
+				$normalizers = [new ArrayDenormalizer, new ObjectNormalizer];
+				$this->serializer = new Serializer($normalizers, $encoders);
 
 				$this->obj = $obj;
 			}
@@ -389,7 +396,9 @@ if(helper_add("json")){
 			 */
 			public function pp():string{
 
-				return Json::pp($this->obj);
+				return $this->serializer->serialize($this->obj, 'json', [
+				    'json_encode_options' => JSON_PRETTY_PRINT,
+				]);
 			}
 
 			/**
@@ -397,7 +406,9 @@ if(helper_add("json")){
 			 */
 			public function decode():array{
 
-				return Json::decode($this->obj);
+				$json = preg_replace("/\'/", '"', $this->obj);
+
+				return $this->serializer->decode($json, "json");
 			}
 
 			/**
@@ -405,7 +416,7 @@ if(helper_add("json")){
 			 */
 			public function encode():string{
 
-				return $this->obj;
+				return $this->serializer->serialize($this->obj, 'json');
 			}
 
 			/**
@@ -415,7 +426,9 @@ if(helper_add("json")){
 			 */
 			public function valid():bool{
 
-				return Json::isJson($this->obj);
+				json_decode($this->obj, true);
+
+	    		return (json_last_error()===JSON_ERROR_NONE);
 			}
 		};
 	}
