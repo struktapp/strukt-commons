@@ -25,7 +25,8 @@
         "ramphor/date-human-readable": "~1.0.0",
         "strukt/base":"dev-changes",
         "strukt/event":"dev-changes",
-        "symfony/serializer-pack": "dev-main"
+        "symfony/serializer-pack": "dev-main",
+        "ramsey/uuid": "^4.7"
     },
     "require-dev": {
         "pestphp/pest": "4.x-dev",

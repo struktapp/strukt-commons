@@ -14,6 +14,9 @@ use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Normalizer\ArrayDenormalizer;
 use Symfony\Component\Serializer\Serializer;
 
+use Symfony\Component\String\Inflector\EnglishInflector;
+use Ramsey\Uuid\Uuid as RamseyUuid;
+
 helper("commons");
 
 if(helper_add("dot")){
@@ -537,5 +540,78 @@ if(helper_add("provider")){
 	function provider(string $class):void{
 
 		ref($class)->make()->getInstance()->register();
+	}
+}
+
+if(helper_add("singular")){
+
+	/**
+	 * @param string $actor
+	 * 
+	 * @return string
+	 */
+	function singular(string $actor):string{
+
+		if(negate(EnglishInflector::class))
+			raise("fn[plural] requires symfony/string 8.1.x-dev");
+
+		$inflector = new EnglishInflector();
+		$actor = str(arr($inflector->singularize($actor))->pop());
+
+		return $actor->yield();
+	}
+}
+
+if(helper_add("plural")){
+
+	/**
+	 * @param string $actor
+	 * 
+	 * @return string
+	 */
+	function plural(string $actor):string{
+
+		if(negate(EnglishInflector::class))
+			raise("fn[plural] requires symfony/string 8.1.x-dev");
+
+		$inflector = new EnglishInflector();
+		$actor = str(arr($inflector->pluralize($actor))->pop());
+
+		return $actor->yield();
+	}
+}
+
+if(helper_add("uuid")){
+
+	/**
+	 * @param int $version - UUID default version 4
+	 * @param array $options
+	 */
+	function uuid(int $version=4, array $options = []){
+
+		if(negate(class_exists(RamseyUuid::class)))
+			raise("fn[uuid] requires ramsey/uuid:^4.7!");
+
+		return new class($version, $options){
+
+			private $uuid;
+
+			/**
+			 * @param int $version
+			 * @param array $options
+			 */
+			public function __construct(int $version, array $options){
+
+				$this->uuid = Strukt\Ref::create(RamseyUuid::class)
+								->noMake()
+								->method(str("uuid")->concat($version))
+								->invoke(...$options);
+			}
+
+			public function yield(){
+
+				return $this->uuid->toString();
+			}
+		};
 	}
 }
