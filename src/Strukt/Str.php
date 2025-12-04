@@ -460,6 +460,16 @@ class Str extends ValueObject{
 		};
 	}
 
+	public function repeat(int $times):static{
+
+		return new $this(str_repeat($this->value, $times));
+	}
+
+	public function newline(int $times = 1):static{
+
+		return $this->concat("\n");
+	}
+
 	/**
 	 * @return string
 	 */
