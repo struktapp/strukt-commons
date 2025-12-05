@@ -50,7 +50,7 @@ abstract class Arr extends ValueObject{
 
 	public function unset(string $key):void{
 	
-		unset($this->values[$key]);
+		unset($this->value[$key]);
 	}
 
 	public function remove(string $key):static{
