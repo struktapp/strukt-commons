@@ -48,6 +48,11 @@ abstract class Arr extends ValueObject{
 		return new $this($values);
 	}
 
+	public function unset(string $key):void{
+	
+		unset($this->values[$key]);
+	}
+
 	public function remove(string $key):static{
 
 		$values = $this->value;
