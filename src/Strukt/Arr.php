@@ -53,7 +53,7 @@ abstract class Arr extends ValueObject{
 		$values = $this->value;
 		unset($values[$key]);
 
-		return new $this($value);
+		return new $this($values);
 	}
 
 	public function dequeue():mixed{
