@@ -336,6 +336,7 @@ abstract class Arr extends ValueObject{
 		$raw = $this->value;
 		foreach($this->value as $key=>$value){
 
+			$this->value[$key];
 			$raw[$key] = $value;
 
 			if(notnull($this->stop_at))
