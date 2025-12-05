@@ -48,9 +48,9 @@ abstract class Arr extends ValueObject{
 		return new $this($values);
 	}
 
-	public function unset(string $key):void{
+	public function unset(?string $key = null):void{
 	
-		unset($this->value[$key]);
+		unset($this->value[$key??$this->key()]);
 	}
 
 	public function remove(string $key):static{
@@ -336,7 +336,7 @@ abstract class Arr extends ValueObject{
 		$raw = $this->value;
 		foreach($this->value as $key=>$value){
 
-			$this->value[$key];
+			// $this->value[$key];
 			$raw[$key] = $value;
 
 			if(notnull($this->stop_at))
