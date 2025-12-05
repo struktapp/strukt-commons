@@ -363,14 +363,16 @@ abstract class Arr extends ValueObject{
 	* 
 	* @return array
 	*/
-	public function level(int $target = 999999999, string $prefix = "", bool $noPrefix = false){ 
+	public function level(int $target = 999999999){ 
 
-	   	$level = new class($this->value, $target, $prefix){
+	   	return new class($this->value, $target){
 
 	    	protected $value;
 	    	protected $current = 1;
 	    	protected $target = 999999999;
 	    	protected $prefix = "";
+	    	protected $noPrefix = false;
+
 	    	public function __construct(array $value, int $target){
 
 	    		$this->value = $value;
@@ -384,28 +386,46 @@ abstract class Arr extends ValueObject{
 	    		return $this;
 	    	}
 
+	    	public function noPrefix(){
+
+	    		$this->noPrefix = true;
+
+	    		return $this;
+	    	}
+
 	    	public function yield(){
 
-	    		return level($this->value, $this->target, $this->current, $this->prefix);
+	    		$leveled = level($this->value, $this->target, $this->current, $this->prefix);
+
+	    		if($this->noPrefix){
+
+	    			$leveledWithNoPrefix = [];
+					foreach($leveled as $k=>$v)
+						$leveledWithNoPrefix[preg_replace("/^\d+\./", "", $k)] = $v;
+
+					return $leveledWithNoPrefix;
+	    		}
+
+	    		return $leveled;
 	    	}
 	    };
 
-		$prefix = str($prefix);
-		if(negate($prefix->empty()))
-			$leveled = $level->prefix($prefix->yield())->yield();
+		// $prefix = str($prefix);
+		// if(negate($prefix->empty()))
+		// 	$leveled = $level->prefix($prefix->yield())->yield();
 
-		if($prefix->empty())
-			$leveled = $level->yield();
+		// if($prefix->empty())
+		// 	$leveled = $level->yield();
 
-		if(negate($noPrefix))
-			return $leveled;
+		// if(negate($noPrefix))
+		// 	return $leveled;
 
-		$leveledNoPrefix = [];
-		if($noPrefix)
-			foreach($leveled as $k=>$v)
-				$leveledNoPrefix[preg_replace("/^\d+\./", "", $k)] = $v;
+		// $leveledNoPrefix = [];
+		// if($noPrefix)
+		// 	foreach($leveled as $k=>$v)
+		// 		$leveledNoPrefix[preg_replace("/^\d+\./", "", $k)] = $v;
 
-		return $leveledNoPrefix;
+		// return $leveledNoPrefix;
 	}
 
 	public function isof(){
