@@ -208,23 +208,79 @@ abstract class Arr extends ValueObject{
 	 * 
 	 * @return static 
 	 */
-	public function skip(string $key):static{
+	public function skip(string|array $key):static{
 
-		$this->skip[] = $key;
+		if(is_array($key))
+			$this->skip = $key;
 
-		return $this;
-	}
-
-	public function jump(string $val):static{
-
-		$this->jump[] = $val;
+		if(negate(is_array($key)))
+			$this->skip[] = $key;
 
 		return $this;
 	}
 
-	public function stop(string $key):static{
+	public function jump(string|array $val):static{
+
+		if(is_array($val))
+			$this->jump = $val;
+
+		if(negate(is_array($val)))
+			$this->jump[] = $val;
+
+		return $this;
+	}
+
+	public function stop(mixed $key = null):static{
 
 		$this->stop_at = $key;
+
+		return $this;
+	}
+
+	public function will(){
+
+		return new class([
+
+			"jumps"=>$this->jump, 
+			"skips"=>$this->skip, 
+			"stop_at"=>$this->stop_at
+		]){
+
+			protected $parent;
+
+			public function __construct($parent){
+
+				$this->parent = $parent;
+			}
+
+			public function jump(mixed $val){
+
+				return in_array($val, $this->parent["jumps"]);
+			}
+
+			public function skip(mixed $key){
+
+				return in_array($key, $this->parent["skips"]);
+			}
+
+			public function stopAt(mixed $key){
+
+				$stop_at = $this->parent["stop_at"];
+				if(notnull($stop_at))
+					return $stop_at == $key;
+
+				return false;
+			}
+		};
+	}
+
+	protected function from(string|int $key){
+
+		if($this->key() != $key){
+
+			$this->next();
+			return $this->from($key);
+		}
 
 		return $this;
 	}
@@ -264,7 +320,7 @@ abstract class Arr extends ValueObject{
 	 */
 	public function enjoin(array $element):static{
 
-		if(!is_map($element)){
+		if(negate(is_map($element))){
 
 			array_push($this->value, ...$element);
 			$values = $this->value;
@@ -349,25 +405,25 @@ abstract class Arr extends ValueObject{
 
 	public function each(callable $func):static{
 
+		$this->rehash();
 		$ref = Ref::func($func->bindTo($this));
-		$jump = arr($this->jump);
-		$skip = arr($this->skip);
 
 		$raw = $this->value;
-		foreach($this->value as $key=>$value){
+		if($this->will()->stopAt($this->key())) 
+			return new static($raw);
 
-			$raw[$key] = $value;
+		if(negate($this->will()->jump($this->current())))
+			if(negate($this->will()->skip($this->key())))
+				$raw[$this->key()] = $ref->invoke($this->key(), $this->current());
 
-			if(notnull($this->stop_at))
-				if($key == $this->stop_at) 
-					break;
-
-			if(negate($jump->contains($value)))
-				if(negate($skip->contains($key)))
-					$raw[$key] = $ref->invoke($key, $value);
-		}
-
-		return new $this($raw);
+		if($this->next())
+			return (new static($raw))
+					->skip($this->skip)
+					->jump($this->jump)
+					->stop($this->stop_at)
+					->from($this->key())->each($func);
+	
+		return (new static($raw))->filter();
 	}
 
 	/**
