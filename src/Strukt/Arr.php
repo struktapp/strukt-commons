@@ -118,13 +118,14 @@ abstract class Arr extends ValueObject{
 
 	public function sibling(){
 
-		return new class($this){
+		return new class($this, $this->value){
 
 			protected $parent;
 
-			public function __construct($parent){
+			public function __construct($parent, $value){
 
 				$this->parent = $parent;
+				$this->value = $value;
 			}
 
 			public function next(){
@@ -132,6 +133,14 @@ abstract class Arr extends ValueObject{
 				$this->parent->next();
 
 				return $this->parent->current();
+			}
+
+			public function remove(mixed $key){
+
+				$current = $this->value[$key];
+				$this->parent->remove($key);
+
+				return $current;
 			}
 		};
 	}
