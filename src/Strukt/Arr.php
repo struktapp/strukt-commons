@@ -116,6 +116,26 @@ abstract class Arr extends ValueObject{
 		return $exists;
 	}
 
+	public function sibling(){
+
+		return new class($this){
+
+			protected $parent;
+
+			public function __construct($parent){
+
+				$this->parent = $parent;
+			}
+
+			public function next(){
+
+				$this->parent->next();
+
+				return $this->parent->current();
+			}
+		};
+	}
+
 	public function last():mixed{
 
 		$last = end($this->value);
@@ -336,7 +356,6 @@ abstract class Arr extends ValueObject{
 		$raw = $this->value;
 		foreach($this->value as $key=>$value){
 
-			// $this->value[$key];
 			$raw[$key] = $value;
 
 			if(notnull($this->stop_at))
@@ -347,11 +366,6 @@ abstract class Arr extends ValueObject{
 				if(negate($skip->contains($key)))
 					$raw[$key] = $ref->invoke($key, $value);
 		}
-
-		/**reset jump, skip & stop_at**/
-		// $this->jump = [];
-		// $this->skip = [];
-		// $this->stop_at = null;
 
 		return new $this($raw);
 	}
@@ -409,23 +423,6 @@ abstract class Arr extends ValueObject{
 	    		return $leveled;
 	    	}
 	    };
-
-		// $prefix = str($prefix);
-		// if(negate($prefix->empty()))
-		// 	$leveled = $level->prefix($prefix->yield())->yield();
-
-		// if($prefix->empty())
-		// 	$leveled = $level->yield();
-
-		// if(negate($noPrefix))
-		// 	return $leveled;
-
-		// $leveledNoPrefix = [];
-		// if($noPrefix)
-		// 	foreach($leveled as $k=>$v)
-		// 		$leveledNoPrefix[preg_replace("/^\d+\./", "", $k)] = $v;
-
-		// return $leveledNoPrefix;
 	}
 
 	public function isof(){
@@ -498,7 +495,6 @@ abstract class Arr extends ValueObject{
 					}
 				};
 
-				// dd($what);
 				if(notnull($what))
 					return $all->assert();
 
