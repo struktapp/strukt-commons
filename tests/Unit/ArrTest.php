@@ -75,7 +75,7 @@ test("arr.each", function(){
     $arr = $arr->each(fn($k, $v)=>$k=="last_name"?"Dennis":$v);
     $arr = $arr->skip("second_name")->each(fn($k, $v)=>$v."...");
     $arr = $arr->jump("Peter")->each(fn($k,$v)=>$v."+++");
-    $arr = $arr->stop("second_name")->each(fn($k,$v)=>$v."---");
+    $arr = $arr->stopAt("second_name")->each(fn($k,$v)=>$v."---");
 
     expect($arr->first())->toBe("Peter...+++---");
     $arr->next();
@@ -93,7 +93,7 @@ test("arr.level", function() use($arr){
       "contact.address.office" => "Dayriyon, Quadtratic Solusis"
     ];
 
-    expect($arr->level())->toBe($leveled);
+    expect($arr->level()->yield())->toBe($leveled);
 });
 
 test("arr.column", function(){

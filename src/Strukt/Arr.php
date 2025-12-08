@@ -13,6 +13,12 @@ abstract class Arr extends ValueObject{
 
 	protected $value = [];
 
+	public function __construct($value){
+
+		parent::__construct($value);
+		$this->first();
+	}
+
 	public function empty():bool{
 
 		return $this->length() == 0;
@@ -111,7 +117,7 @@ abstract class Arr extends ValueObject{
 
 	public function next():mixed{
 
-		$exists = !!next($this->value);
+		$exists = !!next($this->value) || !!key($this->value);
 
 		return $exists;
 	}
@@ -133,14 +139,6 @@ abstract class Arr extends ValueObject{
 				$this->parent->next();
 
 				return $this->parent->current();
-			}
-
-			public function remove(mixed $key){
-
-				$current = $this->value[$key];
-				$this->parent->remove($key);
-
-				return $current;
 			}
 		};
 	}
@@ -239,7 +237,7 @@ abstract class Arr extends ValueObject{
 		return $this;
 	}
 
-	public function stop(mixed $key = null):static{
+	public function stopAt(mixed $key = null):static{
 
 		$this->stop_at = $key;
 
@@ -248,48 +246,57 @@ abstract class Arr extends ValueObject{
 
 	public function will(){
 
-		return new class([
+		$avoids = [
 
 			"jumps"=>$this->jump, 
 			"skips"=>$this->skip, 
 			"stop_at"=>$this->stop_at
-		]){
+		];
 
-			protected $parent;
+		$this->jump = [];
+		$this->skip = []; 
+		$this->stop_at = null;
 
-			public function __construct($parent){
+		return new class($avoids){
 
-				$this->parent = $parent;
+			protected $avoids;
+
+			public function __construct(array $avoids){
+
+				$this->avoids = $avoids;
 			}
 
 			public function jump(mixed $val){
 
-				return in_array($val, $this->parent["jumps"]);
+			  	return in_array($val, $this->avoids["jumps"]);
 			}
 
 			public function skip(mixed $key){
 
-				return in_array($key, $this->parent["skips"]);
+				return in_array($key, $this->avoids["skips"]);
 			}
 
 			public function stopAt(mixed $key){
 
-				$stop_at = $this->parent["stop_at"];
-				if(notnull($stop_at))
+				$stop_at = $this->avoids["stop_at"];
+				if(notnull($stop_at) && negate(empty($stop_at)))
 					return $stop_at == $key;
 
 				return false;
+			}
+
+			public function get(string $name){
+
+				return $this->avoids[$name];
 			}
 		};
 	}
 
 	protected function from(string|int $key){
 
-		if($this->key() != $key){
-
-			$this->next();
-			return $this->from($key);
-		}
+		if($this->key() != $key)
+			if($this->next())
+				return $this->from($key);
 
 		return $this;
 	}
@@ -395,44 +402,40 @@ abstract class Arr extends ValueObject{
 	public function filter(?callable $func = null):static{
 
 		if(is_null($func))
-			if(is_map($this->value)) $func = fn($k, $v)=>empty($k) || empty($v);
-			else $func = fn($k, $v)=>empty($v);
+			$func = is_map($this->value)?fn($k,$v)=>(empty($k) || empty($v)):fn($k, $v)=>empty($v);
 
-		$values = [];
-		foreach($this->value as $k=>$v){
-
-			if(notnull($this->stop_at))
-				if($k == $this->stop_at) 
-					break;
-
-			if(negate($func($k, $v)))
-				$values[$k] = $v;				
-		}
-
-		return new $this($values);
-	}
-
-	public function each(callable $func):static{
-
-		$this->rehash();
-		$ref = Ref::func($func->bindTo($this));
-
-		$raw = $this->value;
-		if($this->will()->stopAt($this->key())) 
-			return new static($raw);
-
-		if(negate($this->will()->jump($this->current())))
-			if(negate($this->will()->skip($this->key())))
-				$raw[$this->key()] = $ref->invoke($this->key(), $this->current());
+		$values = $this->value;
+		if($func($this->key(), $this->current()))
+			unset($values[$this->key()]);
 
 		if($this->next())
-			return (new static($raw))
-					->skip($this->skip)
-					->jump($this->jump)
-					->stop($this->stop_at)
+			return (new static($values))
+					->stopAt($this->stop_at)
+					->from($this->key())->filter($func);
+
+		return new static($values);
+	}
+
+	public function each(callable $func){
+
+		$func = $func->bindTo($this);
+		$will = $this->will();
+
+		$values = $this->value;
+		if($will->stopAt($this->key())) 
+			return arr($values);
+
+		if(negate($will->jump($this->current())) && negate($will->skip($this->key())))
+			$values[$this->key()] = $func($this->key(), $this->current());
+
+		if($this->next())
+			return arr($values)
+					->skip($will->get("skips"))
+					->jump($will->get("jumps"))
+					->stopAt($will->get("stop_at"))
 					->from($this->key())->each($func);
 	
-		return (new static($raw))->filter();
+		return arr($values);
 	}
 
 	/**
@@ -478,11 +481,11 @@ abstract class Arr extends ValueObject{
 
 	    		if($this->noPrefix){
 
-	    			$leveledWithNoPrefix = [];
+	    			$leveled_prefixless = [];
 					foreach($leveled as $k=>$v)
-						$leveledWithNoPrefix[preg_replace("/^\d+\./", "", $k)] = $v;
+						$leveled_prefixless[preg_replace("/^\d+\./", "", $k)] = $v;
 
-					return $leveledWithNoPrefix;
+					return $leveled_prefixless;
 	    		}
 
 	    		return $leveled;
@@ -557,6 +560,11 @@ abstract class Arr extends ValueObject{
 
 						$what = $this->what;
 						return (bool)arr($this->value)->map(fn($k,$v)=>$what == $v)->product();
+					}
+
+					public function empty(){
+
+						return (bool)arr($this->value)->map(fn($k,$v)=>empty($v))->product();
 					}
 				};
 
@@ -706,9 +714,6 @@ abstract class Arr extends ValueObject{
 
 	public function __destruct(){
 
-		/**reset jump, skip & stop_at**/
-		$this->jump = [];
-		$this->skip = [];
-		$this->stop_at = null;
+		// reset($this->value);
 	}
 }

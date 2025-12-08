@@ -121,22 +121,22 @@ if(helper_add("str")){
 if(helper_add("arr")){
 
 	/**
-	 * @param array $bundle
+	 * @param array $value
 	 * 
 	 * @return \Strukt\Arr
 	 */
-	function arr(array $bundle):Arr{
+	function arr(array $value):Arr{
 
-		return new class($bundle) extends Arr{
+		return new class($value) extends Arr{
 
 			protected $value;
 
 			/**
-			 * @param array $bundle
+			 * @param array $value
 			 */
-			public function __construct(array $bundle){
+			public function __construct(array $value){
 
-				$this->value = $bundle;
+				parent::__construct($value);
 			}
 		};
 	}
