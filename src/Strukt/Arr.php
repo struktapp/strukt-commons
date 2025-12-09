@@ -383,6 +383,11 @@ abstract class Arr extends ValueObject{
 		return arr(array_count_values($this->value));
 	}
 
+	public function diff(array $to_diff){
+
+		return new $this(array_diff($this->value, $to_diff));
+	}
+
 	public function only(array $haystack):static{
 
 		return $this->filter(function($needle) use($haystack){
