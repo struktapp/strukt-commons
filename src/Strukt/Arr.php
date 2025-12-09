@@ -591,6 +591,29 @@ abstract class Arr extends ValueObject{
 				$this->value = $value;
 			}
 
+			public function any(){
+
+				return new class($this->value){
+
+					private $value;
+
+					public function __construct($value){
+
+						$this->value = $value;
+					}
+
+					public function empty(){
+
+						return (bool)arr($this->value)->each(fn($k, $v)=>(int)empty($v))->sum();
+					}
+
+					public function null(){
+
+						return (bool)arr($this->value)->each(fn($k, $v)=>(int)is_null($v))->sum();
+					}
+				};
+			}
+
 			public function map():bool{
 
 				return is_map($this->value);
