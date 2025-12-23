@@ -383,9 +383,70 @@ abstract class Arr extends ValueObject{
 		return arr(array_count_values($this->value));
 	}
 
+	/**
+	 * array_diff
+	 */
 	public function diff(array $to_diff){
 
-		return new $this(array_diff($this->value, $to_diff));
+		return new class($this->value, $to_diff){
+
+			private $arr;
+			private $to_diff;
+
+			public function __construct(array $arr, array $to_diff){
+
+				$this->arr = $arr;
+				$this->to_diff = $to_diff;
+			}
+
+			public function keys(){
+
+				return arr(array_diff_key($this->arr, $this->to_diff));
+			}
+
+			public function values(){
+
+				return arr(array_diff($this->arr, $this->to_diff));
+			}
+
+			public function map(){
+
+				return arr(array_diff_assoc($this->arr, $this->to_diff));
+			}
+		};
+	}
+
+	/**
+	 * array_intersect
+	 */ 
+	public function cross(array $subject){
+
+		return new class($this->value, $subject){
+
+			private $arr;
+			private $subject;
+
+			public function __construct(array $arr, array $subject){
+
+				$this->arr = $arr;
+				$this->subject = $subject;
+			}
+
+			public function keys(){
+
+				return arr(array_intersect_key($this->arr, $this->subject));
+			}
+
+			public function values(){
+
+				return arr(array_intersect($this->arr, $this->subject));
+			}
+
+			public function map(){
+
+				return arr(array_intersect_assoc($this->arr, $this->subject));
+			}
+		};
 	}
 
 	public function only(array $haystack):static{
