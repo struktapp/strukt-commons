@@ -144,3 +144,66 @@ test("arr.push", function() use($arr){
     $status = $arr->last();
     expect($status)->toBe("Active");
 });
+
+test("arr.diff", function(){
+
+    $arr = arr([
+        "othernames" => "Sander Wellington",
+        "surname" => "Johnliver",
+        "contact" => [
+            "mobile"=>"+254 712 788 999",
+            "address"=>[
+                "home"=>"Westminiser, Long Street, 453, Middlearth",
+                "office"=>"Dayriyon, Quadtratic Solusis"
+            ]
+        ]
+    ]);
+
+    $other_arr = [
+        "contact" => [
+            "mobile"=>"+254 712 788 999",
+            "address"=>[
+                "home"=>"Westminiser, Long Street, 453, Middlearth",
+                "office"=>"Dayriyon, Quadtratic Solusis"
+            ]
+        ]
+    ];
+
+    $diff = [
+        "othernames" => "Sander Wellington",
+        "surname" => "Johnliver"
+    ];
+    
+    expect($arr->diff($other_arr)->values()->yield())->toBe($diff);
+    expect($arr->diff($other_arr)->map()->yield())->toBe($diff);
+    expect($arr->diff($other_arr)->keys()->yield())->toBe($diff); 
+});
+
+test("arr.cross", function(){
+
+    $arr = arr([
+        "othernames" => "Sander Wellington",
+        "surname" => "Johnliver",
+        "contact" => [
+            "mobile"=>"+254 712 788 999",
+            "address"=>[
+                "home"=>"Westminiser, Long Street, 453, Middlearth",
+                "office"=>"Dayriyon, Quadtratic Solusis"
+            ]
+        ]
+    ]);
+
+    $other_arr = [
+        "contact" => [
+            "mobile"=>"+254 712 788 999",
+            "address"=>[
+                "home"=>"Westminiser, Long Street, 453, Middlearth",
+                "office"=>"Dayriyon, Quadtratic Solusis"
+            ]
+        ]
+    ];
+
+    expect($arr->cross($other_arr)->values()->yield())->toBe($other_arr);
+    expect($arr->cross($other_arr)->keys()->yield())->toBe($other_arr);
+    expect($arr->cross($other_arr)->map()->yield())->toBe($other_arr);
+});
