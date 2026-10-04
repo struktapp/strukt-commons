@@ -61,17 +61,16 @@ if (!function_exists('raise')) {
      *
      * @param string $message Error message.
      * @param int $code Exception code.
-     * @return Strukt\Raise Never returns because the exception is thrown.
+     * @return never Never returns because the exception is thrown.
      * @throws Strukt\Raise Always.
      */
-    function raise(string $message, int $code = 500): Strukt\Raise
+    function raise(string $message, int $code = 500): never
     {
         throw new Strukt\Raise($message, $code);
     }
 }
 
 if (!function_exists('helper_add')) {
-    /** Compatibility no-op for packages that conditionally register helpers. */
     /**
      * Reports that a helper name can be registered.
      *
@@ -92,7 +91,7 @@ if (!function_exists('dot')) {
      * @param array<int|string, mixed> $map Array to inspect by reference.
      * @return mixed Value at the path, or `null` when absent.
      */
-    function dot(string $path, array &$map): mixed
+    function dot(string $path, array $map): mixed
     {
         return Collection::dot($path, $map);
     }

@@ -129,7 +129,7 @@ class Collection implements CollectionInterface
      * @param array<int|string, mixed> $map Array to inspect.
      * @return mixed Value at the path, or `null` when it is missing.
      */
-    public static function dot(string $path, array &$map): mixed
+    public static function dot(string $path, array $map): mixed
     {
         $value = $map;
 
