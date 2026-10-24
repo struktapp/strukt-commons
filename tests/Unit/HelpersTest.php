@@ -5,7 +5,7 @@
 use Strukt\Registry;
 use Strukt\Stack;
 
-test('global path, array, JSON, and UUID helpers work without sibling packages', function (): void {
+test('global path, array, JSON, and UUID helpers work without optional sibling packages', function (): void {
     $data = [];
     attach('user.name', $data, 'Ada');
 

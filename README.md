@@ -12,9 +12,11 @@ chainable array and string values, dot-separated collections, date ranges,
 token queries, registries, message stacks, JSON helpers, and common global
 functions.
 
-The package requires PHP 8.2 or newer and has no runtime dependencies. Optional
-integrations such as Ramsey UUID and Symfony's English inflector are used when
-they are already installed, while standalone fallbacks remain available.
+The package requires PHP 8.2 or newer and depends on `strukt/base`, which
+provides the lowest-level primitives (`alias()`, `raise()`, `app()`, and the
+helper registry). Optional integrations such as Ramsey UUID and Symfony's
+English inflector are used when they are already installed, while standalone
+fallbacks remain available.
 
 ## Installation
 
@@ -372,9 +374,9 @@ echo singular('stories');
 echo uuid();
 ```
 
-Additional helpers include `alias()` for class aliases, `app()` for resolving
-registered implementations, `provider()` for invoking provider registration,
-`is_map()`, `notnull()`, `negate()`, and `raise()`.
+Additional helpers include `provider()` for invoking provider registration. The
+low-level primitives `alias()`, `is_map()`, `notnull()`, `negate()`, and
+`raise()` are provided by the required `strukt/base` package.
 
 ## Development
 

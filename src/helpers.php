@@ -16,72 +16,10 @@ use Strukt\Str;
 use Strukt\Today;
 use Strukt\TokenQuery;
 
-if (!function_exists('is_map')) {
-    /**
-     * Checks whether an array is a non-empty associative map.
-     *
-     * @param array<int|string, mixed> $value Array to inspect.
-     * @return bool True when the array is map-shaped.
-     */
-    function is_map(array $value): bool
-    {
-        return $value !== [] && !array_is_list($value);
-    }
-}
-
-if (!function_exists('notnull')) {
-    /**
-     * Checks whether a value is not null.
-     *
-     * @param mixed $value Value to inspect.
-     * @return bool True when the value is not null.
-     */
-    function notnull(mixed $value): bool
-    {
-        return $value !== null;
-    }
-}
-
-if (!function_exists('negate')) {
-    /**
-     * Negates a boolean value.
-     *
-     * @param bool $value Boolean to invert.
-     * @return bool Inverted boolean.
-     */
-    function negate(bool $value): bool
-    {
-        return !$value;
-    }
-}
-
-if (!function_exists('raise')) {
-    /**
-     * Throws a Strukt runtime exception.
-     *
-     * @param string $message Error message.
-     * @param int $code Exception code.
-     * @return never Never returns because the exception is thrown.
-     * @throws Strukt\Raise Always.
-     */
-    function raise(string $message, int $code = 500): never
-    {
-        throw new Strukt\Raise($message, $code);
-    }
-}
-
-if (!function_exists('helper_add')) {
-    /**
-     * Reports that a helper name can be registered.
-     *
-     * @param string $name Helper name.
-     * @return bool Always true for compatibility.
-     */
-    function helper_add(string $name): bool
-    {
-        return true;
-    }
-}
+/**
+ * Low-level primitives (`is_map`, `notnull`, `negate`, `raise`, `helper_add`)
+ * are owned by `strukt/base`, which this package requires.
+ */
 
 if (!function_exists('dot')) {
     /**
@@ -496,91 +434,6 @@ if (!function_exists('json')) {
     }
 }
 
-if (!function_exists('alias')) {
-    /**
-     * Registers, reads, or lists class aliases.
-     *
-     * @param string|null $name Alias name, wildcard, or `null` for all aliases.
-     * @param string|null $class Fully qualified class or interface to register.
-     * @return array<string, string>|string|null Alias map, class name, or null.
-     */
-    function alias(?string $name = null, ?string $class = null): array|string|null
-    {
-        static $aliases = [];
-
-        if ($name === null) {
-            return $aliases;
-        }
-
-        if ($class !== null) {
-            $aliases[$name] = $class;
-            return $class;
-        }
-
-        if (str_ends_with($name, '*')) {
-            $prefix = rtrim($name, '*');
-            return array_filter($aliases, static fn (string $key): bool => str_starts_with($key, $prefix), ARRAY_FILTER_USE_KEY);
-        }
-
-        return $aliases[$name] ?? null;
-    }
-}
-
-if (!function_exists('app')) {
-    /**
-     * Registers or resolves implementations for an aliased class/interface.
-     *
-     * @param string $name Alias optionally followed by `.*` or a class selector.
-     * @param array<int, string>|null $classes Implementations to validate and register.
-     * @return mixed Registered class name, class list, or null after registration.
-     * @throws \InvalidArgumentException When the alias or implementation is invalid.
-     */
-    function app(string $name, ?array $classes = null): mixed
-    {
-        [$baseName, $selector] = array_pad(explode('.', $name, 2), 2, null);
-        $base = alias($baseName) ?? (interface_exists($baseName) || class_exists($baseName) ? $baseName : null);
-
-        if ($base === null) {
-            throw new \InvalidArgumentException("Alias [{$baseName}] was not found.");
-        }
-
-        $key = 'app.' . $baseName;
-        if ($classes !== null) {
-            $valid = [];
-            foreach ($classes as $class) {
-                if (!is_string($class) || !class_exists($class)) {
-                    throw new \InvalidArgumentException("Class [{$class}] was not found.");
-                }
-
-                $compatible = interface_exists($base)
-                    ? is_a($class, $base, true)
-                    : is_a($class, $base, true);
-                if (!$compatible) {
-                    throw new \InvalidArgumentException("Class [{$class}] does not implement [{$base}].");
-                }
-
-                $valid[] = $class;
-            }
-
-            reg($key, $valid);
-            return null;
-        }
-
-        $registered = reg($key) ?? [];
-        if ($selector === '*' || $selector === null) {
-            return $selector === '*' ? $registered : ($registered[0] ?? null);
-        }
-
-        foreach ($registered as $class) {
-            if ($class === $selector || str_ends_with($class, '\\' . $selector)) {
-                return $class;
-            }
-        }
-
-        return null;
-    }
-}
-
 if (!function_exists('config')) {
     /**
      * Reads or writes a dot-separated configuration value.
@@ -630,7 +483,7 @@ if (!function_exists('provider')) {
             throw new \InvalidArgumentException("Provider [{$class}] was not found.");
         }
 
-        $instance = new $class();
+        $instance = function_exists('app') ? app()->make($class) : new $class();
         if (!method_exists($instance, 'register')) {
             throw new \InvalidArgumentException("Provider [{$class}] has no register() method.");
         }

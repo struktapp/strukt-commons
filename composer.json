@@ -4,7 +4,8 @@
     "type": "library",
     "license": "MIT",
     "require": {
-        "php": ">=8.2"
+        "php": ">=8.2",
+        "strukt/base": "dev-main"
     },
     "require-dev": {
         "pestphp/pest": "^4.0"
@@ -22,6 +23,15 @@
             "Tests\\": "tests/"
         }
     },
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../base",
+            "options": {
+                "versions": { "strukt/base": "dev-main" }
+            }
+        }
+    ],
     "scripts": {
         "test": "pest",
         "test:coverage": "pest --coverage"
@@ -32,7 +42,7 @@
         },
         "sort-packages": true
     },
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "prefer-stable": true,
     "authors": [
         {
