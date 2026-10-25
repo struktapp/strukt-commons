@@ -5,7 +5,7 @@
     "license": "MIT",
     "require": {
         "php": ">=8.2",
-        "strukt/base": "dev-main"
+        "strukt/base": "v1.0.0"
     },
     "require-dev": {
         "pestphp/pest": "^4.0"
@@ -23,15 +23,6 @@
             "Tests\\": "tests/"
         }
     },
-    "repositories": [
-        {
-            "type": "path",
-            "url": "../base",
-            "options": {
-                "versions": { "strukt/base": "dev-main" }
-            }
-        }
-    ],
     "scripts": {
         "test": "pest",
         "test:coverage": "pest --coverage"
@@ -49,5 +40,6 @@
             "name": "pitsolu",
             "email": "pitsolu@gmail.com"
         }
-    ]
+    ],
+    "version": "1.1.0"
 }
